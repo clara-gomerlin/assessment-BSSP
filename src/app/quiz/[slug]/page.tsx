@@ -1,4 +1,4 @@
-import { supabase } from "@/lib/supabase";
+import { getSupabase } from "@/lib/supabase";
 import { Quiz, Question } from "@/lib/types";
 import QuizPlayer from "@/components/QuizPlayer";
 import { notFound } from "next/navigation";
@@ -9,6 +9,7 @@ interface PageProps {
 
 export default async function QuizPage({ params }: PageProps) {
   const { slug } = await params;
+  const supabase = getSupabase();
 
   // Fetch quiz
   const { data: quiz, error: quizError } = await supabase
@@ -43,6 +44,7 @@ export default async function QuizPage({ params }: PageProps) {
 
 export async function generateMetadata({ params }: PageProps) {
   const { slug } = await params;
+  const supabase = getSupabase();
 
   const { data: quiz } = await supabase
     .from("assessment_quizzes")
