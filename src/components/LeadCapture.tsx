@@ -6,28 +6,22 @@ interface LeadCaptureProps {
   onSubmit: (name: string, email: string, phone: string) => void;
 }
 
-function formatPhone(value: string): string {
-  const digits = value.replace(/\D/g, "");
-  // Remove leading 55 if user types it (we already show +55)
-  const clean = digits.startsWith("55") && digits.length > 2 ? digits.slice(2) : digits;
-  const d = clean.slice(0, 11);
-
-  if (d.length === 0) return "+55 ";
-  if (d.length <= 2) return `+55 (${d}`;
-  if (d.length <= 7) return `+55 (${d.slice(0, 2)})${d.slice(2)}`;
-  return `+55 (${d.slice(0, 2)})${d.slice(2, 7)}-${d.slice(7)}`;
+function formatLocal(value: string): string {
+  const d = value.replace(/\D/g, "").slice(0, 11);
+  if (d.length === 0) return "";
+  if (d.length <= 2) return `(${d}`;
+  if (d.length <= 7) return `(${d.slice(0, 2)})${d.slice(2)}`;
+  return `(${d.slice(0, 2)})${d.slice(2, 7)}-${d.slice(7)}`;
 }
 
 function getDigits(value: string): string {
-  // Extract only the local digits (without country code)
-  const all = value.replace(/\D/g, "");
-  return all.startsWith("55") && all.length > 2 ? all.slice(2) : all;
+  return value.replace(/\D/g, "");
 }
 
 export default function LeadCapture({ onSubmit }: LeadCaptureProps) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("+55 ");
+  const [phone, setPhone] = useState("");
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   function validate(): boolean {
@@ -45,13 +39,13 @@ export default function LeadCapture({ onSubmit }: LeadCaptureProps) {
   }
 
   function handlePhoneChange(e: React.ChangeEvent<HTMLInputElement>) {
-    setPhone(formatPhone(e.target.value));
+    setPhone(formatLocal(e.target.value));
   }
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (validate()) {
-      onSubmit(name.trim(), email.trim(), phone.trim());
+      onSubmit(name.trim(), email.trim(), `+55 ${phone.trim()}`);
     }
   }
 
@@ -132,13 +126,45 @@ export default function LeadCapture({ onSubmit }: LeadCaptureProps) {
         </div>
 
         <div>
-          <input
-            type="tel"
-            inputMode="numeric"
-            value={phone}
-            onChange={handlePhoneChange}
+          <div
             className={`email-input ${errors.phone ? "email-input-error" : ""}`}
-          />
+            style={{
+              display: "flex",
+              alignItems: "center",
+              padding: 0,
+            }}
+          >
+            <span
+              style={{
+                padding: "0 0 0 18px",
+                fontSize: 16,
+                color: "#555",
+                whiteSpace: "nowrap",
+                pointerEvents: "none",
+                lineHeight: "52px",
+              }}
+            >
+              +55
+            </span>
+            <input
+              type="tel"
+              inputMode="numeric"
+              placeholder="(XX)XXXXX-XXXX"
+              value={phone}
+              onChange={handlePhoneChange}
+              style={{
+                border: "none",
+                outline: "none",
+                background: "transparent",
+                flex: 1,
+                height: 52,
+                padding: "0 18px 0 6px",
+                fontSize: 16,
+                fontFamily: "var(--font-body)",
+                minWidth: 0,
+              }}
+            />
+          </div>
           {errors.phone && (
             <p style={{ fontSize: 12, color: "rgb(240, 108, 77)", margin: "8px 0 0", textAlign: "start" }}>
               {errors.phone}

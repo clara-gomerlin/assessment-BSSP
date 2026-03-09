@@ -1,5 +1,6 @@
 "use client";
 
+import DOMPurify from "dompurify";
 import { Dimension } from "@/lib/types";
 
 interface ResultViewProps {
@@ -211,7 +212,7 @@ export default function ResultView({
         <div className="prose-result">
           <div
             style={{ whiteSpace: "pre-wrap" }}
-            dangerouslySetInnerHTML={{ __html: formatMarkdown(markdown) }}
+            dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(formatMarkdown(markdown), { ALLOWED_TAGS: ["h1","h2","h3","strong","em","li","ul","br"], ALLOWED_ATTR: ["style"] }) }}
           />
           {markdown && (
             <span
