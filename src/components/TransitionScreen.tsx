@@ -485,8 +485,9 @@ function Content({
   onContinue: () => void;
 }) {
   return (
-    <div className="animate-fade-in" style={{ width: "100%" }}>
+    <div style={{ width: "100%" }}>
       <div
+        className="animate-fade-in"
         style={{
           display: "flex",
           flexDirection: "column",
@@ -503,7 +504,7 @@ function Content({
         <div style={{ width: "100%", maxWidth: 480 }}>{children}</div>
       </div>
 
-      {/* Fixed continue button */}
+      {/* Fixed continue button — outside animated div to avoid translateY glitch */}
       <div
         style={{
           position: "fixed",

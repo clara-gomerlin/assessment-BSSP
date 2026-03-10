@@ -79,6 +79,8 @@ export default function QuizPlayer({ quiz, questions }: QuizPlayerProps) {
   const [transitionQueue, setTransitionQueue] = useState<string[]>([]);
   const [pendingNextIndex, setPendingNextIndex] = useState<number | null>(null);
 
+  const [apiReady, setApiReady] = useState(false);
+
   const [resultData, setResultData] = useState<{
     archetype: { code: string; name: string; emoji: string; description: string };
     secondary: { code: string; name: string; emoji: string; description: string };
@@ -161,6 +163,7 @@ export default function QuizPlayer({ quiz, questions }: QuizPlayerProps) {
 
   const handleSubmit = useCallback(async (name: string, email: string, phone: string) => {
     setRespondentName(name);
+    setApiReady(false);
     setPhase("loading");
 
     try {
@@ -183,7 +186,6 @@ export default function QuizPlayer({ quiz, questions }: QuizPlayerProps) {
 
       const decoder = new TextDecoder();
       let fullText = "";
-      let metaReceived = false;
 
       while (true) {
         const { done, value } = await reader.read();
@@ -203,8 +205,6 @@ export default function QuizPlayer({ quiz, questions }: QuizPlayerProps) {
 
             if (parsed.type === "meta") {
               setResultData(parsed);
-              metaReceived = true;
-              setPhase("result");
             } else if (parsed.type === "text") {
               fullText += parsed.content;
               setResultMarkdown(fullText);
@@ -215,9 +215,8 @@ export default function QuizPlayer({ quiz, questions }: QuizPlayerProps) {
         }
       }
 
-      if (!metaReceived) {
-        setPhase("result");
-      }
+      // Stream finished — signal loading screen that API is ready
+      setApiReady(true);
     } catch (error) {
       console.error(error);
       setPhase("lead_capture");
@@ -248,7 +247,12 @@ export default function QuizPlayer({ quiz, questions }: QuizPlayerProps) {
   }
 
   if (phase === "loading") {
-    return <LoadingScreen />;
+    return (
+      <LoadingScreen
+        apiReady={apiReady}
+        onContinue={() => setPhase("result")}
+      />
+    );
   }
 
   if (phase === "result" && resultData) {
