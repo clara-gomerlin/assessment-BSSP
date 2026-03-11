@@ -499,6 +499,7 @@ function Content({
           gap: 0,
           paddingBottom: 120,
           marginTop: 24,
+          fontFamily: "var(--font-quiz)",
         }}
       >
         <div style={{ width: "100%", maxWidth: 480 }}>{children}</div>

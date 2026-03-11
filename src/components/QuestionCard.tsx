@@ -47,8 +47,9 @@ export default function QuestionCard({
         <h2
           className="question-text"
           style={{
-            fontSize: 20,
-            fontWeight: 600,
+            fontFamily: "var(--font-quiz)",
+            fontSize: 22,
+            fontWeight: 700,
             color: "#000",
             lineHeight: 1.3,
             textAlign: "center",
@@ -59,6 +60,7 @@ export default function QuestionCard({
         {isMulti && (
           <p
             style={{
+              fontFamily: "var(--font-quiz)",
               fontSize: 13,
               fontWeight: 400,
               color: "#64748b",
@@ -167,8 +169,9 @@ export default function QuestionCard({
                   >
                     <span
                       style={{
-                        fontSize: 14,
-                        fontWeight: 500,
+                        fontFamily: "var(--font-quiz)",
+                        fontSize: 16,
+                        fontWeight: 400,
                         color: isSelected ? "#2D3246" : "#000",
                         textAlign: "left",
                         lineHeight: 1.35,

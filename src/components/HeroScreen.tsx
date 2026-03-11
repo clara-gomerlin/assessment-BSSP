@@ -91,7 +91,7 @@ export default function HeroScreen({ quiz, onStart }: HeroScreenProps) {
           >
             <h1
               style={{
-                fontFamily: isIPRT ? "'Montserrat', system-ui, sans-serif" : "'Fraunces', Georgia, serif",
+                fontFamily: isIPRT ? "'Montserrat', system-ui, sans-serif" : isDiagnostic ? "var(--font-quiz)" : "'Fraunces', Georgia, serif",
                 fontWeight: 700,
                 fontSize: "clamp(1.75rem, 6vw, 2.5rem)",
                 lineHeight: 1.15,
@@ -103,7 +103,7 @@ export default function HeroScreen({ quiz, onStart }: HeroScreenProps) {
               {isIPRT ? (
                 <>Índice de Prontidão<br />para a Reforma<br />Tributária</>
               ) : isDiagnostic ? (
-                <>Diagnóstico da<br />Máquina de<br />Receita</>
+                <>Descubra onde está vazando dinheiro na sua operação de receita</>
               ) : (
                 <>Diagnóstico<br />de Carreira:<br />Os 5 Arquétipos</>
               )}
@@ -120,7 +120,7 @@ export default function HeroScreen({ quiz, onStart }: HeroScreenProps) {
               {isIPRT
                 ? "Descubra seu Índice de Prontidão para a Reforma Tributária — e onde estão suas maiores lacunas antes que o novo sistema entre em vigor."
                 : isDiagnostic
-                ? "Descubra qual das 4 alavancas de receita está travando o crescimento da sua empresa — e o que fazer a respeito."
+                ? "Baseado em +200 consultorias do GLA, esta análise investiga sua operação de receita em 4 dimensões e revela o que não aparece no dashboard:"
                 : "90% dos profissionais de marketing preocupados com sua carreira se encaixam em um desses 5 arquétipos. Qual é o seu?"}
             </p>
           </section>
@@ -143,9 +143,9 @@ export default function HeroScreen({ quiz, onStart }: HeroScreenProps) {
                 ]
               : isDiagnostic
               ? [
-                  { icon: "⭐", value: "4.9", label: "no Google" },
-                  { icon: "⏱️", value: "4", label: "minutos" },
-                  { icon: "🏢", value: "+500", label: "empresas" },
+                  { icon: "📈", value: "", label: "Alavancas de receita desligadas" },
+                  { icon: "🤑", value: "", label: "Dinheiro parado no CRM" },
+                  { icon: "🔍", value: "", label: "Oportunidades sem investir em ADS" },
                 ]
               : [
                   { icon: "⭐", value: "4.9", label: "no Google" },
@@ -192,7 +192,7 @@ export default function HeroScreen({ quiz, onStart }: HeroScreenProps) {
               {isIPRT
                 ? "Ao final do diagnóstico, você vai ter:"
                 : isDiagnostic
-                ? "Ao final do diagnóstico, você vai ter:"
+                ? "15 minutos, 25 perguntas e um mapa claro de onde agir."
                 : "Ao final do diagnóstico, você vai ter:"}
             </p>
             <ul
@@ -213,12 +213,7 @@ export default function HeroScreen({ quiz, onStart }: HeroScreenProps) {
                     "Análise personalizada por IA com recomendações",
                   ]
                 : isDiagnostic
-                ? [
-                    "Score geral da sua máquina de receita (0-100)",
-                    "Diagnóstico por alavanca: PP, GD, EV e EB",
-                    "Sua alavanca mais forte e mais fraca",
-                    "Insights personalizados com IA para destravar crescimento",
-                  ]
+                ? []
                 : [
                     "Clareza de qual dos 5 arquétipos você se encaixa",
                     "Os problemas mais comuns de quem tem o seu perfil",
@@ -280,7 +275,7 @@ export default function HeroScreen({ quiz, onStart }: HeroScreenProps) {
               {isIPRT
                 ? "Diagnóstico gratuito. Desenvolvido pela BSSP com base na experiência de +10.000 alunos."
                 : isDiagnostic
-                ? "Baseado em frameworks de receita validados com +500 empresas B2B."
+                ? "Usado por fundadores e líderes de receita de empresas B2B que faturam mais de R$50M/ano."
                 : "Baseado em +200 mentorias individuais e padrões reais de profissionais de marketing"}
             </p>
           </section>
@@ -322,7 +317,7 @@ export default function HeroScreen({ quiz, onStart }: HeroScreenProps) {
             boxShadow: "0 4px 14px rgba(15, 23, 42, 0.25)",
           }}
         >
-          Começar
+          {isDiagnostic ? "Iniciar minha auditoria" : "Começar"}
         </button>
       </div>
     </div>
