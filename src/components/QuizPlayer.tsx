@@ -350,6 +350,14 @@ export default function QuizPlayer({ quiz, questions }: QuizPlayerProps) {
     [quiz.id, responseId]
   );
 
+  // Start result generation when entering loading phase
+  useEffect(() => {
+    if (phase === "loading" && !generationStarted.current) {
+      generationStarted.current = true;
+      startResultGeneration();
+    }
+  }, [phase, startResultGeneration]);
+
   // ========== RENDER PHASES ==========
 
   if (phase === "hero") {
@@ -371,14 +379,6 @@ export default function QuizPlayer({ quiz, questions }: QuizPlayerProps) {
       </div>
     );
   }
-
-  // Start result generation when entering loading phase
-  useEffect(() => {
-    if (phase === "loading" && !generationStarted.current) {
-      generationStarted.current = true;
-      startResultGeneration();
-    }
-  }, [phase, startResultGeneration]);
 
   if (phase === "loading") {
     return (
