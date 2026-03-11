@@ -5,12 +5,12 @@ interface TransitionScreenProps {
   onContinue: () => void;
 }
 
-const LOGO_NESTLE = "https://jiqahhuftixaxyebtpyr.supabase.co/storage/v1/object/sign/Tools/Quiz%20RiseGuide/Images/Nestle.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV84OWE3YjUwMS0xZDc0LTQyMjctODE4Zi1jNmEzNWUzMGViODUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJUb29scy9RdWl6IFJpc2VHdWlkZS9JbWFnZXMvTmVzdGxlLnBuZyIsImlhdCI6MTc2ODExMzYzNiwiZXhwIjoxNzk5NjQ5NjM2fQ.1DuQJkbyrNuCppepJk-ZpYcIfT2x8BjSV8Bwwt_P_EI";
-const LOGO_PAGBANK = "https://jiqahhuftixaxyebtpyr.supabase.co/storage/v1/object/sign/Tools/Quiz%20RiseGuide/Images/Pagbank.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV84OWE3YjUwMS0xZDc0LTQyMjctODE4Zi1jNmEzNWUzMGViODUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJUb29scy9RdWl6IFJpc2VHdWlkZS9JbWFnZXMvUGFnYmFuay5wbmciLCJpYXQiOjE3NjgxMTM2NTAsImV4cCI6MTc5OTY0OTY1MH0.62VoTsflbTrCgaZH_wMt1rmMBaOKphRy6a0sn5wOcw0";
-const LOGO_HOTMART = "https://jiqahhuftixaxyebtpyr.supabase.co/storage/v1/object/sign/Tools/Quiz%20RiseGuide/Images/Hotmart_logo.svg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV84OWE3YjUwMS0xZDc0LTQyMjctODE4Zi1jNmEzNWUzMGViODUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJUb29scy9RdWl6IFJpc2VHdWlkZS9JbWFnZXMvSG90bWFydF9sb2dvLnN2ZyIsImlhdCI6MTc2ODExMzY2NSwiZXhwIjoxNzk5NjQ5NjY1fQ.epVAYt1FLhyvuh4-lZCyd-NYIz3XyOYnQx2m5I3eWgg";
-const LOGO_BOTICARIO = "https://jiqahhuftixaxyebtpyr.supabase.co/storage/v1/object/sign/Tools/Quiz%20RiseGuide/Images/Grupo%20boticario.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV84OWE3YjUwMS0xZDc0LTQyMjctODE4Zi1jNmEzNWUzMGViODUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJUb29scy9RdWl6IFJpc2VHdWlkZS9JbWFnZXMvR3J1cG8gYm90aWNhcmlvLnBuZyIsImlhdCI6MTc2ODExMzcwMiwiZXhwIjoxNzk5NjQ5NzAyfQ.rY-5bhHjR0BUEhGuwmL8xqO56l015ruyh3o_U7nWyro";
-const LOGO_NUVEMSHOP = "https://jiqahhuftixaxyebtpyr.supabase.co/storage/v1/object/sign/Tools/Quiz%20RiseGuide/Images/nuvemshop%2001.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV84OWE3YjUwMS0xZDc0LTQyMjctODE4Zi1jNmEzNWUzMGViODUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJUb29scy9RdWl6IFJpc2VHdWlkZS9JbWFnZXMvbnV2ZW1zaG9wIDAxLnBuZyIsImlhdCI6MTc2ODExMzcxOSwiZXhwIjoxNzk5NjQ5NzE5fQ.pvEXfwc6gy659avjYFrp8ciUTAz1-GD4jyf8RyJh1EM";
-const LOGO_KOVI = "https://jiqahhuftixaxyebtpyr.supabase.co/storage/v1/object/sign/Tools/Quiz%20RiseGuide/Images/Kovi.webp?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV84OWE3YjUwMS0xZDc0LTQyMjctODE4Zi1jNmEzNWUzMGViODUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJUb29scy9RdWl6IFJpc2VHdWlkZS9JbWFnZXMvS292aS53ZWJwIiwiaWF0IjoxNzY4MTEzNzI4LCJleHAiOjE3OTk2NDk3Mjh9.RU8trxMjuO8LWKX-cd56fw8UkZZdJ5a4REWQKWuvzm4";
+const LOGO_NESTLE = "/logos/companies/nestle.png";
+const LOGO_PAGBANK = "/logos/companies/pagbank.png";
+const LOGO_HOTMART = "/logos/companies/hotmart.svg";
+const LOGO_BOTICARIO = "/logos/companies/boticario.png";
+const LOGO_NUVEMSHOP = "/logos/companies/nuvemshop.png";
+const LOGO_KOVI = "/logos/companies/kovi.webp";
 
 function StarsSVG() {
   return (

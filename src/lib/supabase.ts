@@ -12,11 +12,18 @@ export function getSupabase() {
  * Pattern: ax_{company}_{q|r}
  * Falls back to shared tables when no company_code.
  */
+const ALLOWED_COMPANY_CODES = new Set(["bssp"]);
+
 export function getTableNames(companyCode?: string) {
   if (companyCode) {
+    // Validate against whitelist to prevent table name injection
+    const code = companyCode.toLowerCase();
+    if (!ALLOWED_COMPANY_CODES.has(code)) {
+      throw new Error(`Invalid company_code: ${companyCode}`);
+    }
     return {
-      questions: `ax_${companyCode}_q`,
-      responses: `ax_${companyCode}_r`,
+      questions: `ax_${code}_q`,
+      responses: `ax_${code}_r`,
     };
   }
   return {
