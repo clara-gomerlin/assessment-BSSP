@@ -354,13 +354,11 @@ export default function IPRTResultView({
     >
       {/* Header */}
       <div style={{ textAlign: "center", padding: "24px 0 12px" }}>
-        <div style={{ background: "#031D31", borderRadius: 10, padding: "8px 20px", display: "inline-block" }}>
-          <img
-            src="/logos/bssp-white.png"
-            alt="BSSP Centro Educacional"
-            style={{ display: "block", height: 28 }}
-          />
-        </div>
+        <img
+          src="/logos/bssp-pos-graduacao.png"
+          alt="BSSP Pós-Graduação"
+          style={{ display: "inline-block", height: 44 }}
+        />
       </div>
 
       {/* Headline */}

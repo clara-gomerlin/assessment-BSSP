@@ -45,13 +45,11 @@ export default function HeroScreen({ quiz, onStart }: HeroScreenProps) {
         }}
       >
         {isIPRT ? (
-          <div style={{ background: "#031D31", borderRadius: 10, padding: "8px 20px", display: "inline-block" }}>
-            <img
-              src="/logos/bssp-white.png"
-              alt="BSSP Centro Educacional"
-              style={{ display: "block", height: 32 }}
-            />
-          </div>
+          <img
+            src="/logos/bssp-pos-graduacao.png"
+            alt="BSSP Pós-Graduação"
+            style={{ display: "block", height: 48 }}
+          />
         ) : (
           <img
             src="/logos/gla-logo.png"

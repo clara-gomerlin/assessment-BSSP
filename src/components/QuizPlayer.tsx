@@ -479,16 +479,15 @@ export default function QuizPlayer({ quiz, questions }: QuizPlayerProps) {
       {isIPRT && (
         <div
           style={{
-            background: "#031D31",
             padding: "10px 20px",
             display: "flex",
             justifyContent: "center",
           }}
         >
           <img
-            src="/logos/bssp-white.png"
-            alt="BSSP"
-            style={{ height: 28 }}
+            src="/logos/bssp-pos-graduacao.png"
+            alt="BSSP Pós-Graduação"
+            style={{ height: 36 }}
           />
         </div>
       )}

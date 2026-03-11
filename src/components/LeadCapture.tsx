@@ -66,13 +66,11 @@ export default function LeadCapture({ onSubmit, quizType }: LeadCaptureProps) {
       {/* Logo */}
       <div style={{ textAlign: "center", paddingTop: 24 }}>
         {isIPRT ? (
-          <div style={{ background: "#031D31", borderRadius: 10, padding: "8px 20px", display: "inline-block" }}>
-            <img
-              src="/logos/bssp-white.png"
-              alt="BSSP Centro Educacional"
-              style={{ display: "block", height: 28 }}
-            />
-          </div>
+          <img
+            src="/logos/bssp-pos-graduacao.png"
+            alt="BSSP Pós-Graduação"
+            style={{ display: "inline-block", height: 44 }}
+          />
         ) : (
           <img
             src="/logos/gla-logo.png"
