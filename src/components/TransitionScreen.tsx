@@ -530,6 +530,463 @@ function Content({
 }
 
 /* ============================================================
+   Revenue Transition 1 — Social Proof for B2B diagnostic
+   ============================================================ */
+function RevenueSocialProof1({ onContinue }: { onContinue: () => void }) {
+  return (
+    <Content onContinue={onContinue}>
+      <div style={{ textAlign: "center", marginBottom: 16 }}>
+        <span style={{ fontSize: 24, fontWeight: 700, color: "#2D3246" }}>
+          +500 empresas
+        </span>
+        <br />
+        <span style={{ fontSize: 16, fontWeight: 500, color: "#000" }}>
+          já usaram esse framework para destravar receita
+        </span>
+      </div>
+
+      <div
+        style={{
+          display: "flex",
+          padding: "16px 16px 12px",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          gap: 6,
+          borderRadius: 12,
+          border: "2px solid #fff",
+          background: "#fff",
+          boxShadow:
+            "rgba(56,70,174,0.05) 0px 4px 9px, rgba(56,70,174,0.04) 0px 16px 16px",
+        }}
+      >
+        <div
+          style={{
+            position: "relative",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            minHeight: 133,
+            padding: "18px 24px",
+            borderRadius: 8,
+            background: "#f3f6fc",
+          }}
+        >
+          <span style={{ position: "absolute", top: 8, left: 13.5 }}>
+            <QuoteSVG />
+          </span>
+          <span
+            style={{
+              fontSize: 17,
+              fontWeight: 400,
+              textAlign: "center",
+              color: "#161616",
+              lineHeight: 1.3,
+            }}
+          >
+            Antes do diagnóstico, não tínhamos clareza de onde estava o gargalo.
+            Descobrimos que nossa geração de demanda era forte, mas a eficiência
+            em vendas estava travando tudo.
+          </span>
+          <span
+            style={{
+              position: "absolute",
+              bottom: 8,
+              right: 13.5,
+              rotate: "180deg",
+            }}
+          >
+            <QuoteSVG />
+          </span>
+        </div>
+        <span style={{ fontSize: 16, fontWeight: 200, color: "#000" }}>
+          CEO de SaaS B2B — Faturamento R$ 3M/ano
+        </span>
+        <StarsSVG />
+      </div>
+
+      <div style={{ textAlign: "center", marginTop: 24 }}>
+        <p
+          style={{
+            fontSize: 15,
+            fontWeight: 500,
+            color: "#64748b",
+            lineHeight: 1.5,
+          }}
+        >
+          Baseado nas 4 alavancas de receita: Posicionamento & Preço, Geração de
+          Demanda, Eficiência em Vendas e Expansão de Base.
+        </p>
+      </div>
+    </Content>
+  );
+}
+
+/* ============================================================
+   Revenue Transition 2 — Framework explanation
+   ============================================================ */
+function RevenueSocialProof2({ onContinue }: { onContinue: () => void }) {
+  return (
+    <Content onContinue={onContinue}>
+      <h2
+        style={{
+          fontSize: 22,
+          fontWeight: 700,
+          color: "#2D3246",
+          textAlign: "center",
+          lineHeight: 1.3,
+          marginBottom: 24,
+        }}
+      >
+        As 4 alavancas que definem o crescimento da sua empresa
+      </h2>
+
+      <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+        {[
+          { emoji: "🎯", name: "Posicionamento & Preço", desc: "Você está vendendo para o cliente certo, no preço certo?" },
+          { emoji: "📢", name: "Geração de Demanda", desc: "Seu pipeline está cheio o suficiente para bater meta?" },
+          { emoji: "⚡", name: "Eficiência em Vendas", desc: "Seu time converte bem e no tempo certo?" },
+          { emoji: "🔄", name: "Expansão de Base", desc: "Você está extraindo o máximo dos clientes atuais?" },
+        ].map((lever) => (
+          <div
+            key={lever.name}
+            style={{
+              display: "flex",
+              alignItems: "flex-start",
+              gap: 12,
+              padding: "14px 16px",
+              background: "#fff",
+              borderRadius: 12,
+              boxShadow: "rgba(20, 28, 40, 0.04) 0px 4px 16px",
+            }}
+          >
+            <span style={{ fontSize: 28, lineHeight: 1, flexShrink: 0 }}>{lever.emoji}</span>
+            <div>
+              <p style={{ fontSize: 15, fontWeight: 600, color: "#0f172a", margin: "0 0 4px" }}>
+                {lever.name}
+              </p>
+              <p style={{ fontSize: 14, color: "#64748b", margin: 0, lineHeight: 1.4 }}>
+                {lever.desc}
+              </p>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <p
+        style={{
+          fontSize: 14,
+          color: "#64748b",
+          textAlign: "center",
+          marginTop: 20,
+          lineHeight: 1.5,
+        }}
+      >
+        Agora vamos avaliar cada uma delas na sua empresa!
+      </p>
+    </Content>
+  );
+}
+
+/* ============================================================
+   BSSP IPRT Transition 1 — Social Proof + 4 Dimensions
+   ============================================================ */
+function BSSPTransition1({ onContinue }: { onContinue: () => void }) {
+  return (
+    <Content onContinue={onContinue}>
+      <div style={{ textAlign: "center", marginBottom: 16 }}>
+        <span style={{ fontSize: 24, fontWeight: 700, color: "#031D31", fontFamily: "'Montserrat', system-ui, sans-serif" }}>
+          +10.000 alunos
+        </span>
+        <br />
+        <span style={{ fontSize: 16, fontWeight: 500, color: "#000" }}>
+          já passaram pela BSSP desde 2017
+        </span>
+      </div>
+
+      <div
+        style={{
+          display: "flex",
+          padding: "16px 16px 12px",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          gap: 6,
+          borderRadius: 12,
+          border: "2px solid #fff",
+          background: "#fff",
+          boxShadow: "rgba(56,70,174,0.05) 0px 4px 9px, rgba(56,70,174,0.04) 0px 16px 16px",
+        }}
+      >
+        <div
+          style={{
+            position: "relative",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            minHeight: 100,
+            padding: "18px 24px",
+            borderRadius: 8,
+            background: "#f3f6fc",
+          }}
+        >
+          <span style={{ position: "absolute", top: 8, left: 13.5 }}>
+            <QuoteSVG />
+          </span>
+          <span
+            style={{
+              fontSize: 17,
+              fontWeight: 400,
+              textAlign: "center",
+              color: "#161616",
+              lineHeight: 1.3,
+            }}
+          >
+            A BSSP transformou a forma como encaro minha carreira na área tributária. O conteúdo é prático e direto ao ponto.
+          </span>
+          <span
+            style={{
+              position: "absolute",
+              bottom: 8,
+              right: 13.5,
+              rotate: "180deg",
+            }}
+          >
+            <QuoteSVG />
+          </span>
+        </div>
+        <span style={{ fontSize: 16, fontWeight: 200, color: "#000" }}>
+          Cliente A — Empresa X
+        </span>
+        <StarsSVG />
+      </div>
+
+      <div style={{ textAlign: "center", marginTop: 24 }}>
+        <p style={{ fontSize: 15, fontWeight: 500, color: "#64748b", lineHeight: 1.5 }}>
+          Referência em educação tributária desde 2017, a BSSP já formou milhares de profissionais com cursos reconhecidos pelo mercado e nota NPS acima de 93.
+        </p>
+      </div>
+    </Content>
+  );
+}
+
+/* ============================================================
+   BSSP IPRT Transition 2 — Dimensions explanation
+   ============================================================ */
+function BSSPTransition2({ onContinue }: { onContinue: () => void }) {
+  return (
+    <Content onContinue={onContinue}>
+      <h2
+        style={{
+          fontSize: 22,
+          fontWeight: 700,
+          color: "#031D31",
+          textAlign: "center",
+          lineHeight: 1.3,
+          marginBottom: 24,
+          fontFamily: "'Montserrat', system-ui, sans-serif",
+        }}
+      >
+        As 4 dimensões que definem sua prontidão
+      </h2>
+
+      <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+        {[
+          { emoji: "📖", name: "Domínio Normativo", desc: "Você conhece as novas regras — IBS, CBS, Split Payment, Simples Nacional?" },
+          { emoji: "⚙️", name: "Aplicação Prática", desc: "Sabe traduzir as regras para a realidade dos clientes — contratos, preços, sistemas?" },
+          { emoji: "🔧", name: "Preparação Operacional", desc: "Já está agindo — sistemas, processos, equipe, contratos?" },
+          { emoji: "🔭", name: "Visão Estratégica", desc: "Enxerga as oportunidades de mercado que a Reforma cria, não só os riscos?" },
+        ].map((dim) => (
+          <div
+            key={dim.name}
+            style={{
+              display: "flex",
+              alignItems: "flex-start",
+              gap: 12,
+              padding: "14px 16px",
+              background: "#fff",
+              borderRadius: 15,
+              boxShadow: "rgba(20, 28, 40, 0.04) 0px 4px 16px",
+            }}
+          >
+            <span style={{ fontSize: 28, lineHeight: 1, flexShrink: 0 }}>{dim.emoji}</span>
+            <div>
+              <p style={{ fontSize: 15, fontWeight: 600, color: "#031D31", margin: "0 0 4px" }}>
+                {dim.name}
+              </p>
+              <p style={{ fontSize: 14, color: "#64748b", margin: 0, lineHeight: 1.4 }}>
+                {dim.desc}
+              </p>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <p
+        style={{
+          fontSize: 14,
+          color: "#64748b",
+          textAlign: "center",
+          marginTop: 20,
+          lineHeight: 1.5,
+        }}
+      >
+        Agora vamos avaliar cada uma delas!
+      </p>
+    </Content>
+  );
+}
+
+/* ============================================================
+   BSSP IPRT Transition 3 — Chart social proof before Aplicação Prática
+   ============================================================ */
+function BSSPTransition3({ onContinue }: { onContinue: () => void }) {
+  return (
+    <Content onContinue={onContinue}>
+      <h2
+        style={{
+          fontSize: 20,
+          fontWeight: 700,
+          color: "#031D31",
+          textAlign: "center",
+          lineHeight: 1.3,
+          marginBottom: 24,
+          fontFamily: "'Montserrat', system-ui, sans-serif",
+        }}
+      >
+        Profissionais que se prepararam cedo
+        capturam as melhores oportunidades
+      </h2>
+
+      {/* Chart */}
+      <div
+        style={{
+          background: "#fff",
+          borderRadius: 15,
+          padding: "16px 20px",
+          boxShadow: "rgba(20, 28, 40, 0.04) 0 8px 24px",
+          marginBottom: 24,
+        }}
+      >
+        <svg viewBox="0 0 400 200" style={{ width: "100%", height: "auto" }}>
+          {/* Grid */}
+          <line x1="50" y1="20" x2="50" y2="180" stroke="#e9e9ef" strokeWidth="1" />
+          <line x1="50" y1="180" x2="380" y2="180" stroke="#e9e9ef" strokeWidth="1" />
+          {[60, 100, 140].map((y) => (
+            <line key={y} x1="50" y1={y} x2="380" y2={y} stroke="#e9e9ef" strokeWidth="0.5" strokeDasharray="4" />
+          ))}
+
+          {/* Y-axis label */}
+          <text x="10" y="105" fontSize="9" fill="#6c7280" fontWeight="500" transform="rotate(-90, 18, 105)" textAnchor="middle">
+            Preparo
+          </text>
+
+          {/* "COM ESPECIALIZAÇÃO" label */}
+          <rect x="55" y="12" width="120" height="18" rx="4" fill="#031D31" />
+          <text x="115" y="25" fontSize="8" fill="#fff" fontWeight="600" textAnchor="middle">
+            COM ESPECIALIZAÇÃO
+          </text>
+
+          {/* Green line (with BSSP) */}
+          <polyline
+            points="60,155 120,140 180,115 240,80 300,45 360,25"
+            fill="none"
+            stroke="#1dbf73"
+            strokeWidth="3"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <polygon
+            points="60,155 120,140 180,115 240,80 300,45 360,25 360,180 60,180"
+            fill="#1dbf73"
+            opacity="0.12"
+          />
+
+          {/* "SEM ESPECIALIZAÇÃO" label */}
+          <rect x="55" y="128" width="120" height="18" rx="4" fill="#e84343" />
+          <text x="115" y="141" fontSize="8" fill="#fff" fontWeight="600" textAnchor="middle">
+            SEM ESPECIALIZAÇÃO
+          </text>
+
+          {/* Red line (without BSSP) */}
+          <polyline
+            points="60,160 120,158 180,155 240,150 300,148 360,145"
+            fill="none"
+            stroke="#e84343"
+            strokeWidth="3"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <polygon
+            points="60,160 120,158 180,155 240,150 300,148 360,145 360,180 60,180"
+            fill="#e84343"
+            opacity="0.12"
+          />
+
+          {/* Dots */}
+          <circle cx="240" cy="80" r="6" fill="#fff" stroke="#1dbf73" strokeWidth="2" />
+          <circle cx="300" cy="148" r="6" fill="#fff" stroke="#e84343" strokeWidth="2" />
+
+          {/* X-axis labels */}
+          {["2026", "2027", "2028", "2029", "2030", "2033"].map((m, i) => (
+            <text key={m} x={60 + i * 60} y="196" fontSize="10" fill="#5f687b" fontWeight="500" textAnchor="middle">
+              {m}
+            </text>
+          ))}
+        </svg>
+      </div>
+
+      {/* Testimonial */}
+      <div
+        style={{
+          position: "relative",
+          padding: "18px 24px",
+          borderRadius: 8,
+          background: "#f3f6fc",
+          marginBottom: 8,
+        }}
+      >
+        <span style={{ position: "absolute", top: 8, left: 13.5 }}>
+          <QuoteSVG />
+        </span>
+        <p
+          style={{
+            fontSize: 14,
+            fontWeight: 400,
+            textAlign: "center",
+            color: "#161616",
+            lineHeight: 1.4,
+            margin: 0,
+          }}
+        >
+          Quem dominar as novas regras primeiro vai liderar a próxima geração de consultoria tributária no Brasil. A janela de oportunidade é agora.
+        </p>
+        <span
+          style={{
+            position: "absolute",
+            bottom: 8,
+            right: 13.5,
+            rotate: "180deg",
+          }}
+        >
+          <QuoteSVG />
+        </span>
+      </div>
+      <p
+        style={{
+          fontSize: 13,
+          fontWeight: 400,
+          textAlign: "center",
+          color: "#000",
+        }}
+      >
+        Cliente A — Empresa X
+      </p>
+    </Content>
+  );
+}
+
+/* ============================================================
    Main export — picks the right transition by id
    ============================================================ */
 export default function TransitionScreen({
@@ -543,6 +1000,17 @@ export default function TransitionScreen({
       return <Transition2 onContinue={onContinue} />;
     case "after-desafios":
       return <Transition3 onContinue={onContinue} />;
+    case "revenue-social-proof-1":
+      return <RevenueSocialProof1 onContinue={onContinue} />;
+    case "revenue-social-proof-2":
+      return <RevenueSocialProof2 onContinue={onContinue} />;
+    // BSSP IPRT transitions
+    case "bssp-social-proof":
+      return <BSSPTransition1 onContinue={onContinue} />;
+    case "bssp-dimensions":
+      return <BSSPTransition2 onContinue={onContinue} />;
+    case "bssp-aplicacao-intro":
+      return <BSSPTransition3 onContinue={onContinue} />;
     default:
       return null;
   }

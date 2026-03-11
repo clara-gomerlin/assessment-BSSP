@@ -38,24 +38,45 @@ export default function Home() {
         >
           Assessments para profissionais de marketing e growth.
         </p>
-        <Link
-          href="/quiz/diagnostico-carreira"
-          style={{
-            display: "inline-block",
-            padding: "16px 32px",
-            background: "#0f172a",
-            color: "#ffffff",
-            borderRadius: 12,
-            fontSize: "1rem",
-            fontWeight: 600,
-            textDecoration: "none",
-            boxShadow: "0 4px 14px rgba(15, 23, 42, 0.25)",
-            letterSpacing: "0.02em",
-            textTransform: "uppercase",
-          }}
-        >
-          Fazer o Diagnóstico de Carreira
-        </Link>
+        <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+          <Link
+            href="/quiz/diagnostico-carreira"
+            style={{
+              display: "inline-block",
+              padding: "16px 32px",
+              background: "#0f172a",
+              color: "#ffffff",
+              borderRadius: 12,
+              fontSize: "1rem",
+              fontWeight: 600,
+              textDecoration: "none",
+              boxShadow: "0 4px 14px rgba(15, 23, 42, 0.25)",
+              letterSpacing: "0.02em",
+              textTransform: "uppercase",
+            }}
+          >
+            Fazer o Diagnóstico de Carreira
+          </Link>
+          <Link
+            href="/quiz/iprt-reforma-tributaria"
+            style={{
+              display: "inline-block",
+              padding: "16px 32px",
+              background: "#ffffff",
+              color: "#0f172a",
+              border: "1px solid rgba(15,23,42,0.15)",
+              borderRadius: 12,
+              fontSize: "1rem",
+              fontWeight: 600,
+              textDecoration: "none",
+              boxShadow: "0 4px 10px rgba(15,23,42,0.08)",
+              letterSpacing: "0.02em",
+              textTransform: "uppercase",
+            }}
+          >
+            IPRT — Reforma Tributária (BSSP)
+          </Link>
+        </div>
       </div>
     </div>
   );

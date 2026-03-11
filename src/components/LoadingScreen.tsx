@@ -3,9 +3,9 @@
 import { useState, useEffect } from "react";
 
 const PROGRESS_ITEMS = [
-  { label: "Analisando suas respostas", duration: 3000 },
-  { label: "Identificando seu arquétipo", duration: 4000 },
-  { label: "Gerando recomendações personalizadas", duration: 5000 },
+  { label: "Analisando suas respostas", duration: 4900 },
+  { label: "Identificando seu arquétipo", duration: 5300 },
+  { label: "Gerando recomendações personalizadas", duration: 5900 },
 ];
 
 const TESTIMONIALS = [
@@ -29,11 +29,34 @@ const TESTIMONIALS = [
   },
 ];
 
-const CAROUSEL_INTERVAL = 3500;
+const BSSP_TESTIMONIALS = [
+  {
+    quote:
+      "A especialização da BSSP mudou completamente a forma como oriento meus clientes sobre a Reforma Tributária. Saí com confiança para atuar na prática.",
+    author: "Cliente A",
+    role: "Empresa X",
+  },
+  {
+    quote:
+      "Antes eu acompanhava a Reforma por notícias. Depois da BSSP, entendi de verdade o impacto nos contratos e na operação dos meus clientes.",
+    author: "Cliente B",
+    role: "Empresa Y",
+  },
+  {
+    quote:
+      "O conteúdo é direto ao ponto e aplicável. Em poucas semanas já estava usando o que aprendi no dia a dia do escritório.",
+    author: "Cliente C",
+    role: "Empresa Z",
+  },
+];
+
+const CAROUSEL_INTERVAL = 5000;
 
 interface LoadingScreenProps {
   apiReady: boolean;
   onContinue: () => void;
+  labels?: string[];
+  quizType?: string;
 }
 
 function QuoteSVG() {
@@ -64,7 +87,12 @@ function StarsSVG() {
   );
 }
 
-export default function LoadingScreen({ apiReady, onContinue }: LoadingScreenProps) {
+export default function LoadingScreen({ apiReady, onContinue, labels, quizType }: LoadingScreenProps) {
+  // Override progress item labels if custom labels are provided
+  const progressItems = labels
+    ? PROGRESS_ITEMS.map((item, i) => ({ ...item, label: labels[i] || item.label }))
+    : PROGRESS_ITEMS;
+  const testimonials = quizType === "iprt" ? BSSP_TESTIMONIALS : TESTIMONIALS;
   const [progresses, setProgresses] = useState([0, 0, 0]);
   const [barsFinished, setBarsFinished] = useState(false);
   const [activeTestimonial, setActiveTestimonial] = useState(0);
@@ -75,10 +103,10 @@ export default function LoadingScreen({ apiReady, onContinue }: LoadingScreenPro
   // Progress bars
   useEffect(() => {
     const intervals: NodeJS.Timeout[] = [];
-    const startTimes = [0, 1500, 3500];
+    const startTimes = [0, 2500, 5500];
     let finishedCount = 0;
 
-    PROGRESS_ITEMS.forEach((item, index) => {
+    progressItems.forEach((item, index) => {
       const timeout = setTimeout(() => {
         const start = Date.now();
         const interval = setInterval(() => {
@@ -110,7 +138,7 @@ export default function LoadingScreen({ apiReady, onContinue }: LoadingScreenPro
     const interval = setInterval(() => {
       setTestimonialVisible(false);
       setTimeout(() => {
-        setActiveTestimonial((prev) => (prev + 1) % TESTIMONIALS.length);
+        setActiveTestimonial((prev) => (prev + 1) % testimonials.length);
         setTestimonialVisible(true);
       }, 400);
     }, CAROUSEL_INTERVAL);
@@ -118,7 +146,7 @@ export default function LoadingScreen({ apiReady, onContinue }: LoadingScreenPro
     return () => clearInterval(interval);
   }, []);
 
-  const testimonial = TESTIMONIALS[activeTestimonial];
+  const testimonial = testimonials[activeTestimonial];
 
   return (
     <div
@@ -161,7 +189,7 @@ export default function LoadingScreen({ apiReady, onContinue }: LoadingScreenPro
         </div>
 
         {/* Progress bars */}
-        {PROGRESS_ITEMS.map((item, index) => (
+        {progressItems.map((item, index) => (
           <div key={item.label} style={{ marginBottom: 8 }}>
             <div
               style={{
@@ -267,7 +295,7 @@ export default function LoadingScreen({ apiReady, onContinue }: LoadingScreenPro
               marginTop: 12,
             }}
           >
-            {TESTIMONIALS.map((_, i) => (
+            {testimonials.map((_, i) => (
               <span
                 key={i}
                 style={{

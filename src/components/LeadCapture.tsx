@@ -4,21 +4,23 @@ import { useState } from "react";
 
 interface LeadCaptureProps {
   onSubmit: (name: string, email: string, phone: string) => void;
+  quizType?: string;
 }
 
 function formatLocal(value: string): string {
   const d = value.replace(/\D/g, "").slice(0, 11);
   if (d.length === 0) return "";
   if (d.length <= 2) return `(${d}`;
-  if (d.length <= 7) return `(${d.slice(0, 2)})${d.slice(2)}`;
-  return `(${d.slice(0, 2)})${d.slice(2, 7)}-${d.slice(7)}`;
+  if (d.length <= 7) return `(${d.slice(0, 2)}) ${d.slice(2)}`;
+  return `(${d.slice(0, 2)}) ${d.slice(2, 7)}-${d.slice(7)}`;
 }
 
 function getDigits(value: string): string {
   return value.replace(/\D/g, "");
 }
 
-export default function LeadCapture({ onSubmit }: LeadCaptureProps) {
+export default function LeadCapture({ onSubmit, quizType }: LeadCaptureProps) {
+  const isIPRT = quizType === "iprt";
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -63,11 +65,21 @@ export default function LeadCapture({ onSubmit }: LeadCaptureProps) {
     >
       {/* Logo */}
       <div style={{ textAlign: "center", paddingTop: 24 }}>
-        <img
-          src="https://jiqahhuftixaxyebtpyr.supabase.co/storage/v1/object/sign/Tools/Quiz%20RiseGuide/Images/GROWTH%20LEADERS%20ACADEMY%20PRETO%20(PNG).png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV84OWE3YjUwMS0xZDc0LTQyMjctODE4Zi1jNmEzNWUzMGViODUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJUb29scy9RdWl6IFJpc2VHdWlkZS9JbWFnZXMvR1JPV1RIIExFQURFUlMgQUNBREVNWSBQUkVUTyAoUE5HKS5wbmciLCJpYXQiOjE3Njc5ODE0NDQsImV4cCI6MTc5OTUxNzQ0NH0.nJgiHiKpuwQrWTMoMAH3n7Osb0HvZVXzcFhJr7Je0Z8"
-          alt="Growth Leaders Academy"
-          style={{ display: "inline-block", width: 120 }}
-        />
+        {isIPRT ? (
+          <div style={{ background: "#031D31", borderRadius: 10, padding: "8px 20px", display: "inline-block" }}>
+            <img
+              src="/logos/bssp-white.png"
+              alt="BSSP Centro Educacional"
+              style={{ display: "block", height: 28 }}
+            />
+          </div>
+        ) : (
+          <img
+            src="https://jiqahhuftixaxyebtpyr.supabase.co/storage/v1/object/sign/Tools/Quiz%20RiseGuide/Images/GROWTH%20LEADERS%20ACADEMY%20PRETO%20(PNG).png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV84OWE3YjUwMS0xZDc0LTQyMjctODE4Zi1jNmEzNWUzMGViODUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJUb29scy9RdWl6IFJpc2VHdWlkZS9JbWFnZXMvR1JPV1RIIExFQURFUlMgQUNBREVNWSBQUkVUTyAoUE5HKS5wbmciLCJpYXQiOjE3Njc5ODE0NDQsImV4cCI6MTc5OTUxNzQ0NH0.nJgiHiKpuwQrWTMoMAH3n7Osb0HvZVXzcFhJr7Je0Z8"
+            alt="Growth Leaders Academy"
+            style={{ display: "inline-block", width: 120 }}
+          />
+        )}
       </div>
 
       {/* Headline */}
@@ -76,12 +88,18 @@ export default function LeadCapture({ onSubmit }: LeadCaptureProps) {
           style={{
             fontSize: 22,
             fontWeight: 700,
-            color: "#000",
+            color: isIPRT ? "#031D31" : "#000",
             lineHeight: 1.3,
+            fontFamily: isIPRT ? "'Montserrat', system-ui, sans-serif" : undefined,
           }}
         >
-          Descubra seu arquétipo e receba um guia para{" "}
-          <span style={{ color: "#64748b" }}>acelerar a carreira</span>
+          {isIPRT ? (
+            <>Descubra seu Índice de Prontidão e receba{" "}
+            <span style={{ color: "#64748b" }}>insights personalizados</span></>
+          ) : (
+            <>Descubra seu arquétipo e receba um guia para{" "}
+            <span style={{ color: "#64748b" }}>acelerar a carreira</span></>
+          )}
         </h2>
       </div>
 
@@ -142,6 +160,7 @@ export default function LeadCapture({ onSubmit }: LeadCaptureProps) {
                 whiteSpace: "nowrap",
                 pointerEvents: "none",
                 lineHeight: "52px",
+                fontFamily: "var(--font-body)",
               }}
             >
               +55
@@ -149,7 +168,7 @@ export default function LeadCapture({ onSubmit }: LeadCaptureProps) {
             <input
               type="tel"
               inputMode="numeric"
-              placeholder="(XX)XXXXX-XXXX"
+              placeholder="(99) 99999-9999"
               value={phone}
               onChange={handlePhoneChange}
               style={{
@@ -194,8 +213,13 @@ export default function LeadCapture({ onSubmit }: LeadCaptureProps) {
         >
           <span style={{ fontSize: 36, lineHeight: 1, flexShrink: 0 }}>🎁</span>
           <p style={{ fontSize: 14, fontWeight: 500, color: "#000", lineHeight: 1.4, margin: 0 }}>
-            Garanta que seu email é válido! Vamos mandar seu{" "}
-            <strong>Guia de Arquétipos de Carreira</strong> para lá.
+            {isIPRT ? (
+              <>Garanta que seu email é válido! Vamos enviar seu{" "}
+              <strong>relatório completo de prontidão</strong> para lá.</>
+            ) : (
+              <>Garanta que seu email é válido! Vamos mandar seu{" "}
+              <strong>Guia de Arquétipos de Carreira</strong> para lá.</>
+            )}
           </p>
         </div>
 
