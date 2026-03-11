@@ -503,81 +503,65 @@ export default function QuizPlayer({ quiz, questions }: QuizPlayerProps) {
       >
         {isDiagnostic && diagnosticProgress ? (
           <>
-            {/* Diagnostic header: back + counter + single bar + section pill */}
+            {/* Diagnostic header: back + centered section label */}
             <div
               style={{
                 display: "flex",
                 justifyContent: "space-between",
                 alignItems: "center",
-                marginBottom: 10,
+                marginBottom: 12,
                 height: 32,
               }}
             >
               <button
                 onClick={handleBack}
                 style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 4,
+                  width: 32,
+                  height: 32,
                   padding: 4,
                   borderRadius: 8,
                   backgroundColor: "rgb(230, 232, 236)",
                   border: "none",
                   cursor: "pointer",
-                  fontSize: 14,
-                  color: "#64748b",
                 }}
               >
-                <svg width="18" height="18" fill="none" viewBox="0 0 24 24">
+                <svg width="24" height="24" fill="none" viewBox="0 0 24 24">
                   <path
-                    fill="#64748b"
+                    fill="#222"
                     fillRule="evenodd"
                     d="M15.279 6.579a1 1 0 0 0 0-1.424l-.469-.462a1 1 0 0 0-1.404 0L6.72 11.288a1 1 0 0 0 0 1.424l6.685 6.595a1 1 0 0 0 1.404 0l.468-.462a1 1 0 0 0 0-1.423L9.785 12z"
                     clipRule="evenodd"
                   />
                 </svg>
-                Voltar
               </button>
-              <span style={{ fontSize: 15, fontWeight: 600, color: "#0f172a" }}>
-                {diagnosticProgress.globalCurrent}{" "}
-                <span style={{ fontWeight: 400, color: "#94a3b8" }}>
-                  / {diagnosticProgress.globalTotal}
-                </span>
+              <span style={{ fontSize: 16, fontWeight: 700, color: "#000", fontFamily: isIPRT ? "'Montserrat', system-ui, sans-serif" : "var(--font-quiz)" }}>
+                {currentSectionLabel}
               </span>
+              <div style={{ width: 32, visibility: "hidden" }} />
             </div>
 
-            {/* Progress bar */}
-            <div
-              style={{
-                height: 6,
-                borderRadius: 3,
-                background: "#e5e7eb",
-                overflow: "hidden",
-                marginBottom: phase === "questions" ? 10 : 0,
-              }}
-            >
-              <div
-                style={{
-                  height: "100%",
-                  borderRadius: 3,
-                  background: isIPRT ? "#031D31" : "linear-gradient(90deg, #6366f1, #8b5cf6)",
-                  width: `${(diagnosticProgress.globalCurrent / diagnosticProgress.globalTotal) * 100}%`,
-                  transition: "width 0.4s ease",
-                }}
-              />
+            {/* Dot progress bar */}
+            <div style={{ display: "flex", alignItems: "center" }}>
+              {sections.map((_section, si) => (
+                <div key={si} style={{ display: "contents" }}>
+                  <span
+                    className={`progress-dot ${
+                      si <= sectionIndex ? "active" : "pending"
+                    }`}
+                  />
+                  {si < sections.length - 1 && (
+                    <div className="progress-segment">
+                      <div
+                        className="progress-fill"
+                        style={{
+                          transform: `translateX(${-(1 - fills[si]) * 100}%)`,
+                        }}
+                      />
+                    </div>
+                  )}
+                </div>
+              ))}
             </div>
-
-            {/* Section name (left) + counter (right) */}
-            {phase === "questions" && (
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <span style={{ fontSize: 13, fontWeight: 600, color: isIPRT ? "#031D31" : "#6366f1" }}>
-                  {currentSectionLabel}
-                </span>
-                <span style={{ fontSize: 13, color: "#94a3b8" }}>
-                  {diagnosticProgress.current} de {diagnosticProgress.totalInSection}
-                </span>
-              </div>
-            )}
           </>
         ) : (
           <>
