@@ -218,14 +218,21 @@ function useBragTag() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const generate = useCallback(
-    async (name: string, score: number, stage: string, stageColor: string) => {
+    async (
+      name: string,
+      score: number,
+      stage: string,
+      stageColor: string,
+      strongest: IPRTDimensionResult,
+      weakest: IPRTDimensionResult,
+    ) => {
       const canvas = canvasRef.current;
       if (!canvas) return;
       const ctx = canvas.getContext("2d");
       if (!ctx) return;
 
-      const W = 1200;
-      const H = 627;
+      const W = 1080;
+      const H = 1080;
       canvas.width = W;
       canvas.height = H;
 
@@ -233,32 +240,32 @@ function useBragTag() {
       ctx.fillStyle = "#031D31";
       ctx.fillRect(0, 0, W, H);
 
-      // Accent gradient bar at top
+      // Accent bar at top
       const grad = ctx.createLinearGradient(0, 0, W, 0);
-      grad.addColorStop(0, "#052a42");
+      grad.addColorStop(0, "#1a7ec2");
       grad.addColorStop(1, "#0ea5e9");
       ctx.fillStyle = grad;
       ctx.fillRect(0, 0, W, 6);
 
       // Title
       ctx.fillStyle = "#94a3b8";
-      ctx.font = "500 24px sans-serif";
+      ctx.font = "600 26px sans-serif";
       ctx.textAlign = "center";
-      ctx.fillText("ÍNDICE DE PRONTIDÃO PARA A REFORMA TRIBUTÁRIA", W / 2, 60);
+      ctx.fillText("ÍNDICE DE PRONTIDÃO PARA A REFORMA TRIBUTÁRIA", W / 2, 80);
 
       // Name
       ctx.fillStyle = "#ffffff";
-      ctx.font = "700 36px sans-serif";
-      ctx.fillText(name, W / 2, 110);
+      ctx.font = "700 42px sans-serif";
+      ctx.fillText(name, W / 2, 140);
 
       // Score circle
       const cx = W / 2;
-      const cy = 300;
-      const r = 100;
+      const cy = 360;
+      const r = 130;
       ctx.beginPath();
       ctx.arc(cx, cy, r, 0, Math.PI * 2);
-      ctx.strokeStyle = "#334155";
-      ctx.lineWidth = 14;
+      ctx.strokeStyle = "#1e3a50";
+      ctx.lineWidth = 16;
       ctx.stroke();
 
       const startAngle = -Math.PI / 2;
@@ -266,32 +273,56 @@ function useBragTag() {
       ctx.beginPath();
       ctx.arc(cx, cy, r, startAngle, endAngle);
       ctx.strokeStyle = stageColor;
-      ctx.lineWidth = 14;
+      ctx.lineWidth = 16;
       ctx.lineCap = "round";
       ctx.stroke();
 
+      // Score text
       ctx.fillStyle = "#ffffff";
-      ctx.font = "700 60px sans-serif";
+      ctx.font = "700 72px sans-serif";
       ctx.textAlign = "center";
-      ctx.fillText(`${score}%`, cx, cy + 18);
-      ctx.font = "400 18px sans-serif";
+      ctx.fillText(`${score}`, cx, cy + 16);
+      ctx.font = "400 24px sans-serif";
       ctx.fillStyle = "#94a3b8";
-      ctx.fillText("IPRT", cx, cy + 44);
+      ctx.fillText("de 100", cx, cy + 50);
 
+      // Stage label
       ctx.fillStyle = stageColor;
-      ctx.font = "600 24px sans-serif";
-      ctx.fillText(stage, cx, cy + r + 50);
+      ctx.font = "700 28px sans-serif";
+      ctx.fillText(stage, cx, cy + r + 60);
 
-      // CTA
-      ctx.fillStyle = "#475569";
+      // Strongest dimension
+      const dimY = 610;
+      ctx.textAlign = "left";
+      const leftX = 100;
+
+      ctx.fillStyle = "#1dbf73";
+      ctx.font = "700 18px sans-serif";
+      ctx.fillText("DIMENSÃO MAIS FORTE", leftX, dimY);
+      ctx.fillStyle = "#ffffff";
+      ctx.font = "500 26px sans-serif";
+      ctx.fillText(`${strongest.emoji} ${strongest.name}`, leftX, dimY + 38);
+      ctx.fillStyle = "#94a3b8";
       ctx.font = "400 20px sans-serif";
-      ctx.textAlign = "center";
-      ctx.fillText("Descubra o seu em bsspce.com.br", cx, H - 40);
+      ctx.fillText(`Score: ${strongest.percentage}/100`, leftX, dimY + 70);
 
-      // BSSP branding
+      // Weakest dimension
+      const dimY2 = dimY + 120;
+      ctx.fillStyle = "#e84343";
+      ctx.font = "700 18px sans-serif";
+      ctx.fillText("DIMENSÃO MAIS FRACA", leftX, dimY2);
+      ctx.fillStyle = "#ffffff";
+      ctx.font = "500 26px sans-serif";
+      ctx.fillText(`${weakest.emoji} ${weakest.name}`, leftX, dimY2 + 38);
+      ctx.fillStyle = "#94a3b8";
+      ctx.font = "400 20px sans-serif";
+      ctx.fillText(`Score: ${weakest.percentage}/100`, leftX, dimY2 + 70);
+
+      // Footer
+      ctx.textAlign = "center";
       ctx.fillStyle = "#64748b";
-      ctx.font = "500 18px sans-serif";
-      ctx.fillText("BSSP Centro Educacional", cx, H - 70);
+      ctx.font = "500 20px sans-serif";
+      ctx.fillText("BSSP Pós-Graduação", cx, H - 40);
 
       const link = document.createElement("a");
       link.download = `iprt-${name.split(" ")[0].toLowerCase()}.png`;
@@ -605,9 +636,17 @@ export default function IPRTResultView({
       {/* Shareable Card Download */}
       <div style={{ marginTop: 32, textAlign: "center" }}>
         <button
-          onClick={() =>
-            generate(respondentName, result.iprtScore, result.stage, result.stageColor)
-          }
+          onClick={() => {
+            const sorted = [...result.dimensions].sort((a, b) => b.percentage - a.percentage);
+            generate(
+              respondentName,
+              result.iprtScore,
+              result.stage,
+              result.stageColor,
+              sorted[0],
+              sorted[sorted.length - 1],
+            );
+          }}
           className="diagnostic-brag-btn"
         >
           📥 Baixar meu resultado (imagem)
