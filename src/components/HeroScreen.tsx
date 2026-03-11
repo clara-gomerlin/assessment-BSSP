@@ -77,7 +77,8 @@ export default function HeroScreen({ quiz, onStart }: HeroScreenProps) {
             flex: 1,
             display: "flex",
             flexDirection: "column",
-            justifyContent: "center",
+            justifyContent: isIPRT ? "flex-start" : "center",
+            paddingTop: isIPRT ? 16 : 0,
             gap: 32,
           }}
         >

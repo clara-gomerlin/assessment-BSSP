@@ -482,6 +482,7 @@ export default function QuizPlayer({ quiz, questions }: QuizPlayerProps) {
             padding: "10px 20px",
             display: "flex",
             justifyContent: "center",
+            borderBottom: "1px solid rgb(227, 228, 230)",
           }}
         >
           <img
