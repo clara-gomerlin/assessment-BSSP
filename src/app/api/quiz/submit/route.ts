@@ -335,8 +335,7 @@ Foque a análise na alavanca mais fraca (${diagResult.weakest.name}). Responda A
       });
 
     if (saveError) {
-      console.error("Save error full:", Object.getOwnPropertyNames(saveError).reduce((acc: Record<string, unknown>, k) => { acc[k] = (saveError as Record<string, unknown>)[k]; return acc; }, {}));
-      console.error("Save error keys:", Object.keys(saveError), "type:", typeof saveError, "string:", String(saveError));
+      console.error("Save error:", saveError.message, saveError.code);
       return Response.json({ error: "Erro ao salvar respostas" }, { status: 500 });
     }
 
