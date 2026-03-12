@@ -189,9 +189,11 @@ export default function QuizPlayer({ quiz, questions }: QuizPlayerProps) {
     const nextSec = getSectionIdx(questions[nextIndex].category);
 
     if (currentSec !== nextSec) {
-      const transitions = transitionsAfter[currentSec];
-      if (transitions?.length) {
-        setTransitionQueue([...transitions]);
+      const afterTransitions = transitionsAfter[currentSec] || [];
+      const beforeTransitions = transitionsBefore[nextSec] || [];
+      const allTransitions = [...afterTransitions, ...beforeTransitions];
+      if (allTransitions.length) {
+        setTransitionQueue([...allTransitions]);
         setPendingNextIndex(nextIndex);
         setPhase("transition");
         return;
