@@ -560,7 +560,7 @@ export default function QuizPlayer({ quiz, questions }: QuizPlayerProps) {
                 </svg>
               </button>
               <span style={{ fontSize: 16, fontWeight: 700, color: "#000", fontFamily: isIPRT ? "'Montserrat', system-ui, sans-serif" : "var(--font-quiz)" }}>
-                {diagnosticProgress ? `${diagnosticProgress.globalCurrent}/${diagnosticProgress.globalTotal} - ` : ""}{currentSectionLabel}
+                {diagnosticProgress && phase !== "transition" ? `${diagnosticProgress.globalCurrent}/${diagnosticProgress.globalTotal} - ` : ""}{currentSectionLabel}
               </span>
               <div style={{ width: 32, visibility: "hidden" }} />
             </div>

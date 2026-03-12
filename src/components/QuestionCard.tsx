@@ -79,7 +79,7 @@ export default function QuestionCard({
               fontFamily: "var(--font-quiz)",
               fontSize: 14,
               fontWeight: 400,
-              color: "#e84343",
+              color: "#5F687B",
               marginTop: 6,
               textAlign: "center",
             }}

@@ -865,15 +865,6 @@ export default function DiagnosticResultView({
           <ConsultancyPitch ctaUrl={ctaWhatsappUrl || DEFAULT_WHATSAPP_URL} onCtaClick={handleCtaClick} />
 
           <div style={{ marginTop: 32, display: "flex", flexDirection: "column", gap: 12 }}>
-            <a
-              href={ctaWhatsappUrl || DEFAULT_WHATSAPP_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="result-primary-cta"
-              onClick={handleCtaClick}
-            >
-              Falar com um consultor no WhatsApp
-            </a>
             <button onClick={() => window.location.reload()} className="result-secondary-cta">
               Refazer diagnóstico
             </button>
@@ -929,15 +920,6 @@ export default function DiagnosticResultView({
 
           {/* CTAs */}
           <div style={{ marginTop: 32, display: "flex", flexDirection: "column", gap: 12 }}>
-            <a
-              href={ctaWhatsappUrl || DEFAULT_WHATSAPP_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="result-primary-cta"
-              onClick={handleCtaClick}
-            >
-              Falar com um consultor no WhatsApp
-            </a>
             <button onClick={() => window.location.reload()} className="result-secondary-cta">
               Refazer diagnóstico
             </button>
