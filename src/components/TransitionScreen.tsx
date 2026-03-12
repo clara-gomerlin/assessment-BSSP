@@ -558,12 +558,12 @@ function RevenueConfiancaIntro({ onContinue }: { onContinue: () => void }) {
             marginBottom: 24,
           }}
         >
-          <strong>Apenas 5.</strong> Maaaas...{"\n"}Com velocidade e confiança.
+          Apenas 5. Maaaas...{"\n"}Com velocidade e confiança.
         </h2>
         <p
           style={{
             fontSize: 15,
-            fontWeight: 400,
+            fontWeight: 700,
             color: "#64748b",
             lineHeight: 1.5,
             maxWidth: 380,
