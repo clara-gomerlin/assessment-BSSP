@@ -207,7 +207,7 @@ export default function HeroScreen({ quiz, onStart }: HeroScreenProps) {
               {isIPRT
                 ? "Ao final do diagnóstico, você vai ter:"
                 : isDiagnostic
-                ? <><strong style={{ fontWeight: 700, color: "#0f172a" }}>15 minutos, 25 perguntas e um mapa claro de onde agir.</strong></>
+                ? <><strong style={{ fontWeight: 700, color: "#0f172a" }}>10 minutos, 27 perguntas e um mapa claro de onde agir.</strong></>
                 : "Ao final do diagnóstico, você vai ter:"}
             </p>
             <ul

@@ -563,10 +563,10 @@ function RevenueConfiancaIntro({ onContinue }: { onContinue: () => void }) {
         <p
           style={{
             fontSize: 15,
-            fontWeight: 700,
+            fontWeight: 400,
             color: "#64748b",
             lineHeight: 1.5,
-            maxWidth: 460,
+            maxWidth: 520,
             margin: "0 auto",
           }}
         >
@@ -690,8 +690,8 @@ function RevenueSocialProof1({ onContinue }: { onContinue: () => void }) {
       onContinue={onContinue}
       title1="+200 empresas"
       title2="já usaram esse framework para destravar receita"
-      quote="Com o apoio estratégico do GLA, elevamos o nível do nosso time de Growth na Globo. A principal mudança foi a adoção de uma mentalidade real de experimentação. Conseguimos implementar frameworks próprios de testes e fortalecer nossa cultura de experimentos."
-      author="Marcos Caringi — Dir. de Marketing & Growth @ Manual | Ex-Head of Growth @ Globo"
+      quote="Com o apoio estratégico do GLA adotamos uma mentalidade de growth, implementamos frameworks de testes e imprimimos ritmo na cultura de experimentação."
+      author="Marcos Caringi — Dir. Marketing @ Manual | ex-Head of Growth @ Globo"
       footer="Baseado nas 4 alavancas de receita: Posicionamento & Preço, Geração de Demanda, Eficiência em Vendas e Expansão de Base."
     />
   );
@@ -706,7 +706,7 @@ function RevenueSocialProof3({ onContinue }: { onContinue: () => void }) {
       onContinue={onContinue}
       title1="Antes de investir mais em aquisição"
       title2="encontre sua receita escondida"
-      quote="Com o apoio do GLA, eu e a equipe da Caffeine Army aumentamos a retenção de clientes em 33% e reduzimos o CAC de Facebook em 50%. Mais do que números, ganhamos clareza sobre dados, experimentação e um novo ritmo de crescimento."
+      quote="Com ajuda do GLA, eu e a equipe da Caffeine Army aumentamos a retenção de clientes em 33% e reduzimos o CAC de facebook em 50%."
       author="Josean Neto — Líder de Growth @ Caffeine Army"
       footer="O diagnóstico identifica sua melhor alavanca de receita sem investir mais em ADS."
     />
@@ -722,7 +722,7 @@ function RevenueSocialProof4({ onContinue }: { onContinue: () => void }) {
       onContinue={onContinue}
       title1="Toda empresa B2B que cresce rápido"
       title2="tem receita escondida na operação"
-      quote="Quando os desafios de Growth começaram a escalar, decidi procurar a consultoria do GLA. A profundidade técnica, a expertise e a qualidade das discussões trouxeram clareza sobre os gargalos e oportunidades na nossa operação de receita."
+      quote="Quando os desafios de Growth começaram a escalar a consultoria do GLA trouxe expertise técnica, e qualidade nas discussões sobre as alavancas."
       author="Marco Piacentini — Head of Growth @ Quero Educação"
       footer="Consultoria que entrega método, diagnóstico com dados, plano de ação e ritmo de execução."
     />

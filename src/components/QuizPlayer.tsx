@@ -121,6 +121,9 @@ export default function QuizPlayer({ quiz, questions }: QuizPlayerProps) {
   const [transitionQueue, setTransitionQueue] = useState<string[]>([]);
   const [pendingNextIndex, setPendingNextIndex] = useState<number | null>(null);
 
+  // "Outro" free-text answers
+  const [otherTexts, setOtherTexts] = useState<Record<string, string>>({});
+
   const [apiReady, setApiReady] = useState(false);
   const [responseId, setResponseId] = useState<string | null>(null);
   const generationStarted = useRef(false);
@@ -216,6 +219,25 @@ export default function QuizPlayer({ quiz, questions }: QuizPlayerProps) {
       return; // Don't auto-advance for multi-select
     }
 
+    // Check if this is an "Outro" option — don't auto-advance first time (wait for text)
+    const isOtherOption = question.options.find(
+      (o) => o.id === optionId && o.label.toLowerCase().startsWith("outro")
+    );
+    if (isOtherOption && !answers[questionId]) {
+      // First click on "Outro" — just select, don't advance
+      setAnswers({ ...answers, [questionId]: optionId });
+      return;
+    }
+    if (isOtherOption && answers[questionId] === optionId) {
+      // Already selected "Outro" and clicking confirm — advance
+      const newAnswers = { ...answers, [questionId]: optionId };
+      setAnswers(newAnswers);
+      setTimeout(() => {
+        advanceToNext(currentIndex + 1);
+      }, 400);
+      return;
+    }
+
     // Single choice — save and advance
     const newAnswers = { ...answers, [questionId]: optionId };
     setAnswers(newAnswers);
@@ -277,6 +299,7 @@ export default function QuizPlayer({ quiz, questions }: QuizPlayerProps) {
           body: JSON.stringify({
             quiz_id: quiz.id,
             answers,
+            other_texts: Object.keys(otherTexts).length > 0 ? otherTexts : undefined,
           }),
         });
 
@@ -322,7 +345,7 @@ export default function QuizPlayer({ quiz, questions }: QuizPlayerProps) {
         console.error(error);
       }
     },
-    [quiz.id, answers]
+    [quiz.id, answers, otherTexts]
   );
 
   // Handle lead capture submission (update lead data + show result)
@@ -694,9 +717,12 @@ export default function QuizPlayer({ quiz, questions }: QuizPlayerProps) {
               }
               onMultiConfirm={handleMultiConfirm}
               subtitle={
-                isDiagnostic && currentSectionLabel.toLowerCase().includes("confian")
+                isDiagnostic && (currentSectionLabel.toLowerCase().includes("5 pergunta") || currentSectionLabel.toLowerCase().includes("confian"))
                   ? "Selecione a resposta mais adequada a sua realidade"
                   : undefined
+              }
+              onOtherText={(qId, text) =>
+                setOtherTexts((prev) => ({ ...prev, [qId]: text }))
               }
             />
           </div>

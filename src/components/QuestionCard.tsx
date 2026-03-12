@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { Question } from "@/lib/types";
 
 interface QuestionCardProps {
@@ -8,6 +9,7 @@ interface QuestionCardProps {
   onSelect: (optionId: string) => void;
   onMultiConfirm?: (optionIds: string[]) => void;
   subtitle?: string;
+  onOtherText?: (questionId: string, text: string) => void;
 }
 
 export default function QuestionCard({
@@ -16,6 +18,7 @@ export default function QuestionCard({
   onSelect,
   onMultiConfirm,
   subtitle,
+  onOtherText,
 }: QuestionCardProps) {
   const isMulti = question.type === "multiple_choice";
   const selectedArray = Array.isArray(selectedOption)
@@ -24,11 +27,24 @@ export default function QuestionCard({
     ? [selectedOption]
     : [];
 
+  // "Outro (qual)" free text support
+  const [otherText, setOtherText] = useState("");
+  const otherOption = question.options.find((o) =>
+    o.label.toLowerCase().startsWith("outro")
+  );
+  const isOtherSelected = otherOption
+    ? selectedArray.includes(otherOption.id)
+    : false;
+
   function handleClick(optionId: string) {
     if (isMulti) {
-      // Toggle in multi-select mode — parent manages state via onSelect
       onSelect(optionId);
     } else {
+      // If clicking "Outro" option, don't auto-advance — wait for text input
+      if (otherOption && optionId === otherOption.id) {
+        onSelect(optionId);
+        return;
+      }
       onSelect(optionId);
     }
   }
@@ -203,6 +219,60 @@ export default function QuestionCard({
           );
         })}
       </div>
+
+      {/* "Outro (qual)" text input */}
+      {isOtherSelected && !isMulti && (
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 12,
+            marginTop: 16,
+            width: "100%",
+            maxWidth: 480,
+          }}
+        >
+          <input
+            type="text"
+            value={otherText}
+            onChange={(e) => {
+              setOtherText(e.target.value);
+              onOtherText?.(question.id, e.target.value);
+            }}
+            placeholder="Digite sua resposta..."
+            autoFocus
+            style={{
+              width: "100%",
+              padding: "14px 16px",
+              borderRadius: 12,
+              border: "1.5px solid #c4c7cc",
+              fontSize: 16,
+              fontFamily: "var(--font-quiz)",
+              color: "#000",
+              outline: "none",
+              background: "#fff",
+            }}
+            onFocus={(e) => (e.target.style.borderColor = "#2D3246")}
+            onBlur={(e) => (e.target.style.borderColor = "#c4c7cc")}
+          />
+          <button
+            onClick={() => {
+              if (otherText.trim()) {
+                onOtherText?.(question.id, otherText.trim());
+                onSelect(otherOption!.id);
+              }
+            }}
+            className="continue-button"
+            style={{
+              maxWidth: 480,
+              opacity: otherText.trim() ? 1 : 0.4,
+              pointerEvents: otherText.trim() ? "auto" : "none",
+            }}
+          >
+            Continuar
+          </button>
+        </div>
+      )}
 
       {/* Confirm button for multi-select */}
       {isMulti && (
