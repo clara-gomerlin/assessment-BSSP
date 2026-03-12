@@ -2,6 +2,7 @@ import { NextRequest } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { getTableNames } from "@/lib/supabase";
 import { QuizSettings } from "@/lib/types";
+import { upsertContact } from "@/lib/hubspot";
 
 function getSupabase() {
   return createClient(
@@ -58,10 +59,10 @@ export async function POST(request: NextRequest) {
 
     const supabase = getSupabase();
 
-    // Resolve table name from quiz settings
+    // Resolve table name and quiz title from quiz settings
     const { data: quiz } = await supabase
       .from("assessment_quizzes")
-      .select("settings")
+      .select("title, settings")
       .eq("id", quiz_id)
       .single();
 
@@ -97,7 +98,26 @@ export async function POST(request: NextRequest) {
       return Response.json({ error: "Erro ao atualizar dados" }, { status: 500 });
     }
 
-    return Response.json({ success: true });
+    // Sync to HubSpot (fire and forget — don't block response)
+    const nameParts = respondent_name.trim().split(" ");
+    const firstName = nameParts[0];
+    const lastName = nameParts.slice(1).join(" ") || "";
+    const quizTitle = quiz?.title || "Quiz";
+
+    let hubspotContactId: string | null = null;
+    try {
+      hubspotContactId = await upsertContact({
+        email: respondent_email.trim().toLowerCase(),
+        firstName,
+        lastName,
+        phone: respondent_phone?.trim(),
+        quizName: quizTitle,
+      });
+    } catch (hsErr) {
+      console.error("HubSpot contact sync error:", hsErr);
+    }
+
+    return Response.json({ success: true, hubspot_contact_id: hubspotContactId });
   } catch (error) {
     console.error("Update lead error:", error);
     return Response.json({ error: "Erro interno" }, { status: 500 });

@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useCallback } from "react";
+import { useRef, useCallback, useState } from "react";
 import { IPRTDimensionResult } from "@/lib/types";
 
 interface IPRTAnalysis {
@@ -38,6 +38,8 @@ interface IPRTResultViewProps {
   respondentName: string;
   quizSlug: string;
   ctaWhatsappUrl?: string;
+  hubspotContactId?: string | null;
+  quizTitle?: string;
 }
 
 // --- Stage copy ---
@@ -342,9 +344,26 @@ export default function IPRTResultView({
   markdown,
   respondentName,
   ctaWhatsappUrl,
+  hubspotContactId,
+  quizTitle,
 }: IPRTResultViewProps) {
   const firstName = respondentName.split(" ")[0] || "Profissional";
   const { canvasRef, generate } = useBragTag();
+  const [dealCreated, setDealCreated] = useState(false);
+
+  const handleCtaClick = useCallback(() => {
+    if (dealCreated || !hubspotContactId) return;
+    setDealCreated(true);
+    fetch("/api/quiz/create-deal", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        hubspot_contact_id: hubspotContactId,
+        contact_name: respondentName,
+        quiz_title: quizTitle || "Quiz",
+      }),
+    }).catch((err) => console.error("Deal creation error:", err));
+  }, [hubspotContactId, respondentName, quizTitle, dealCreated]);
 
   const stageCopy = STAGE_COPY[result.stage] || "";
   const weakestCode = result.weakestDimension.code;
@@ -683,6 +702,7 @@ export default function IPRTResultView({
           target="_blank"
           rel="noopener noreferrer"
           className="result-primary-cta"
+          onClick={handleCtaClick}
         >
           Falar com um especialista BSSP
         </a>

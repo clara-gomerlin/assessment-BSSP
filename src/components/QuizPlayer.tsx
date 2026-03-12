@@ -128,6 +128,7 @@ export default function QuizPlayer({ quiz, questions }: QuizPlayerProps) {
   const [resultData, setResultData] = useState<any>(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [analysisData, setAnalysisData] = useState<any>(null);
+  const [hubspotContactId, setHubspotContactId] = useState<string | null>(null);
 
   const currentQuestion = questions[currentIndex];
 
@@ -326,10 +327,10 @@ export default function QuizPlayer({ quiz, questions }: QuizPlayerProps) {
     async (name: string, email: string, phone: string) => {
       setRespondentName(name);
 
-      // Update lead data in the existing response record
+      // Update lead data in the existing response record + sync to HubSpot
       if (responseId) {
         try {
-          await fetch("/api/quiz/update-lead", {
+          const res = await fetch("/api/quiz/update-lead", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -340,6 +341,10 @@ export default function QuizPlayer({ quiz, questions }: QuizPlayerProps) {
               respondent_phone: phone,
             }),
           });
+          const data = await res.json();
+          if (data.hubspot_contact_id) {
+            setHubspotContactId(data.hubspot_contact_id);
+          }
         } catch (error) {
           console.error("Failed to update lead data:", error);
         }
@@ -435,6 +440,8 @@ export default function QuizPlayer({ quiz, questions }: QuizPlayerProps) {
             respondentName={respondentName}
             quizSlug={quiz.slug}
             ctaWhatsappUrl={quiz.settings.cta_whatsapp_url}
+            hubspotContactId={hubspotContactId}
+            quizTitle={quiz.title}
           />
         </div>
       );
@@ -448,6 +455,8 @@ export default function QuizPlayer({ quiz, questions }: QuizPlayerProps) {
           respondentName={respondentName}
           quizSlug={quiz.slug}
           ctaWhatsappUrl={quiz.settings.cta_whatsapp_url}
+          hubspotContactId={hubspotContactId}
+          quizTitle={quiz.title}
         />
       );
     }
@@ -460,6 +469,8 @@ export default function QuizPlayer({ quiz, questions }: QuizPlayerProps) {
         markdown={resultMarkdown}
         respondentName={respondentName}
         ctaWhatsappUrl={quiz.settings.cta_whatsapp_url}
+        hubspotContactId={hubspotContactId}
+        quizTitle={quiz.title}
       />
     );
   }

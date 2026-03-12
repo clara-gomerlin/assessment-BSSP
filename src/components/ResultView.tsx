@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useCallback } from "react";
 import DOMPurify from "dompurify";
 import { Dimension } from "@/lib/types";
 
@@ -11,6 +12,8 @@ interface ResultViewProps {
   markdown: string;
   respondentName: string;
   ctaWhatsappUrl?: string;
+  hubspotContactId?: string | null;
+  quizTitle?: string;
 }
 
 export default function ResultView({
@@ -21,6 +24,8 @@ export default function ResultView({
   markdown,
   respondentName,
   ctaWhatsappUrl,
+  hubspotContactId,
+  quizTitle,
 }: ResultViewProps) {
   const maxScore = Math.max(...Object.values(scores), 1);
   const potentialPct = Math.min(
@@ -29,6 +34,21 @@ export default function ResultView({
   );
 
   const firstName = respondentName.split(" ")[0] || "Profissional";
+  const [dealCreated, setDealCreated] = useState(false);
+
+  const handleCtaClick = useCallback(() => {
+    if (dealCreated || !hubspotContactId) return;
+    setDealCreated(true);
+    fetch("/api/quiz/create-deal", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        hubspot_contact_id: hubspotContactId,
+        contact_name: respondentName,
+        quiz_title: quizTitle || "Quiz",
+      }),
+    }).catch((err) => console.error("Deal creation error:", err));
+  }, [hubspotContactId, respondentName, quizTitle, dealCreated]);
 
   return (
     <div
@@ -246,6 +266,7 @@ export default function ResultView({
           target="_blank"
           rel="noopener noreferrer"
           className="result-primary-cta"
+          onClick={handleCtaClick}
         >
           Falar com um consultor no WhatsApp
         </a>

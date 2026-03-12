@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useCallback } from "react";
+import { useRef, useCallback, useState } from "react";
 import { DimensionResult } from "@/lib/types";
 
 interface DiagnosticAnalysis {
@@ -35,6 +35,8 @@ interface DiagnosticResultViewProps {
   respondentName: string;
   quizSlug: string;
   ctaWhatsappUrl?: string;
+  hubspotContactId?: string | null;
+  quizTitle?: string;
 }
 
 const DEFAULT_WHATSAPP_URL = "#";
@@ -707,9 +709,26 @@ export default function DiagnosticResultView({
   respondentName,
   quizSlug,
   ctaWhatsappUrl,
+  hubspotContactId,
+  quizTitle,
 }: DiagnosticResultViewProps) {
   const firstName = respondentName.split(" ")[0] || "Empresa";
   const { canvasRef, generate } = useBragTag();
+  const [dealCreated, setDealCreated] = useState(false);
+
+  const handleCtaClick = useCallback(() => {
+    if (dealCreated || !hubspotContactId) return;
+    setDealCreated(true);
+    fetch("/api/quiz/create-deal", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        hubspot_contact_id: hubspotContactId,
+        contact_name: respondentName,
+        quiz_title: quizTitle || "Quiz",
+      }),
+    }).catch((err) => console.error("Deal creation error:", err));
+  }, [hubspotContactId, respondentName, quizTitle, dealCreated]);
 
   return (
     <div style={{ width: "100%", fontFamily: "var(--font-quiz)" }}>
@@ -762,6 +781,7 @@ export default function DiagnosticResultView({
               target="_blank"
               rel="noopener noreferrer"
               className="result-primary-cta"
+              onClick={handleCtaClick}
             >
               Falar com um consultor no WhatsApp
             </a>
@@ -825,6 +845,7 @@ export default function DiagnosticResultView({
               target="_blank"
               rel="noopener noreferrer"
               className="result-primary-cta"
+              onClick={handleCtaClick}
             >
               Falar com um consultor no WhatsApp
             </a>
