@@ -2,7 +2,7 @@ import { NextRequest } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { getTableNames } from "@/lib/supabase";
 import { QuizSettings } from "@/lib/types";
-import { upsertContact } from "@/lib/hubspot";
+import { upsertContact, QuizAnswer, QuestionInfo, ComputedScores } from "@/lib/hubspot";
 
 function getSupabase() {
   return createClient(
@@ -70,9 +70,10 @@ export async function POST(request: NextRequest) {
     const tables = getTableNames(quizSettings?.company_code);
 
     // Verify the response exists and has no lead data yet (prevents overwriting)
+    // Also fetch answers and computed_scores for HubSpot sync
     const { data: existing } = await supabase
       .from(tables.responses)
-      .select("respondent_email")
+      .select("respondent_email, answers, computed_scores")
       .eq("id", response_id)
       .single();
 
@@ -98,11 +99,26 @@ export async function POST(request: NextRequest) {
       return Response.json({ error: "Erro ao atualizar dados" }, { status: 500 });
     }
 
-    // Sync to HubSpot (fire and forget — don't block response)
+    // Fetch questions for answer label resolution
+    const { data: questions } = await supabase
+      .from(tables.questions)
+      .select("id, order_index, options")
+      .eq("quiz_id", quiz_id)
+      .order("order_index", { ascending: true });
+
+    // Prepare HubSpot data
     const nameParts = respondent_name.trim().split(" ");
     const firstName = nameParts[0];
     const lastName = nameParts.slice(1).join(" ") || "";
     const quizTitle = quiz?.title || "Quiz";
+
+    const answers = (existing.answers || []) as QuizAnswer[];
+    const scores = (existing.computed_scores || null) as ComputedScores | null;
+    const questionInfos: QuestionInfo[] = (questions || []).map((q: { id: string; order_index: number; options: { id: string; label: string }[] }) => ({
+      id: q.id,
+      order_index: q.order_index,
+      options: (q.options || []).map((o: { id: string; label: string }) => ({ id: o.id, label: o.label })),
+    }));
 
     let hubspotContactId: string | null = null;
     try {
@@ -112,6 +128,9 @@ export async function POST(request: NextRequest) {
         lastName,
         phone: respondent_phone?.trim(),
         quizName: quizTitle,
+        answers,
+        questions: questionInfos,
+        scores,
       });
     } catch (hsErr) {
       console.error("HubSpot contact sync error:", hsErr);
