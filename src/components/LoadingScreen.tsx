@@ -180,6 +180,7 @@ export default function LoadingScreen({ apiReady, onContinue, labels, quizType }
         margin: "0 auto",
         padding: "0 20px",
         paddingBottom: 100,
+        fontFamily: "var(--font-quiz)",
       }}
     >
       <div
@@ -221,7 +222,7 @@ export default function LoadingScreen({ apiReady, onContinue, labels, quizType }
               }}
             >
               <span
-                style={{ fontSize: 16, fontWeight: 600, color: "#000" }}
+                style={{ fontSize: 16, fontWeight: 500, color: "#000" }}
               >
                 {item.label}
               </span>
