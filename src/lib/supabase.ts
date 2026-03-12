@@ -9,11 +9,22 @@ export function getSupabase() {
 }
 
 /**
+ * Supabase client for the GLA project (public schema).
+ * Used to sync assessment data to the GLA org.
+ */
+export function getGLASupabase() {
+  const url = process.env.GLA_SUPABASE_URL;
+  const key = process.env.GLA_SUPABASE_ANON_KEY;
+  if (!url || !key) return null;
+  return createClient(url, key);
+}
+
+/**
  * Resolve table names based on company_code.
  * Pattern: ax_{company}_{q|r}
  * Falls back to shared tables when no company_code.
  */
-const ALLOWED_COMPANY_CODES = new Set(["bssp"]);
+const ALLOWED_COMPANY_CODES = new Set(["bssp", "gla"]);
 
 export function getTableNames(companyCode?: string) {
   if (companyCode) {

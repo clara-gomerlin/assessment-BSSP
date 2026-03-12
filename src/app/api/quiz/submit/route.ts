@@ -4,7 +4,7 @@ import Anthropic from "@anthropic-ai/sdk";
 import { calculateScores, getWinnerArchetype } from "@/lib/scoring";
 import { calculateDiagnosticScores } from "@/lib/scoring-diagnostic";
 import { calculateIPRTScores } from "@/lib/scoring-iprt";
-import { getTableNames } from "@/lib/supabase";
+import { getTableNames, getGLASupabase } from "@/lib/supabase";
 import { Question, SubmitPayload, QuizSettings, Dimension, Answers } from "@/lib/types";
 
 // Lazy init to avoid build-time errors when env vars aren't set
@@ -336,6 +336,31 @@ Foque a análise na alavanca mais fraca (${diagResult.weakest.name}). Responda A
     if (saveError) {
       console.error("Save error:", saveError);
       return Response.json({ error: "Erro ao salvar respostas" }, { status: 500 });
+    }
+
+    // Sync to GLA Supabase if this is a GLA quiz
+    const companyCode = quizSettings?.company_code?.toLowerCase();
+    if (companyCode === "gla") {
+      try {
+        const glaSupa = getGLASupabase();
+        if (glaSupa) {
+          await glaSupa.from("assessment maquina de receita").insert({
+            quiz_id,
+            quiz_title: quiz.title || "Máquina de Receita",
+            response_id: savedResponse.id,
+            evento_de_conversao: `Assessment ${quiz.title || "Máquina de Receita"}`,
+            produto: "Consultoria",
+            tipo_registro: "contato",
+            answers: Object.entries(answers).map(([question_id, selected_option_id]) => ({
+              question_id,
+              selected_option_id,
+            })),
+            scores: computedScores,
+          });
+        }
+      } catch (glaErr) {
+        console.error("GLA Supabase sync error:", glaErr);
+      }
     }
 
     // Stream response using SSE

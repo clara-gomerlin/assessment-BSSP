@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
 import { createClient } from "@supabase/supabase-js";
-import { getTableNames } from "@/lib/supabase";
+import { getTableNames, getGLASupabase } from "@/lib/supabase";
 import { QuizSettings } from "@/lib/types";
 import { upsertContact, QuizAnswer, QuestionInfo, ComputedScores } from "@/lib/hubspot";
 
@@ -153,6 +153,27 @@ export async function POST(request: NextRequest) {
       });
     } catch (logErr) {
       console.error("Integration event log error:", logErr);
+    }
+
+    // Sync lead data to GLA Supabase if this is a GLA quiz
+    const companyCode = quizSettings?.company_code?.toLowerCase();
+    if (companyCode === "gla") {
+      try {
+        const glaSupa = getGLASupabase();
+        if (glaSupa) {
+          await glaSupa
+            .from("assessment maquina de receita")
+            .update({
+              email: respondent_email.trim().toLowerCase(),
+              respondent_name: respondent_name.trim(),
+              phone: respondent_phone?.trim() || null,
+              hubspot_contact_id: hubspotContactId,
+            })
+            .eq("response_id", response_id);
+        }
+      } catch (glaErr) {
+        console.error("GLA Supabase lead sync error:", glaErr);
+      }
     }
 
     return Response.json({ success: true, hubspot_contact_id: hubspotContactId });
