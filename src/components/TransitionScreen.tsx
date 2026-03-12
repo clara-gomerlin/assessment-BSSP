@@ -628,22 +628,22 @@ function RevenueSocialProofCard({
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            minHeight: 133,
-            padding: "18px 24px",
+            minHeight: 80,
+            padding: "16px 20px",
             borderRadius: 8,
             background: "#f3f6fc",
           }}
         >
-          <span style={{ position: "absolute", top: 8, left: 13.5 }}>
+          <span style={{ position: "absolute", top: 8, left: 12 }}>
             <QuoteSVG />
           </span>
           <span
             style={{
-              fontSize: 17,
+              fontSize: 14,
               fontWeight: 400,
               textAlign: "center",
               color: "#161616",
-              lineHeight: 1.3,
+              lineHeight: 1.4,
             }}
           >
             {quote}
@@ -690,7 +690,7 @@ function RevenueSocialProof1({ onContinue }: { onContinue: () => void }) {
       onContinue={onContinue}
       title1="+200 empresas"
       title2="já usaram esse framework para destravar receita"
-      quote={<>Com o apoio estratégico do GLA adotamos uma mentalidade de growth,<br />implementamos frameworks de testes e imprimimos ritmo na cultura de experimentação.</>}
+      quote={<>Com o apoio estratégico do GLA adotamos uma mentalidade de growth, <br />implementamos frameworks de testes e imprimimos ritmo na cultura de experimentação.</>}
       author={<>Marcos Caringi — Dir. Marketing @Manual<br />ex-Head of Growth @ Globo</>}
       footer="Baseado nas 4 alavancas de receita: Posicionamento & Preço, Geração de Demanda, Eficiência em Vendas e Expansão de Base."
     />
@@ -706,7 +706,7 @@ function RevenueSocialProof3({ onContinue }: { onContinue: () => void }) {
       onContinue={onContinue}
       title1="Antes de investir mais em aquisição"
       title2="encontre sua receita escondida"
-      quote={<>Com ajuda do GLA, eu e a equipe da Caffeine Army aumentamos a retenção de<br />clientes em 33% e reduzimos o CAC de facebook em 50%.</>}
+      quote={<>Com ajuda do GLA, eu e a equipe da Caffeine Army aumentamos a retenção de <br />clientes em 33% e reduzimos o CAC de facebook em 50%.</>}
       author="Josean Neto — Líder de Growth @ Caffeine Army"
       footer="O diagnóstico identifica sua melhor alavanca de receita sem investir mais em ADS."
     />
@@ -722,7 +722,7 @@ function RevenueSocialProof4({ onContinue }: { onContinue: () => void }) {
       onContinue={onContinue}
       title1="Toda empresa B2B que cresce rápido"
       title2="tem receita escondida na operação"
-      quote={<>Quando os desafios de Growth começaram a escalar a consultoria do GLA trouxe<br />expertise técnica, e qualidade nas discussões sobre as alavancas.</>}
+      quote={<>Quando os desafios de Growth começaram a escalar a consultoria do GLA trouxe <br />expertise técnica, e qualidade nas discussões sobre as alavancas.</>}
       author="Marco Piacentini — Head of Growth @ Quero Educação"
       footer="Consultoria que entrega método, diagnóstico com dados, plano de ação e ritmo de execução."
     />

@@ -1,7 +1,14 @@
 const HUBSPOT_TOKEN = () => process.env.HUBSPOT_PRIVATE_APP_TOKEN!;
 const HUBSPOT_API = "https://api.hubapi.com";
 
-async function hubspotFetch(path: string, options: RequestInit = {}) {
+interface HubSpotResponse {
+  ok: boolean;
+  status: number;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  data: any;
+}
+
+async function hubspotFetch(path: string, options: RequestInit = {}): Promise<HubSpotResponse> {
   const res = await fetch(`${HUBSPOT_API}${path}`, {
     ...options,
     headers: {
@@ -14,10 +21,11 @@ async function hubspotFetch(path: string, options: RequestInit = {}) {
   if (!res.ok) {
     const body = await res.text();
     console.error(`HubSpot API error [${res.status}] ${path}:`, body);
-    return null;
+    return { ok: false, status: res.status, data: null };
   }
 
-  return res.json();
+  const data = await res.json();
+  return { ok: true, status: res.status, data };
 }
 
 // === Question → HubSpot property mapping (by order_index) ===
@@ -206,17 +214,35 @@ export async function upsertContact({
     Object.assign(properties, quizProps);
   }
 
-  // Try to create first
+  // Try to create with all properties
   const createRes = await hubspotFetch("/crm/v3/objects/contacts", {
     method: "POST",
     body: JSON.stringify({ properties }),
   });
 
-  if (createRes?.id) {
-    return createRes.id;
+  if (createRes.ok && createRes.data?.id) {
+    return createRes.data.id;
   }
 
-  // If contact already exists (409 conflict), update by email
+  // If creation failed with 400 (invalid properties), retry with only standard props
+  if (createRes.status === 400) {
+    console.warn("HubSpot: creation failed with 400, retrying with standard properties only");
+    const standardProps: Record<string, string> = { email, firstname: firstName, lastname: lastName };
+    if (phone) standardProps.phone = phone;
+    standardProps.lead_source = properties.lead_source;
+    standardProps.produto = properties.produto;
+
+    const retryRes = await hubspotFetch("/crm/v3/objects/contacts", {
+      method: "POST",
+      body: JSON.stringify({ properties: standardProps }),
+    });
+
+    if (retryRes.ok && retryRes.data?.id) {
+      return retryRes.data.id;
+    }
+  }
+
+  // If contact already exists (409 conflict) or creation failed, search by email
   const searchRes = await hubspotFetch("/crm/v3/objects/contacts/search", {
     method: "POST",
     body: JSON.stringify({
@@ -231,10 +257,13 @@ export async function upsertContact({
     }),
   });
 
-  const existingId = searchRes?.results?.[0]?.id;
-  if (!existingId) return null;
+  const existingId = searchRes.data?.results?.[0]?.id;
+  if (!existingId) {
+    console.error("HubSpot: could not create or find contact for", email);
+    return null;
+  }
 
-  // Update existing contact
+  // Update existing contact with all properties
   await hubspotFetch(`/crm/v3/objects/contacts/${existingId}`, {
     method: "PATCH",
     body: JSON.stringify({ properties }),
@@ -278,5 +307,5 @@ export async function createDeal({
     }),
   });
 
-  return result?.id || null;
+  return result.data?.id || null;
 }
