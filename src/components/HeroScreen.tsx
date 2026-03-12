@@ -103,18 +103,32 @@ export default function HeroScreen({ quiz, onStart }: HeroScreenProps) {
               {isIPRT ? (
                 <>Índice de Prontidão<br />para a Reforma<br />Tributária</>
               ) : isDiagnostic ? (
-                <>Descubra onde está vazando dinheiro na sua operação de receita</>
+                <>Auditoria de eficiência em receita</>
               ) : (
                 <>Diagnóstico<br />de Carreira:<br />Os 5 Arquétipos</>
               )}
             </h1>
+            {isDiagnostic && (
+              <p
+                style={{
+                  fontSize: "clamp(1.1rem, 4vw, 1.35rem)",
+                  fontWeight: 600,
+                  color: "#0f172a",
+                  lineHeight: 1.3,
+                  maxWidth: 400,
+                  margin: "8px auto 0",
+                }}
+              >
+                Descubra onde está vazando dinheiro na sua operação de receita
+              </p>
+            )}
             <p
               style={{
                 fontSize: "clamp(0.9375rem, 3.5vw, 1.0625rem)",
                 color: "#64748b",
                 lineHeight: 1.55,
                 maxWidth: 400,
-                margin: "0 auto",
+                margin: isDiagnostic ? "16px auto 0" : "0 auto",
               }}
             >
               {isIPRT
