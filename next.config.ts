@@ -23,7 +23,7 @@ const nextConfig: NextConfig = {
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
               "font-src 'self' https://fonts.gstatic.com",
               "img-src 'self' data:",
-              "connect-src 'self' https://*.supabase.co https://api.anthropic.com",
+              "connect-src 'self' https://*.supabase.co",
               "frame-ancestors 'none'",
             ].join("; "),
           },

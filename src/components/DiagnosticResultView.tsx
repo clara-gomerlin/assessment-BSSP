@@ -34,7 +34,10 @@ interface DiagnosticResultViewProps {
   markdown: string;
   respondentName: string;
   quizSlug: string;
+  ctaWhatsappUrl?: string;
 }
+
+const DEFAULT_WHATSAPP_URL = "#";
 
 // === Radar Chart SVG ===
 function RadarChart({ dimensions }: { dimensions: DimensionResult[] }) {
@@ -314,8 +317,8 @@ function useBragTag() {
       name: string,
       score: number,
       scoreLabel: string,
-      strongest: DimensionResult,
-      weakest: DimensionResult
+      scoreColor: string,
+      dimensions: DimensionResult[]
     ) => {
       const canvas = canvasRef.current;
       if (!canvas) return;
@@ -323,88 +326,206 @@ function useBragTag() {
       if (!ctx) return;
 
       const W = 1080;
-      const H = 1080;
+      const H = 1350;
       canvas.width = W;
       canvas.height = H;
 
-      ctx.fillStyle = "#0f172a";
+      // Load Rubik font (already loaded in page)
+      const font = (w: number, s: number) => `${w} ${s}px Rubik, system-ui, sans-serif`;
+
+      // White background
+      ctx.fillStyle = "#ffffff";
       ctx.fillRect(0, 0, W, H);
 
-      const grad = ctx.createLinearGradient(0, 0, W, 0);
-      grad.addColorStop(0, "#6366f1");
-      grad.addColorStop(1, "#8b5cf6");
-      ctx.fillStyle = grad;
-      ctx.fillRect(0, 0, W, 6);
+      // Load GLA logo
+      const logo = new Image();
+      logo.crossOrigin = "anonymous";
+      logo.src = "/logos/gla-logo.png";
+      await new Promise<void>((resolve) => {
+        logo.onload = () => resolve();
+        logo.onerror = () => resolve();
+      });
+      // Draw logo centered at top
+      const logoH = 40;
+      const logoW = logo.naturalWidth ? (logo.naturalWidth / logo.naturalHeight) * logoH : 120;
+      ctx.drawImage(logo, (W - logoW) / 2, 60, logoW, logoH);
 
-      ctx.fillStyle = "#94a3b8";
-      ctx.font = "500 28px sans-serif";
+      // Headline
+      const firstName = name.split(" ")[0] || "Empresa";
+      ctx.fillStyle = "#0f172a";
+      ctx.font = font(700, 36);
       ctx.textAlign = "center";
-      ctx.fillText("DIAGNÓSTICO DA MÁQUINA DE RECEITA", W / 2, 100);
+      ctx.fillText(`${firstName}, aqui está o diagnóstico da sua`, W / 2, 160);
+      ctx.fillStyle = "#2D3246";
+      ctx.font = font(700, 36);
+      ctx.fillText("Máquina de Receita", W / 2, 205);
 
-      ctx.fillStyle = "#ffffff";
-      ctx.font = "700 42px sans-serif";
-      ctx.fillText(name, W / 2, 180);
-
-      const ccx = W / 2;
-      const ccy = 380;
-      const r = 120;
-      ctx.beginPath();
-      ctx.arc(ccx, ccy, r, 0, Math.PI * 2);
-      ctx.strokeStyle = "#334155";
-      ctx.lineWidth = 16;
-      ctx.stroke();
-
-      const startAngle = -Math.PI / 2;
-      const endAngle = startAngle + (score / 100) * Math.PI * 2;
-      ctx.beginPath();
-      ctx.arc(ccx, ccy, r, startAngle, endAngle);
-      ctx.strokeStyle = score >= 71 ? "#1dbf73" : score >= 31 ? "#f5a623" : "#e84343";
-      ctx.lineWidth = 16;
-      ctx.lineCap = "round";
-      ctx.stroke();
-
-      ctx.fillStyle = "#ffffff";
-      ctx.font = "700 72px sans-serif";
+      // Score — large number
+      ctx.fillStyle = "#0f172a";
+      ctx.font = font(700, 96);
       ctx.textAlign = "center";
-      ctx.fillText(`${score}`, ccx, ccy + 20);
-      ctx.font = "400 22px sans-serif";
+      const scoreText = `${score}`;
+      const scoreMetrics = ctx.measureText(scoreText);
+      const scoreX = W / 2 - 30;
+      ctx.fillText(scoreText, scoreX, 330);
+
+      // /100 next to score
       ctx.fillStyle = "#94a3b8";
-      ctx.fillText("de 100", ccx, ccy + 52);
-
-      ctx.fillStyle = "#ffffff";
-      ctx.font = "600 26px sans-serif";
-      ctx.fillText(scoreLabel, ccx, ccy + r + 60);
-
-      const yBottom = 640;
+      ctx.font = font(400, 36);
       ctx.textAlign = "left";
+      ctx.fillText("/100", scoreX + scoreMetrics.width / 2 + 6, 330);
 
-      ctx.fillStyle = "#1dbf73";
-      ctx.font = "600 22px sans-serif";
-      ctx.fillText("ALAVANCA MAIS FORTE", 100, yBottom);
-      ctx.fillStyle = "#ffffff";
-      ctx.font = "500 28px sans-serif";
-      ctx.fillText(`${strongest.emoji} ${strongest.name}`, 100, yBottom + 40);
-      ctx.fillStyle = "#94a3b8";
-      ctx.font = "400 22px sans-serif";
-      ctx.fillText(`Score: ${strongest.normalizedScore}/100`, 100, yBottom + 72);
-
-      ctx.fillStyle = "#e84343";
-      ctx.font = "600 22px sans-serif";
-      ctx.fillText("ALAVANCA MAIS FRACA", 100, yBottom + 140);
-      ctx.fillStyle = "#ffffff";
-      ctx.font = "500 28px sans-serif";
-      ctx.fillText(`${weakest.emoji} ${weakest.name}`, 100, yBottom + 180);
-      ctx.fillStyle = "#94a3b8";
-      ctx.font = "400 22px sans-serif";
-      ctx.fillText(`Score: ${weakest.normalizedScore}/100`, 100, yBottom + 212);
-
-      ctx.fillStyle = "#475569";
-      ctx.font = "400 20px sans-serif";
+      // Score label badge
       ctx.textAlign = "center";
-      ctx.fillText("Growth Leaders Academy", ccx, H - 60);
+      ctx.font = font(600, 24);
+      const badgeText = scoreLabel;
+      const badgeMetrics = ctx.measureText(badgeText);
+      const badgeW = badgeMetrics.width + 40;
+      const badgeH = 42;
+      const badgeX = (W - badgeW) / 2;
+      const badgeY = 355;
 
+      // Badge background
+      ctx.fillStyle = `${scoreColor}18`;
+      ctx.beginPath();
+      ctx.roundRect(badgeX, badgeY, badgeW, badgeH, 20);
+      ctx.fill();
+
+      // Badge text
+      ctx.fillStyle = scoreColor;
+      ctx.fillText(badgeText, W / 2, badgeY + 28);
+
+      // Divider
+      const divY = 425;
+      ctx.strokeStyle = "#e2e8f0";
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(80, divY);
+      ctx.lineTo(W - 80, divY);
+      ctx.stroke();
+
+      // Section title
+      ctx.fillStyle = "#0f172a";
+      ctx.font = font(700, 28);
+      ctx.textAlign = "left";
+      ctx.fillText("Breakdown por Alavanca", 80, divY + 50);
+
+      // Dimension bars
+      const barStartY = divY + 85;
+      const barLeft = 80;
+      const barRight = W - 80;
+      const barW = barRight - barLeft;
+      const barH = 14;
+      const dimSpacing = 115;
+
+      dimensions.forEach((dim, i) => {
+        const y = barStartY + i * dimSpacing;
+
+        // Dimension name + emoji
+        ctx.fillStyle = "#0f172a";
+        ctx.font = font(600, 24);
+        ctx.textAlign = "left";
+        ctx.fillText(`${dim.emoji}  ${dim.name}`, barLeft, y);
+
+        // Score + label on the right
+        ctx.textAlign = "right";
+        ctx.fillStyle = "#64748b";
+        ctx.font = font(600, 22);
+        ctx.fillText(`${dim.normalizedScore}/100`, barRight, y);
+
+        // Status pill
+        const pillText = dim.label;
+        ctx.font = font(500, 18);
+        const pillW = ctx.measureText(pillText).width + 20;
+        const pillX = barRight - ctx.measureText(`${dim.normalizedScore}/100`).width - pillW - 16;
+        const pillY = y - 16;
+
+        ctx.fillStyle = `${dim.color}18`;
+        ctx.beginPath();
+        ctx.roundRect(pillX, pillY, pillW, 24, 12);
+        ctx.fill();
+        ctx.fillStyle = dim.color;
+        ctx.textAlign = "center";
+        ctx.fillText(pillText, pillX + pillW / 2, y - 1);
+
+        // Bar track
+        const barY = y + 14;
+        ctx.fillStyle = "#f1f5f9";
+        ctx.beginPath();
+        ctx.roundRect(barLeft, barY, barW, barH, 7);
+        ctx.fill();
+
+        // Bar fill
+        const fillW = (dim.normalizedScore / 100) * barW;
+        ctx.fillStyle = dim.color;
+        ctx.beginPath();
+        ctx.roundRect(barLeft, barY, fillW, barH, 7);
+        ctx.fill();
+      });
+
+      // Strongest / Weakest summary boxes
+      const boxY = barStartY + dimensions.length * dimSpacing + 20;
+      const boxW = (barW - 20) / 2;
+      const boxH = 90;
+
+      // Find strongest & weakest
+      const sorted = [...dimensions].sort((a, b) => b.normalizedScore - a.normalizedScore);
+      const strongest = sorted[0];
+      const weakest = sorted[sorted.length - 1];
+
+      // Strongest box
+      ctx.fillStyle = "#ecfdf5";
+      ctx.beginPath();
+      ctx.roundRect(barLeft, boxY, boxW, boxH, 12);
+      ctx.fill();
+      ctx.strokeStyle = "#a7f3d0";
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.roundRect(barLeft, boxY, boxW, boxH, 12);
+      ctx.stroke();
+
+      ctx.textAlign = "left";
+      ctx.fillStyle = "#059669";
+      ctx.font = font(600, 16);
+      ctx.fillText("MAIS FORTE", barLeft + 16, boxY + 26);
+      ctx.fillStyle = "#0f172a";
+      ctx.font = font(600, 22);
+      ctx.fillText(`${strongest.emoji} ${strongest.name}`, barLeft + 16, boxY + 54);
+      ctx.fillStyle = "#64748b";
+      ctx.font = font(400, 18);
+      ctx.fillText(`${strongest.normalizedScore}/100`, barLeft + 16, boxY + 78);
+
+      // Weakest box
+      const weakBoxX = barLeft + boxW + 20;
+      ctx.fillStyle = "#fef2f2";
+      ctx.beginPath();
+      ctx.roundRect(weakBoxX, boxY, boxW, boxH, 12);
+      ctx.fill();
+      ctx.strokeStyle = "#fecaca";
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.roundRect(weakBoxX, boxY, boxW, boxH, 12);
+      ctx.stroke();
+
+      ctx.fillStyle = "#dc2626";
+      ctx.font = font(600, 16);
+      ctx.fillText("MAIS FRACA", weakBoxX + 16, boxY + 26);
+      ctx.fillStyle = "#0f172a";
+      ctx.font = font(600, 22);
+      ctx.fillText(`${weakest.emoji} ${weakest.name}`, weakBoxX + 16, boxY + 54);
+      ctx.fillStyle = "#64748b";
+      ctx.font = font(400, 18);
+      ctx.fillText(`${weakest.normalizedScore}/100`, weakBoxX + 16, boxY + 78);
+
+      // Footer
+      ctx.fillStyle = "#94a3b8";
+      ctx.font = font(400, 18);
+      ctx.textAlign = "center";
+      ctx.fillText("Growth Leaders Academy", W / 2, H - 50);
+
+      // Download
       const link = document.createElement("a");
-      link.download = `diagnostico-receita-${name.split(" ")[0].toLowerCase()}.png`;
+      link.download = `diagnostico-receita-${firstName.toLowerCase()}.png`;
       link.href = canvas.toDataURL("image/png");
       link.click();
     },
@@ -585,6 +706,7 @@ export default function DiagnosticResultView({
   markdown,
   respondentName,
   quizSlug,
+  ctaWhatsappUrl,
 }: DiagnosticResultViewProps) {
   const firstName = respondentName.split(" ")[0] || "Empresa";
   const { canvasRef, generate } = useBragTag();
@@ -623,7 +745,7 @@ export default function DiagnosticResultView({
           {/* Brag + CTAs */}
           <div style={{ marginTop: 32, textAlign: "center" }}>
             <button
-              onClick={() => generate(respondentName, result.scoreGeral, result.scoreGeralLabel, result.strongest, result.weakest)}
+              onClick={() => generate(respondentName, result.scoreGeral, result.scoreGeralLabel, result.scoreGeralColor, result.dimensions)}
               className="diagnostic-brag-btn"
             >
               📥 Baixar meu Diagnóstico (imagem)
@@ -636,7 +758,7 @@ export default function DiagnosticResultView({
               Quer acelerar essa mudança?
             </p>
             <a
-              href="https://wa.me/5511999999999?text=Quero%20saber%20mais%20sobre%20a%20consultoria%20de%20receita"
+              href={ctaWhatsappUrl || DEFAULT_WHATSAPP_URL}
               target="_blank"
               rel="noopener noreferrer"
               className="result-primary-cta"
@@ -685,7 +807,7 @@ export default function DiagnosticResultView({
           {/* Brag */}
           <div style={{ marginTop: 32, textAlign: "center" }}>
             <button
-              onClick={() => generate(respondentName, result.scoreGeral, result.scoreGeralLabel, result.strongest, result.weakest)}
+              onClick={() => generate(respondentName, result.scoreGeral, result.scoreGeralLabel, result.scoreGeralColor, result.dimensions)}
               className="diagnostic-brag-btn"
             >
               📥 Baixar meu Diagnóstico (imagem)
@@ -699,7 +821,7 @@ export default function DiagnosticResultView({
               Quer acelerar essa mudança?
             </p>
             <a
-              href="https://wa.me/5511999999999?text=Quero%20saber%20mais%20sobre%20a%20consultoria%20de%20receita"
+              href={ctaWhatsappUrl || DEFAULT_WHATSAPP_URL}
               target="_blank"
               rel="noopener noreferrer"
               className="result-primary-cta"

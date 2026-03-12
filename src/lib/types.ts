@@ -38,6 +38,7 @@ export interface QuizSettings {
   sections?: { label: string; categories: string[] }[];
   transitions_before_section?: Record<number, string[]>;
   transitions_after_section?: Record<number, string[]>;
+  cta_whatsapp_url?: string;
 }
 
 export interface Quiz {

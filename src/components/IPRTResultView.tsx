@@ -37,6 +37,7 @@ interface IPRTResultViewProps {
   markdown: string;
   respondentName: string;
   quizSlug: string;
+  ctaWhatsappUrl?: string;
 }
 
 // --- Stage copy ---
@@ -340,6 +341,7 @@ export default function IPRTResultView({
   analysis,
   markdown,
   respondentName,
+  ctaWhatsappUrl,
 }: IPRTResultViewProps) {
   const firstName = respondentName.split(" ")[0] || "Profissional";
   const { canvasRef, generate } = useBragTag();
@@ -677,7 +679,7 @@ export default function IPRTResultView({
           Quer fechar essas lacunas com profundidade?
         </p>
         <a
-          href="https://wa.me/5511999999999?text=Fiz%20o%20IPRT%20e%20quero%20saber%20mais%20sobre%20a%20Especialização%20em%20Reforma%20Tributária"
+          href={ctaWhatsappUrl || "#"}
           target="_blank"
           rel="noopener noreferrer"
           className="result-primary-cta"

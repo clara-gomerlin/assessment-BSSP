@@ -434,6 +434,7 @@ export default function QuizPlayer({ quiz, questions }: QuizPlayerProps) {
             markdown={resultMarkdown}
             respondentName={respondentName}
             quizSlug={quiz.slug}
+            ctaWhatsappUrl={quiz.settings.cta_whatsapp_url}
           />
         </div>
       );
@@ -446,6 +447,7 @@ export default function QuizPlayer({ quiz, questions }: QuizPlayerProps) {
           markdown={resultMarkdown}
           respondentName={respondentName}
           quizSlug={quiz.slug}
+          ctaWhatsappUrl={quiz.settings.cta_whatsapp_url}
         />
       );
     }
@@ -457,6 +459,7 @@ export default function QuizPlayer({ quiz, questions }: QuizPlayerProps) {
         dimensions={quiz.dimensions}
         markdown={resultMarkdown}
         respondentName={respondentName}
+        ctaWhatsappUrl={quiz.settings.cta_whatsapp_url}
       />
     );
   }

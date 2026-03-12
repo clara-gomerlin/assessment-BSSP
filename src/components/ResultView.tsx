@@ -10,6 +10,7 @@ interface ResultViewProps {
   dimensions: Dimension[];
   markdown: string;
   respondentName: string;
+  ctaWhatsappUrl?: string;
 }
 
 export default function ResultView({
@@ -19,6 +20,7 @@ export default function ResultView({
   dimensions,
   markdown,
   respondentName,
+  ctaWhatsappUrl,
 }: ResultViewProps) {
   const maxScore = Math.max(...Object.values(scores), 1);
   const potentialPct = Math.min(
@@ -240,7 +242,7 @@ export default function ResultView({
         }}
       >
         <a
-          href="https://wa.me/5511999999999?text=Quero%20saber%20mais%20sobre%20a%20mentoria"
+          href={ctaWhatsappUrl || "#"}
           target="_blank"
           rel="noopener noreferrer"
           className="result-primary-cta"

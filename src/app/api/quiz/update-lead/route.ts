@@ -14,8 +14,30 @@ const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 const PHONE_RE = /^[\d\s()+-]{8,20}$/;
 
+// Rate limiter (per IP, 10 requests per minute)
+const rateMap = new Map<string, { count: number; resetAt: number }>();
+const RATE_LIMIT = 10;
+const RATE_WINDOW_MS = 60_000;
+
+function isRateLimited(ip: string): boolean {
+  const now = Date.now();
+  const entry = rateMap.get(ip);
+  if (!entry || now > entry.resetAt) {
+    rateMap.set(ip, { count: 1, resetAt: now + RATE_WINDOW_MS });
+    return false;
+  }
+  entry.count++;
+  return entry.count > RATE_LIMIT;
+}
+
 export async function POST(request: NextRequest) {
   try {
+    // Rate limiting
+    const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
+    if (isRateLimited(ip)) {
+      return Response.json({ error: "Muitas requisições. Tente novamente em 1 minuto." }, { status: 429 });
+    }
+
     const body = await request.json();
     const { response_id, quiz_id, respondent_name, respondent_email, respondent_phone } = body;
 
@@ -45,6 +67,21 @@ export async function POST(request: NextRequest) {
 
     const quizSettings = quiz?.settings as QuizSettings | null;
     const tables = getTableNames(quizSettings?.company_code);
+
+    // Verify the response exists and has no lead data yet (prevents overwriting)
+    const { data: existing } = await supabase
+      .from(tables.responses)
+      .select("respondent_email")
+      .eq("id", response_id)
+      .single();
+
+    if (!existing) {
+      return Response.json({ error: "Resposta não encontrada" }, { status: 404 });
+    }
+
+    if (existing.respondent_email) {
+      return Response.json({ error: "Dados já preenchidos" }, { status: 409 });
+    }
 
     const { error } = await supabase
       .from(tables.responses)
