@@ -566,12 +566,11 @@ function RevenueConfiancaIntro({ onContinue }: { onContinue: () => void }) {
             fontWeight: 700,
             color: "#64748b",
             lineHeight: 1.5,
-            maxWidth: 380,
+            maxWidth: 460,
             margin: "0 auto",
           }}
         >
-          Descubra quais são as perguntas e selecione a resposta que mais se
-          adequa a sua realidade. Seja sincero!
+          Descubra quais são as perguntas e selecione a resposta que mais se adequa a sua realidade. Seja sincero!
         </p>
       </div>
     </Content>
