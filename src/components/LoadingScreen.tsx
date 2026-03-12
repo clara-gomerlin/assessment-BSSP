@@ -34,19 +34,19 @@ const DIAGNOSTIC_TESTIMONIALS = [
     quote:
       "Com o apoio estratégico do GLA adotamos uma mentalidade de growth, implementamos frameworks de testes e imprimimos ritmo na cultura de experimentação.",
     author: "Marcos Caringi",
-    role: "Dir. Marketing @Manual | ex-Head of Growth @ Globo",
+    role: "Dir. Marketing @Manual | ex-Head of Growth @Globo",
   },
   {
     quote:
       "Com ajuda do GLA, eu e a equipe da Caffeine Army aumentamos a retenção de clientes em 33% e reduzimos o CAC de facebook em 50%.",
     author: "Josean Neto",
-    role: "Líder de Growth @ Caffeine Army",
+    role: "Líder de Growth @CaffeineArmy",
   },
   {
     quote:
       "Antes da consultoria, faltava clareza sobre o que priorizar para gerar resultado. Com o GLA, montamos um plano com dados e executamos!",
     author: "Renan Fernandes",
-    role: "Ex-Head of Growth @ Movidesk",
+    role: "Ex-Head of Growth @Movidesk",
   },
 ];
 

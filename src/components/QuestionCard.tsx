@@ -76,9 +76,9 @@ export default function QuestionCard({
           <p
             style={{
               fontFamily: "var(--font-quiz)",
-              fontSize: 13,
-              fontWeight: 400,
-              color: "#64748b",
+              fontSize: 14,
+              fontWeight: 500,
+              color: "#5F687B",
               marginTop: 4,
               textAlign: "center",
             }}
@@ -91,7 +91,7 @@ export default function QuestionCard({
             style={{
               fontFamily: "var(--font-quiz)",
               fontSize: 14,
-              fontWeight: 700,
+              fontWeight: 500,
               color: "#5F687B",
               marginTop: 6,
               textAlign: "center",

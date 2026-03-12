@@ -90,11 +90,11 @@ function Transition1({ onContinue }: { onContinue: () => void }) {
           </span>
           <span
             style={{
-              fontSize: 17,
+              fontSize: 15,
               fontWeight: 400,
               textAlign: "center",
               color: "#161616",
-              lineHeight: 1.3,
+              lineHeight: 1.4,
             }}
           >
             Eu sabia o que queria, mas não sabia como chegar. A mentoria de
@@ -112,7 +112,7 @@ function Transition1({ onContinue }: { onContinue: () => void }) {
           </span>
         </div>
         <span style={{ fontSize: 16, fontWeight: 200, color: "#000" }}>
-          Mariana Marins - Líder de Marketing @GoCache
+          Mariana Marins — Líder de Marketing @GoCache
         </span>
         <StarsSVG />
       </div>
@@ -318,7 +318,7 @@ function Transition2({ onContinue }: { onContinue: () => void }) {
           color: "#000",
         }}
       >
-        Taciana Serafim - Diretora de Growth e Marketing @Looptomize
+        Taciana Serafim — Diretora de Growth e Marketing @Looptomize
       </p>
     </Content>
   );
@@ -457,7 +457,7 @@ function Transition3({ onContinue }: { onContinue: () => void }) {
         <strong>3x</strong> o que eu ganhava antes de começar o GLA&quot;
         <br />
         <em>
-          — Dionatha Rodrigues - Ex-Martech Team Lead @ Blip
+          — Dionatha Rodrigues — Ex-Martech Team Lead @Blip
         </em>
       </div>
 
@@ -628,8 +628,9 @@ function RevenueSocialProofCard({
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            minHeight: 80,
-            padding: "16px 20px",
+            minHeight: 133,
+            padding: "18px 24px",
+            width: "100%",
             borderRadius: 8,
             background: "#f3f6fc",
           }}
@@ -639,7 +640,7 @@ function RevenueSocialProofCard({
           </span>
           <span
             style={{
-              fontSize: 14,
+              fontSize: 15,
               fontWeight: 400,
               textAlign: "center",
               color: "#161616",
@@ -691,7 +692,7 @@ function RevenueSocialProof1({ onContinue }: { onContinue: () => void }) {
       title1="+200 empresas"
       title2="já usaram esse framework para destravar receita"
       quote={<>Com o apoio estratégico do GLA adotamos uma mentalidade de growth, <br />implementamos frameworks de testes e imprimimos ritmo na cultura de experimentação.</>}
-      author={<>Marcos Caringi — Dir. Marketing @Manual<br />ex-Head of Growth @ Globo</>}
+      author={<>Marcos Caringi — Dir. Marketing @Manual<br />ex-Head of Growth @Globo</>}
       footer="Baseado nas 4 alavancas de receita: Posicionamento & Preço, Geração de Demanda, Eficiência em Vendas e Expansão de Base."
     />
   );
@@ -707,7 +708,7 @@ function RevenueSocialProof3({ onContinue }: { onContinue: () => void }) {
       title1="Antes de investir mais em aquisição"
       title2="encontre sua receita escondida"
       quote={<>Com ajuda do GLA, eu e a equipe da Caffeine Army aumentamos a retenção de <br />clientes em 33% e reduzimos o CAC de facebook em 50%.</>}
-      author="Josean Neto — Líder de Growth @ Caffeine Army"
+      author="Josean Neto — Líder de Growth @CaffeineArmy"
       footer="O diagnóstico identifica sua melhor alavanca de receita sem investir mais em ADS."
     />
   );
@@ -723,7 +724,7 @@ function RevenueSocialProof4({ onContinue }: { onContinue: () => void }) {
       title1="Toda empresa B2B que cresce rápido"
       title2="tem receita escondida na operação"
       quote={<>Quando os desafios de Growth começaram a escalar a consultoria do GLA trouxe <br />expertise técnica, e qualidade nas discussões sobre as alavancas.</>}
-      author="Marco Piacentini — Head of Growth @ Quero Educação"
+      author="Marco Piacentini — Head of Growth @QueroEducação"
       footer="Consultoria que entrega método, diagnóstico com dados, plano de ação e ritmo de execução."
     />
   );
@@ -739,7 +740,7 @@ function RevenueSocialProof5({ onContinue }: { onContinue: () => void }) {
       title1="Se o CAC subir amanhã"
       title2="você sabe qual alavanca mexer?"
       quote="Antes da consultoria, faltava clareza sobre o que priorizar para gerar resultado. Com o GLA, montamos um plano com dados e executamos! Hoje tenho total confiança do time e, principalmente, do CEO."
-      author="Renan Fernandes — Ex-Head of Growth @ Movidesk"
+      author="Renan Fernandes — Ex-Head of Growth @Movidesk"
       footer="Método aplicado em empresas B2B que faturam de R$5M a R$100M/ano."
     />
   );
@@ -858,11 +859,11 @@ function BSSPTransition1({ onContinue }: { onContinue: () => void }) {
           </span>
           <span
             style={{
-              fontSize: 17,
+              fontSize: 15,
               fontWeight: 400,
               textAlign: "center",
               color: "#161616",
-              lineHeight: 1.3,
+              lineHeight: 1.4,
             }}
           >
             A BSSP transformou a forma como encaro minha carreira na área tributária. O conteúdo é prático e direto ao ponto.
