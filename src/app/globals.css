@@ -177,11 +177,14 @@ body {
   font-size: 20px;
   background: #2D3246;
   font-family: var(--font-body);
-  transition: background 0.2s;
+  box-shadow: 0 4px 14px rgba(45, 50, 70, 0.3);
+  transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
 }
 
 .continue-button:hover {
   background: #3A405C;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(45, 50, 70, 0.4);
 }
 
 /* ===== Email Input ===== */
@@ -373,13 +376,15 @@ body {
   font-size: 16px;
   box-shadow: 0 8px 20px rgba(45, 50, 70, 0.35);
   cursor: pointer;
-  transition: background-color .2s ease, box-shadow .2s ease, transform .06s ease;
+  transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
   font-family: var(--font-body);
   text-decoration: none;
 }
 
 .result-primary-cta:hover {
   background: #3A405C;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(45, 50, 70, 0.4);
 }
 
 .result-secondary-cta {

@@ -117,6 +117,7 @@ export default function HeroScreen({ quiz, onStart }: HeroScreenProps) {
                   lineHeight: 1.3,
                   maxWidth: 400,
                   margin: "8px auto 0",
+                  fontFamily: "var(--font-quiz)",
                 }}
               >
                 Descubra onde está vazando dinheiro na sua operação de receita
@@ -310,26 +311,8 @@ export default function HeroScreen({ quiz, onStart }: HeroScreenProps) {
       >
         <button
           onClick={onStart}
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            width: "100%",
-            maxWidth: 540,
-            margin: "0 auto",
-            padding: "16px 32px",
-            background: isIPRT ? "#32373c" : "#2D3246",
-            color: "white",
-            fontFamily: isIPRT ? "'Montserrat', system-ui, sans-serif" : "'DM Sans', system-ui, sans-serif",
-            fontSize: "1rem",
-            fontWeight: 600,
-            letterSpacing: "0.02em",
-            textTransform: "uppercase" as const,
-            border: "none",
-            borderRadius: isIPRT ? 9999 : 12,
-            cursor: "pointer",
-            boxShadow: "0 4px 14px rgba(15, 23, 42, 0.25)",
-          }}
+          className="continue-button"
+          style={{ maxWidth: 540 }}
         >
           {isDiagnostic ? "Iniciar minha auditoria" : "Começar"}
         </button>
