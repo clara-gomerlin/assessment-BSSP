@@ -34,12 +34,15 @@ interface DiagnosticResultViewProps {
   markdown: string;
   respondentName: string;
   quizSlug: string;
+  quizId?: string;
+  responseId?: string | null;
+  respondentEmail?: string;
   ctaWhatsappUrl?: string;
   hubspotContactId?: string | null;
   quizTitle?: string;
 }
 
-const DEFAULT_WHATSAPP_URL = "#";
+const DEFAULT_WHATSAPP_URL = "https://wa.me/5511932727443?text=Ol%C3%A1%2C%20recebi%20meu%20diagn%C3%B3stico%20de%20receita%20e%20gostaria%20de%20saber%20mais%20sobre%20a%20consultoria%20do%20GLA.";
 
 // === Radar Chart SVG ===
 function RadarChart({ dimensions }: { dimensions: DimensionResult[] }) {
@@ -702,12 +705,95 @@ function DimensionsBreakdown({
   );
 }
 
+// === Consultancy Pitch Section ===
+function ConsultancyPitch({ ctaUrl, onCtaClick }: { ctaUrl: string; onCtaClick: () => void }) {
+  return (
+    <div
+      style={{
+        marginTop: 40,
+        padding: "28px 20px",
+        background: "#fff",
+        borderRadius: 16,
+        border: "1px solid rgba(15,23,42,0.06)",
+        boxShadow: "rgba(20, 28, 40, 0.06) 0 8px 24px",
+      }}
+    >
+      <h2
+        style={{
+          fontSize: 22,
+          fontWeight: 700,
+          color: "#0f172a",
+          lineHeight: 1.3,
+          marginBottom: 16,
+          fontFamily: "var(--font-quiz)",
+        }}
+      >
+        🚀 Consultoria estratégica para destravar a receita que já existe na sua operação
+      </h2>
+      <p style={{ fontSize: 15, color: "#334155", lineHeight: 1.6, marginBottom: 8 }}>
+        Você acabou de ver um retrato da sua máquina de crescimento.
+      </p>
+      <p style={{ fontSize: 15, color: "#334155", lineHeight: 1.6, marginBottom: 16 }}>
+        O próximo passo agora é transformar esse diagnóstico em{" "}
+        <strong style={{ fontWeight: 700, color: "#0f172a" }}>um plano de ação</strong>.
+      </p>
+      <p style={{ fontSize: 15, color: "#334155", lineHeight: 1.6, marginBottom: 12 }}>
+        Na consultoria do GLA, você vai:
+      </p>
+      <ul
+        style={{
+          listStyle: "none",
+          padding: 0,
+          margin: "0 0 24px",
+          display: "flex",
+          flexDirection: "column",
+          gap: 10,
+        }}
+      >
+        {[
+          "Destravar sua alavanca de maior retorno de receita",
+          "Desenvolver Inteligência analítica para tomada de decisão",
+          "Ter acompanhamento por 6 meses para implementar e dar ritmo ao seu plano de ação",
+        ].map((item) => (
+          <li
+            key={item}
+            style={{
+              display: "flex",
+              alignItems: "flex-start",
+              gap: 10,
+              fontSize: 15,
+              color: "#334155",
+              lineHeight: 1.5,
+            }}
+          >
+            <span style={{ color: "#10b981", fontWeight: 700, flexShrink: 0 }}>•</span>
+            <span>{item}</span>
+          </li>
+        ))}
+      </ul>
+      <a
+        href={ctaUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="result-primary-cta"
+        onClick={onCtaClick}
+        style={{ display: "block", textAlign: "center" }}
+      >
+        Quero conhecer a consultoria
+      </a>
+    </div>
+  );
+}
+
 export default function DiagnosticResultView({
   result,
   analysis,
   markdown,
   respondentName,
+  respondentEmail,
   quizSlug,
+  quizId,
+  responseId,
   ctaWhatsappUrl,
   hubspotContactId,
   quizTitle,
@@ -725,10 +811,13 @@ export default function DiagnosticResultView({
       body: JSON.stringify({
         hubspot_contact_id: hubspotContactId,
         contact_name: respondentName,
+        contact_email: respondentEmail,
         quiz_title: quizTitle || "Quiz",
+        quiz_id: quizId,
+        response_id: responseId,
       }),
     }).catch((err) => console.error("Deal creation error:", err));
-  }, [hubspotContactId, respondentName, quizTitle, dealCreated]);
+  }, [hubspotContactId, respondentName, respondentEmail, quizTitle, quizId, responseId, dealCreated]);
 
   return (
     <div style={{ width: "100%", fontFamily: "var(--font-quiz)" }}>
@@ -772,10 +861,10 @@ export default function DiagnosticResultView({
             <canvas ref={canvasRef} style={{ display: "none" }} />
           </div>
 
+          {/* Consultancy Pitch */}
+          <ConsultancyPitch ctaUrl={ctaWhatsappUrl || DEFAULT_WHATSAPP_URL} onCtaClick={handleCtaClick} />
+
           <div style={{ marginTop: 32, display: "flex", flexDirection: "column", gap: 12 }}>
-            <p style={{ fontSize: 15, fontWeight: 500, color: "#64748b", textAlign: "center", marginBottom: 8 }}>
-              Quer acelerar essa mudança?
-            </p>
             <a
               href={ctaWhatsappUrl || DEFAULT_WHATSAPP_URL}
               target="_blank"
@@ -835,11 +924,11 @@ export default function DiagnosticResultView({
             <canvas ref={canvasRef} style={{ display: "none" }} />
           </div>
 
+          {/* Consultancy Pitch */}
+          <ConsultancyPitch ctaUrl={ctaWhatsappUrl || DEFAULT_WHATSAPP_URL} onCtaClick={handleCtaClick} />
+
           {/* CTAs */}
-          <div style={{ marginTop: 48, display: "flex", flexDirection: "column", gap: 12 }}>
-            <p style={{ fontSize: 15, fontWeight: 500, color: "#64748b", textAlign: "center", marginBottom: 8 }}>
-              Quer acelerar essa mudança?
-            </p>
+          <div style={{ marginTop: 32, display: "flex", flexDirection: "column", gap: 12 }}>
             <a
               href={ctaWhatsappUrl || DEFAULT_WHATSAPP_URL}
               target="_blank"

@@ -7,6 +7,7 @@ interface QuestionCardProps {
   selectedOption: string | string[] | undefined;
   onSelect: (optionId: string) => void;
   onMultiConfirm?: (optionIds: string[]) => void;
+  subtitle?: string;
 }
 
 export default function QuestionCard({
@@ -14,6 +15,7 @@ export default function QuestionCard({
   selectedOption,
   onSelect,
   onMultiConfirm,
+  subtitle,
 }: QuestionCardProps) {
   const isMulti = question.type === "multiple_choice";
   const selectedArray = Array.isArray(selectedOption)
@@ -69,6 +71,20 @@ export default function QuestionCard({
             }}
           >
             Selecione todas que se aplicam
+          </p>
+        )}
+        {!isMulti && subtitle && (
+          <p
+            style={{
+              fontFamily: "var(--font-quiz)",
+              fontSize: 14,
+              fontWeight: 400,
+              color: "#e84343",
+              marginTop: 6,
+              textAlign: "center",
+            }}
+          >
+            {subtitle}
           </p>
         )}
       </div>

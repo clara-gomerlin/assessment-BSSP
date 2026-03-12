@@ -531,18 +531,80 @@ function Content({
 }
 
 /* ============================================================
-   Revenue Transition 1 — Social Proof for B2B diagnostic
+   Revenue Transition — Confiança intro (before Score de Confiança)
    ============================================================ */
-function RevenueSocialProof1({ onContinue }: { onContinue: () => void }) {
+function RevenueConfiancaIntro({ onContinue }: { onContinue: () => void }) {
+  return (
+    <Content onContinue={onContinue}>
+      <div style={{ textAlign: "center", marginTop: 24 }}>
+        <h1
+          style={{
+            fontSize: 24,
+            fontWeight: 700,
+            color: "#2D3246",
+            lineHeight: 1.3,
+            marginBottom: 12,
+          }}
+        >
+          Todo líder de receita deve ser capaz de{" "}
+          <strong>responder 5 perguntas.</strong>
+        </h1>
+        <h2
+          style={{
+            fontSize: 18,
+            fontWeight: 500,
+            color: "#000",
+            lineHeight: 1.4,
+            marginBottom: 24,
+          }}
+        >
+          <strong>Apenas 5.</strong> Maaaas...{"\n"}Com velocidade e confiança.
+        </h2>
+        <p
+          style={{
+            fontSize: 15,
+            fontWeight: 400,
+            color: "#64748b",
+            lineHeight: 1.5,
+            maxWidth: 380,
+            margin: "0 auto",
+          }}
+        >
+          Descubra quais são as perguntas e selecione a resposta que mais se
+          adequa a sua realidade. Seja sincero!
+        </p>
+      </div>
+    </Content>
+  );
+}
+
+/* ============================================================
+   Revenue Social Proof — Reusable template
+   ============================================================ */
+function RevenueSocialProofCard({
+  onContinue,
+  title1,
+  title2,
+  quote,
+  author,
+  footer,
+}: {
+  onContinue: () => void;
+  title1: string;
+  title2: string;
+  quote: string;
+  author: string;
+  footer: string;
+}) {
   return (
     <Content onContinue={onContinue}>
       <div style={{ textAlign: "center", marginBottom: 16 }}>
         <span style={{ fontSize: 24, fontWeight: 700, color: "#2D3246" }}>
-          +500 empresas
+          {title1}
         </span>
         <br />
         <span style={{ fontSize: 16, fontWeight: 500, color: "#000" }}>
-          já usaram esse framework para destravar receita
+          {title2}
         </span>
       </div>
 
@@ -585,9 +647,7 @@ function RevenueSocialProof1({ onContinue }: { onContinue: () => void }) {
               lineHeight: 1.3,
             }}
           >
-            Antes do diagnóstico, não tínhamos clareza de onde estava o gargalo.
-            Descobrimos que nossa geração de demanda era forte, mas a eficiência
-            em vendas estava travando tudo.
+            {quote}
           </span>
           <span
             style={{
@@ -601,7 +661,7 @@ function RevenueSocialProof1({ onContinue }: { onContinue: () => void }) {
           </span>
         </div>
         <span style={{ fontSize: 16, fontWeight: 200, color: "#000" }}>
-          CEO de SaaS B2B — Faturamento R$ 3M/ano
+          {author}
         </span>
         <StarsSVG />
       </div>
@@ -615,11 +675,74 @@ function RevenueSocialProof1({ onContinue }: { onContinue: () => void }) {
             lineHeight: 1.5,
           }}
         >
-          Baseado nas 4 alavancas de receita: Posicionamento & Preço, Geração de
-          Demanda, Eficiência em Vendas e Expansão de Base.
+          {footer}
         </p>
       </div>
     </Content>
+  );
+}
+
+/* ============================================================
+   Revenue Transition 1 — Copy 01
+   ============================================================ */
+function RevenueSocialProof1({ onContinue }: { onContinue: () => void }) {
+  return (
+    <RevenueSocialProofCard
+      onContinue={onContinue}
+      title1="+200 empresas"
+      title2="já usaram esse framework para destravar receita"
+      quote="Com o apoio estratégico do GLA, elevamos o nível do nosso time de Growth na Globo. A principal mudança foi a adoção de uma mentalidade real de experimentação. Conseguimos implementar frameworks próprios de testes e fortalecer nossa cultura de experimentos."
+      author="Marcos Caringi — Dir. de Marketing & Growth @ Manual | Ex-Head of Growth @ Globo"
+      footer="Baseado nas 4 alavancas de receita: Posicionamento & Preço, Geração de Demanda, Eficiência em Vendas e Expansão de Base."
+    />
+  );
+}
+
+/* ============================================================
+   Revenue Transition — Copy 02
+   ============================================================ */
+function RevenueSocialProof3({ onContinue }: { onContinue: () => void }) {
+  return (
+    <RevenueSocialProofCard
+      onContinue={onContinue}
+      title1="Antes de investir mais em aquisição"
+      title2="encontre sua receita escondida"
+      quote="Com o apoio do GLA, eu e a equipe da Caffeine Army aumentamos a retenção de clientes em 33% e reduzimos o CAC de Facebook em 50%. Mais do que números, ganhamos clareza sobre dados, experimentação e um novo ritmo de crescimento."
+      author="Josean Neto — Líder de Growth @ Caffeine Army"
+      footer="O diagnóstico identifica sua melhor alavanca de receita sem investir mais em ADS."
+    />
+  );
+}
+
+/* ============================================================
+   Revenue Transition — Copy 03
+   ============================================================ */
+function RevenueSocialProof4({ onContinue }: { onContinue: () => void }) {
+  return (
+    <RevenueSocialProofCard
+      onContinue={onContinue}
+      title1="Toda empresa B2B que cresce rápido"
+      title2="tem receita escondida na operação"
+      quote="Quando os desafios de Growth começaram a escalar, decidi procurar a consultoria do GLA. A profundidade técnica, a expertise e a qualidade das discussões trouxeram clareza sobre os gargalos e oportunidades na nossa operação de receita."
+      author="Marco Piacentini — Head of Growth @ Quero Educação"
+      footer="Consultoria que entrega método, diagnóstico com dados, plano de ação e ritmo de execução."
+    />
+  );
+}
+
+/* ============================================================
+   Revenue Transition — Copy 04
+   ============================================================ */
+function RevenueSocialProof5({ onContinue }: { onContinue: () => void }) {
+  return (
+    <RevenueSocialProofCard
+      onContinue={onContinue}
+      title1="Se o CAC subir amanhã"
+      title2="você sabe qual alavanca mexer?"
+      quote="Antes da consultoria, faltava clareza sobre o que priorizar para gerar resultado. Com o GLA, montamos um plano com dados e executamos! Hoje tenho total confiança do time e, principalmente, do CEO."
+      author="Renan Fernandes — Ex-Head of Growth @ Movidesk"
+      footer="Método aplicado em empresas B2B que faturam de R$5M a R$100M/ano."
+    />
   );
 }
 
@@ -1001,10 +1124,18 @@ export default function TransitionScreen({
       return <Transition2 onContinue={onContinue} />;
     case "after-desafios":
       return <Transition3 onContinue={onContinue} />;
+    case "revenue-confianca-intro":
+      return <RevenueConfiancaIntro onContinue={onContinue} />;
     case "revenue-social-proof-1":
       return <RevenueSocialProof1 onContinue={onContinue} />;
     case "revenue-social-proof-2":
       return <RevenueSocialProof2 onContinue={onContinue} />;
+    case "revenue-social-proof-3":
+      return <RevenueSocialProof3 onContinue={onContinue} />;
+    case "revenue-social-proof-4":
+      return <RevenueSocialProof4 onContinue={onContinue} />;
+    case "revenue-social-proof-5":
+      return <RevenueSocialProof5 onContinue={onContinue} />;
     // BSSP IPRT transitions
     case "bssp-social-proof":
       return <BSSPTransition1 onContinue={onContinue} />;

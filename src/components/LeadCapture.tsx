@@ -21,6 +21,7 @@ function getDigits(value: string): string {
 
 export default function LeadCapture({ onSubmit, quizType }: LeadCaptureProps) {
   const isIPRT = quizType === "iprt";
+  const isDiagnostic = quizType === "diagnostic";
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -94,6 +95,8 @@ export default function LeadCapture({ onSubmit, quizType }: LeadCaptureProps) {
           {isIPRT ? (
             <>Descubra seu Índice de Prontidão e receba{" "}
             <span style={{ color: "#64748b" }}>insights personalizados</span></>
+          ) : isDiagnostic ? (
+            <>Descubra onde sua empresa está perdendo receita</>
           ) : (
             <>Descubra seu arquétipo e receba um guia para{" "}
             <span style={{ color: "#64748b" }}>acelerar a carreira</span></>
@@ -214,6 +217,8 @@ export default function LeadCapture({ onSubmit, quizType }: LeadCaptureProps) {
             {isIPRT ? (
               <>Garanta que seu email é válido! Vamos enviar seu{" "}
               <strong>relatório completo de prontidão</strong> para lá.</>
+            ) : isDiagnostic ? (
+              <><strong>Garanta que seu email é válido!</strong> Vamos enviar seu resultado completo pra lá.</>
             ) : (
               <>Garanta que seu email é válido! Vamos mandar seu{" "}
               <strong>Guia de Arquétipos de Carreira</strong> para lá.</>

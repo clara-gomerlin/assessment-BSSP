@@ -29,6 +29,27 @@ const TESTIMONIALS = [
   },
 ];
 
+const DIAGNOSTIC_TESTIMONIALS = [
+  {
+    quote:
+      "Com o apoio estratégico do GLA, elevamos o nível do nosso time de Growth na Globo. A principal mudança foi a adoção de uma mentalidade real de experimentação.",
+    author: "Marcos Caringi",
+    role: "Dir. de Marketing & Growth @ Manual | Ex-Head of Growth @ Globo",
+  },
+  {
+    quote:
+      "Com o apoio do GLA, eu e a equipe da Caffeine Army aumentamos a retenção de clientes em 33% e reduzimos o CAC de Facebook em 50%.",
+    author: "Josean Neto",
+    role: "Líder de Growth @ Caffeine Army",
+  },
+  {
+    quote:
+      "Antes da consultoria, faltava clareza sobre o que priorizar para gerar resultado. Com o GLA, montamos um plano com dados e executamos!",
+    author: "Renan Fernandes",
+    role: "Ex-Head of Growth @ Movidesk",
+  },
+];
+
 const BSSP_TESTIMONIALS = [
   {
     quote:
@@ -92,7 +113,7 @@ export default function LoadingScreen({ apiReady, onContinue, labels, quizType }
   const progressItems = labels
     ? PROGRESS_ITEMS.map((item, i) => ({ ...item, label: labels[i] || item.label }))
     : PROGRESS_ITEMS;
-  const testimonials = quizType === "iprt" ? BSSP_TESTIMONIALS : TESTIMONIALS;
+  const testimonials = quizType === "iprt" ? BSSP_TESTIMONIALS : quizType === "diagnostic" ? DIAGNOSTIC_TESTIMONIALS : TESTIMONIALS;
   const [progresses, setProgresses] = useState([0, 0, 0]);
   const [barsFinished, setBarsFinished] = useState(false);
   const [activeTestimonial, setActiveTestimonial] = useState(0);
@@ -166,9 +187,9 @@ export default function LoadingScreen({ apiReady, onContinue, labels, quizType }
           flex: 1,
           display: "flex",
           flexDirection: "column",
-          justifyContent: "center",
+          justifyContent: "flex-start",
           gap: 16,
-          padding: "12px 0",
+          paddingTop: "15vh",
         }}
       >
         {/* Header */}

@@ -115,6 +115,7 @@ export default function QuizPlayer({ quiz, questions }: QuizPlayerProps) {
   const [phase, setPhase] = useState<Phase>("hero");
   const [resultMarkdown, setResultMarkdown] = useState("");
   const [respondentName, setRespondentName] = useState("");
+  const [respondentEmail, setRespondentEmail] = useState("");
 
   // Transition state
   const [transitionQueue, setTransitionQueue] = useState<string[]>([]);
@@ -326,6 +327,7 @@ export default function QuizPlayer({ quiz, questions }: QuizPlayerProps) {
   const handleLeadSubmit = useCallback(
     async (name: string, email: string, phone: string) => {
       setRespondentName(name);
+      setRespondentEmail(email);
 
       // Update lead data in the existing response record + sync to HubSpot
       if (responseId) {
@@ -438,7 +440,10 @@ export default function QuizPlayer({ quiz, questions }: QuizPlayerProps) {
             analysis={analysisData}
             markdown={resultMarkdown}
             respondentName={respondentName}
+            respondentEmail={respondentEmail}
             quizSlug={quiz.slug}
+            quizId={quiz.id}
+            responseId={responseId}
             ctaWhatsappUrl={quiz.settings.cta_whatsapp_url}
             hubspotContactId={hubspotContactId}
             quizTitle={quiz.title}
@@ -453,7 +458,10 @@ export default function QuizPlayer({ quiz, questions }: QuizPlayerProps) {
           analysis={analysisData}
           markdown={resultMarkdown}
           respondentName={respondentName}
+          respondentEmail={respondentEmail}
           quizSlug={quiz.slug}
+          quizId={quiz.id}
+          responseId={responseId}
           ctaWhatsappUrl={quiz.settings.cta_whatsapp_url}
           hubspotContactId={hubspotContactId}
           quizTitle={quiz.title}
@@ -468,6 +476,9 @@ export default function QuizPlayer({ quiz, questions }: QuizPlayerProps) {
         dimensions={quiz.dimensions}
         markdown={resultMarkdown}
         respondentName={respondentName}
+        respondentEmail={respondentEmail}
+        quizId={quiz.id}
+        responseId={responseId}
         ctaWhatsappUrl={quiz.settings.cta_whatsapp_url}
         hubspotContactId={hubspotContactId}
         quizTitle={quiz.title}
@@ -549,7 +560,7 @@ export default function QuizPlayer({ quiz, questions }: QuizPlayerProps) {
                 </svg>
               </button>
               <span style={{ fontSize: 16, fontWeight: 700, color: "#000", fontFamily: isIPRT ? "'Montserrat', system-ui, sans-serif" : "var(--font-quiz)" }}>
-                {currentSectionLabel}
+                {diagnosticProgress ? `${diagnosticProgress.globalCurrent}/${diagnosticProgress.globalTotal} - ` : ""}{currentSectionLabel}
               </span>
               <div style={{ width: 32, visibility: "hidden" }} />
             </div>
@@ -680,6 +691,11 @@ export default function QuizPlayer({ quiz, questions }: QuizPlayerProps) {
                 handleAnswer(currentQuestion.id, optionId)
               }
               onMultiConfirm={handleMultiConfirm}
+              subtitle={
+                isDiagnostic && currentSectionLabel.toLowerCase().includes("confian")
+                  ? "Selecione a resposta mais adequada a sua realidade"
+                  : undefined
+              }
             />
           </div>
         </div>

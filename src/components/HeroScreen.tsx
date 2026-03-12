@@ -120,7 +120,7 @@ export default function HeroScreen({ quiz, onStart }: HeroScreenProps) {
               {isIPRT
                 ? "Descubra seu Índice de Prontidão para a Reforma Tributária — e onde estão suas maiores lacunas antes que o novo sistema entre em vigor."
                 : isDiagnostic
-                ? "Baseado em +200 consultorias do GLA, esta análise investiga sua operação de receita em 4 dimensões e revela o que não aparece no dashboard:"
+                ? "Baseado em +200 consultorias, esta análise revela o que não aparece no seu dashboard:"
                 : "90% dos profissionais de marketing preocupados com sua carreira se encaixam em um desses 5 arquétipos. Qual é o seu?"}
             </p>
           </section>
@@ -192,7 +192,7 @@ export default function HeroScreen({ quiz, onStart }: HeroScreenProps) {
               {isIPRT
                 ? "Ao final do diagnóstico, você vai ter:"
                 : isDiagnostic
-                ? "15 minutos, 25 perguntas e um mapa claro de onde agir."
+                ? <><strong style={{ fontWeight: 700, color: "#0f172a" }}>15 minutos, 25 perguntas e um mapa claro de onde agir.</strong></>
                 : "Ao final do diagnóstico, você vai ter:"}
             </p>
             <ul
@@ -275,7 +275,7 @@ export default function HeroScreen({ quiz, onStart }: HeroScreenProps) {
               {isIPRT
                 ? "Diagnóstico gratuito. Desenvolvido pela BSSP com base na experiência de +10.000 alunos."
                 : isDiagnostic
-                ? "Usado por fundadores e líderes de receita de empresas B2B que faturam mais de R$50M/ano."
+                ? null
                 : "Baseado em +200 mentorias individuais e padrões reais de profissionais de marketing"}
             </p>
           </section>
@@ -304,7 +304,7 @@ export default function HeroScreen({ quiz, onStart }: HeroScreenProps) {
             maxWidth: 540,
             margin: "0 auto",
             padding: "16px 32px",
-            background: isIPRT ? "#32373c" : "#0f172a",
+            background: isIPRT ? "#32373c" : "#2D3246",
             color: "white",
             fontFamily: isIPRT ? "'Montserrat', system-ui, sans-serif" : "'DM Sans', system-ui, sans-serif",
             fontSize: "1rem",

@@ -11,6 +11,9 @@ interface ResultViewProps {
   dimensions: Dimension[];
   markdown: string;
   respondentName: string;
+  respondentEmail?: string;
+  quizId?: string;
+  responseId?: string | null;
   ctaWhatsappUrl?: string;
   hubspotContactId?: string | null;
   quizTitle?: string;
@@ -23,6 +26,9 @@ export default function ResultView({
   dimensions,
   markdown,
   respondentName,
+  respondentEmail,
+  quizId,
+  responseId,
   ctaWhatsappUrl,
   hubspotContactId,
   quizTitle,
@@ -45,10 +51,13 @@ export default function ResultView({
       body: JSON.stringify({
         hubspot_contact_id: hubspotContactId,
         contact_name: respondentName,
+        contact_email: respondentEmail,
         quiz_title: quizTitle || "Quiz",
+        quiz_id: quizId,
+        response_id: responseId,
       }),
     }).catch((err) => console.error("Deal creation error:", err));
-  }, [hubspotContactId, respondentName, quizTitle, dealCreated]);
+  }, [hubspotContactId, respondentName, respondentEmail, quizTitle, quizId, responseId, dealCreated]);
 
   return (
     <div

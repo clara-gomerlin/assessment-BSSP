@@ -15,6 +15,10 @@
   --font-quiz: 'Rubik', system-ui, sans-serif;
 }
 
+html {
+  overflow-y: scroll;
+}
+
 body {
   font-family: var(--font-body);
   color: #060606;

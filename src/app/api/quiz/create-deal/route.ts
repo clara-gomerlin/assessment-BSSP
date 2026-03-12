@@ -1,7 +1,13 @@
 import { NextRequest } from "next/server";
+import { createClient } from "@supabase/supabase-js";
 import { createDeal } from "@/lib/hubspot";
 
-const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+function getSupabase() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  );
+}
 
 // Rate limiter (per IP, 5 requests per minute)
 const rateMap = new Map<string, { count: number; resetAt: number }>();
@@ -27,7 +33,7 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { hubspot_contact_id, contact_name, quiz_title } = body;
+    const { hubspot_contact_id, contact_name, contact_email, quiz_title, quiz_id, response_id } = body;
 
     if (!hubspot_contact_id || typeof hubspot_contact_id !== "string") {
       return Response.json({ error: "hubspot_contact_id inválido" }, { status: 400 });
@@ -49,6 +55,24 @@ export async function POST(request: NextRequest) {
 
     if (!dealId) {
       return Response.json({ error: "Erro ao criar negócio" }, { status: 500 });
+    }
+
+    // Log integration event in Supabase
+    const supabase = getSupabase();
+    const eventoConversao = `Assessment ${quiz_title}`;
+    try {
+      await supabase.from("integration_events").insert({
+        email: contact_email || null,
+        respondent_name: contact_name.trim(),
+        quiz_id: quiz_id || null,
+        quiz_title,
+        evento_de_conversao: eventoConversao,
+        tipo_registro: "negócio",
+        hubspot_id: dealId,
+        response_id: response_id || null,
+      });
+    } catch (logErr) {
+      console.error("Integration event log error:", logErr);
     }
 
     return Response.json({ success: true, deal_id: dealId });

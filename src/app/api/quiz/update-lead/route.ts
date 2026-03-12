@@ -136,6 +136,24 @@ export async function POST(request: NextRequest) {
       console.error("HubSpot contact sync error:", hsErr);
     }
 
+    // Log integration event in Supabase
+    const eventoConversao = `Assessment ${quizTitle}`;
+    try {
+      await supabase.from("integration_events").insert({
+        email: respondent_email.trim().toLowerCase(),
+        respondent_name: respondent_name.trim(),
+        quiz_id,
+        quiz_title: quizTitle,
+        evento_de_conversao: eventoConversao,
+        produto: "Consultoria",
+        tipo_registro: "contato",
+        hubspot_id: hubspotContactId,
+        response_id,
+      });
+    } catch (logErr) {
+      console.error("Integration event log error:", logErr);
+    }
+
     return Response.json({ success: true, hubspot_contact_id: hubspotContactId });
   } catch (error) {
     console.error("Update lead error:", error);
