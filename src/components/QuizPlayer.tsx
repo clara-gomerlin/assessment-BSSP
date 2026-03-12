@@ -219,22 +219,12 @@ export default function QuizPlayer({ quiz, questions }: QuizPlayerProps) {
       return; // Don't auto-advance for multi-select
     }
 
-    // Check if this is an "Outro" option — don't auto-advance first time (wait for text)
+    // Check if this is an "Outro" option — never auto-advance, wait for text + confirm
     const isOtherOption = question.options.find(
       (o) => o.id === optionId && o.label.toLowerCase().startsWith("outro")
     );
-    if (isOtherOption && !answers[questionId]) {
-      // First click on "Outro" — just select, don't advance
+    if (isOtherOption) {
       setAnswers({ ...answers, [questionId]: optionId });
-      return;
-    }
-    if (isOtherOption && answers[questionId] === optionId) {
-      // Already selected "Outro" and clicking confirm — advance
-      const newAnswers = { ...answers, [questionId]: optionId };
-      setAnswers(newAnswers);
-      setTimeout(() => {
-        advanceToNext(currentIndex + 1);
-      }, 400);
       return;
     }
 
@@ -245,6 +235,10 @@ export default function QuizPlayer({ quiz, questions }: QuizPlayerProps) {
     setTimeout(() => {
       advanceToNext(currentIndex + 1);
     }, 400);
+  }
+
+  function handleOtherConfirm() {
+    advanceToNext(currentIndex + 1);
   }
 
   function handleMultiConfirm(optionIds: string[]) {
@@ -724,6 +718,7 @@ export default function QuizPlayer({ quiz, questions }: QuizPlayerProps) {
               onOtherText={(qId, text) =>
                 setOtherTexts((prev) => ({ ...prev, [qId]: text }))
               }
+              onOtherConfirm={handleOtherConfirm}
             />
           </div>
         </div>

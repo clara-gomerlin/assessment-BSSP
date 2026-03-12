@@ -34,7 +34,7 @@ const DIAGNOSTIC_TESTIMONIALS = [
     quote:
       "Com o apoio estratégico do GLA adotamos uma mentalidade de growth, implementamos frameworks de testes e imprimimos ritmo na cultura de experimentação.",
     author: "Marcos Caringi",
-    role: "Dir. Marketing @ Manual | ex-Head of Growth @ Globo",
+    role: "Dir. Marketing @Manual | ex-Head of Growth @ Globo",
   },
   {
     quote:

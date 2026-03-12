@@ -10,6 +10,7 @@ interface QuestionCardProps {
   onMultiConfirm?: (optionIds: string[]) => void;
   subtitle?: string;
   onOtherText?: (questionId: string, text: string) => void;
+  onOtherConfirm?: () => void;
 }
 
 export default function QuestionCard({
@@ -19,6 +20,7 @@ export default function QuestionCard({
   onMultiConfirm,
   subtitle,
   onOtherText,
+  onOtherConfirm,
 }: QuestionCardProps) {
   const isMulti = question.type === "multiple_choice";
   const selectedArray = Array.isArray(selectedOption)
@@ -40,11 +42,6 @@ export default function QuestionCard({
     if (isMulti) {
       onSelect(optionId);
     } else {
-      // If clicking "Outro" option, don't auto-advance — wait for text input
-      if (otherOption && optionId === otherOption.id) {
-        onSelect(optionId);
-        return;
-      }
       onSelect(optionId);
     }
   }
@@ -94,7 +91,7 @@ export default function QuestionCard({
             style={{
               fontFamily: "var(--font-quiz)",
               fontSize: 14,
-              fontWeight: 400,
+              fontWeight: 700,
               color: "#5F687B",
               marginTop: 6,
               textAlign: "center",
@@ -241,6 +238,12 @@ export default function QuestionCard({
             }}
             placeholder="Digite sua resposta..."
             autoFocus
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && otherText.trim()) {
+                onOtherText?.(question.id, otherText.trim());
+                onOtherConfirm?.();
+              }
+            }}
             style={{
               width: "100%",
               padding: "14px 16px",
@@ -255,22 +258,18 @@ export default function QuestionCard({
             onFocus={(e) => (e.target.style.borderColor = "#2D3246")}
             onBlur={(e) => (e.target.style.borderColor = "#c4c7cc")}
           />
-          <button
-            onClick={() => {
-              if (otherText.trim()) {
+          {otherText.trim() && (
+            <button
+              onClick={() => {
                 onOtherText?.(question.id, otherText.trim());
-                onSelect(otherOption!.id);
-              }
-            }}
-            className="continue-button"
-            style={{
-              maxWidth: 480,
-              opacity: otherText.trim() ? 1 : 0.4,
-              pointerEvents: otherText.trim() ? "auto" : "none",
-            }}
-          >
-            Continuar
-          </button>
+                onOtherConfirm?.();
+              }}
+              className="continue-button"
+              style={{ maxWidth: 480 }}
+            >
+              Continuar
+            </button>
+          )}
         </div>
       )}
 

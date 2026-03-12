@@ -91,7 +91,7 @@ export default function HeroScreen({ quiz, onStart }: HeroScreenProps) {
           >
             <h1
               style={{
-                fontFamily: isIPRT ? "'Montserrat', system-ui, sans-serif" : isDiagnostic ? "var(--font-quiz)" : "'Fraunces', Georgia, serif",
+                fontFamily: isIPRT ? "'Montserrat', system-ui, sans-serif" : isDiagnostic ? "'Rubik', var(--font-quiz)" : "'Fraunces', Georgia, serif",
                 fontWeight: 700,
                 fontSize: "clamp(1.75rem, 6vw, 2.5rem)",
                 lineHeight: 1.15,
@@ -117,7 +117,7 @@ export default function HeroScreen({ quiz, onStart }: HeroScreenProps) {
                   lineHeight: 1.3,
                   maxWidth: 400,
                   margin: "8px auto 0",
-                  fontFamily: "var(--font-quiz)",
+                  fontFamily: "'Rubik', var(--font-quiz)",
                 }}
               >
                 Descubra onde está vazando dinheiro na sua operação de receita
@@ -130,6 +130,7 @@ export default function HeroScreen({ quiz, onStart }: HeroScreenProps) {
                 lineHeight: 1.55,
                 maxWidth: 400,
                 margin: isDiagnostic ? "16px auto 0" : "0 auto",
+                fontFamily: isDiagnostic ? "'Rubik', sans-serif" : undefined,
               }}
             >
               {isIPRT
@@ -183,6 +184,7 @@ export default function HeroScreen({ quiz, onStart }: HeroScreenProps) {
                   color: "#334155",
                   boxShadow: "0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.03)",
                   whiteSpace: "nowrap",
+                  fontFamily: isDiagnostic ? "'Rubik', sans-serif" : undefined,
                 }}
               >
                 <span style={{ fontSize: "1rem", lineHeight: 1 }}>{badge.icon}</span>
@@ -207,7 +209,7 @@ export default function HeroScreen({ quiz, onStart }: HeroScreenProps) {
               {isIPRT
                 ? "Ao final do diagnóstico, você vai ter:"
                 : isDiagnostic
-                ? <><strong style={{ fontWeight: 700, color: "#0f172a" }}>10 minutos, 27 perguntas e um mapa claro de onde agir.</strong></>
+                ? <><strong style={{ fontWeight: 700, color: "#0f172a", fontFamily: "'Rubik', sans-serif" }}>10 minutos, 27 perguntas e um mapa claro de onde agir.</strong></>
                 : "Ao final do diagnóstico, você vai ter:"}
             </p>
             <ul
