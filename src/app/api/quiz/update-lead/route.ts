@@ -61,22 +61,30 @@ export async function POST(request: NextRequest) {
     const supabase = getSupabase();
 
     // Resolve table name and quiz title from quiz settings
-    const { data: quiz } = await supabase
+    const { data: quiz, error: quizError } = await supabase
       .from("assessment_quizzes")
       .select("title, settings")
       .eq("id", quiz_id)
       .single();
+
+    if (quizError) {
+      console.error("Quiz fetch error:", quizError.message, quizError.code);
+    }
 
     const quizSettings = quiz?.settings as QuizSettings | null;
     const tables = getTableNames(quizSettings?.company_code);
 
     // Verify the response exists and has no lead data yet (prevents overwriting)
     // Also fetch answers and computed_scores for HubSpot sync
-    const { data: existing } = await supabase
+    const { data: existing, error: existingError } = await supabase
       .from(tables.responses)
       .select("respondent_email, answers, computed_scores")
       .eq("id", response_id)
       .single();
+
+    if (existingError) {
+      console.error("Response fetch error:", existingError.message, existingError.code);
+    }
 
     if (!existing) {
       return Response.json({ error: "Resposta não encontrada" }, { status: 404 });
@@ -96,7 +104,7 @@ export async function POST(request: NextRequest) {
       .eq("id", response_id);
 
     if (error) {
-      console.error("Update lead error:", error);
+      console.error("Update lead error:", error.message, error.code);
       return Response.json({ error: "Erro ao atualizar dados" }, { status: 500 });
     }
 
@@ -155,9 +163,9 @@ export async function POST(request: NextRequest) {
       console.error("Integration event log error:", logErr);
     }
 
-    // Sync lead data to GLA Supabase if this is a GLA quiz
-    const companyCode = quizSettings?.company_code?.toLowerCase();
-    if (companyCode === "gla") {
+    // Sync lead data to GLA Supabase for the Máquina de Receita quiz
+    const GLA_QUIZ_ID = "57a01f5f-47d2-4d06-903e-99ffc3dff78d";
+    if (quiz_id === GLA_QUIZ_ID) {
       try {
         const glaSupa = getGLASupabase();
         if (glaSupa) {

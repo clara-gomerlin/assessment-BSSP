@@ -317,9 +317,12 @@ Foque a análise na alavanca mais fraca (${diagResult.weakest.name}). Responda A
     }
 
     // Save response to database
-    const { data: savedResponse, error: saveError } = await supabase
+    // Generate ID client-side to avoid RLS issues with RETURNING
+    const responseId = crypto.randomUUID();
+    const { error: saveError } = await supabase
       .from(tables.responses)
       .insert({
+        id: responseId,
         quiz_id,
         respondent_name: respondent_name || null,
         respondent_email: respondent_email || null,
@@ -329,25 +332,24 @@ Foque a análise na alavanca mais fraca (${diagResult.weakest.name}). Responda A
           selected_option_id,
         })),
         computed_scores: computedScores,
-      })
-      .select("id")
-      .single();
+      });
 
     if (saveError) {
-      console.error("Save error:", saveError);
+      console.error("Save error full:", Object.getOwnPropertyNames(saveError).reduce((acc: Record<string, unknown>, k) => { acc[k] = (saveError as Record<string, unknown>)[k]; return acc; }, {}));
+      console.error("Save error keys:", Object.keys(saveError), "type:", typeof saveError, "string:", String(saveError));
       return Response.json({ error: "Erro ao salvar respostas" }, { status: 500 });
     }
 
-    // Sync to GLA Supabase if this is a GLA quiz
-    const companyCode = quizSettings?.company_code?.toLowerCase();
-    if (companyCode === "gla") {
+    // Sync to GLA Supabase for the Máquina de Receita quiz
+    const GLA_QUIZ_ID = "57a01f5f-47d2-4d06-903e-99ffc3dff78d";
+    if (quiz_id === GLA_QUIZ_ID) {
       try {
         const glaSupa = getGLASupabase();
         if (glaSupa) {
           await glaSupa.from("assessment maquina de receita").insert({
             quiz_id,
             quiz_title: quiz.title || "Máquina de Receita",
-            response_id: savedResponse.id,
+            response_id: responseId,
             evento_de_conversao: `Assessment ${quiz.title || "Máquina de Receita"}`,
             produto: "Consultoria",
             tipo_registro: "contato",
@@ -365,7 +367,6 @@ Foque a análise na alavanca mais fraca (${diagResult.weakest.name}). Responda A
 
     // Stream response using SSE
     const encoder = new TextEncoder();
-    const responseId = savedResponse.id;
     const stream = new ReadableStream({
       async start(controller) {
         // Send meta data first (include response_id for later lead update)
@@ -438,7 +439,7 @@ Foque a análise na alavanca mais fraca (${diagResult.weakest.name}). Responda A
             ai_result: aiResultData,
             result_markdown: fullText,
           })
-          .eq("id", savedResponse.id);
+          .eq("id", responseId);
 
         controller.enqueue(encoder.encode("data: [DONE]\n\n"));
         controller.close();
