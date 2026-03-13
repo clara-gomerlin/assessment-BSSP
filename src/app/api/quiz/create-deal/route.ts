@@ -83,15 +83,14 @@ export async function POST(request: NextRequest) {
       try {
         const glaSupa = getGLASupabase();
         if (glaSupa) {
-          // Fluxo 2: Insert conversion event (negócio) into GLA eventos_conversao
-          await glaSupa.from("eventos_conversao").insert({
-            nome: contact_name.trim(),
-            email: contact_email || null,
-            evento_conversao: eventoConversao,
-            tipo_registro: "negócio",
-            etapa_negocio: "Pendente",
-            data_conversao: new Date().toISOString(),
-          });
+          // Fluxo 2: Update existing contato record to negócio
+          await glaSupa.from("eventos_conversao")
+            .update({
+              tipo_registro: "negócio",
+              etapa_negocio: "Pendente",
+            })
+            .eq("email", (contact_email || "").trim().toLowerCase())
+            .eq("tipo_registro", "contato");
         }
       } catch (glaErr) {
         console.error("GLA eventos_conversao sync error:", glaErr);
