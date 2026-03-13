@@ -178,6 +178,17 @@ export async function POST(request: NextRequest) {
               hubspot_contact_id: hubspotContactId,
             })
             .eq("response_id", response_id);
+
+          // Fluxo 1: Insert conversion event (contato) into GLA eventos_conversao
+          await glaSupa.from("eventos_conversao").insert({
+            nome: respondent_name.trim(),
+            email: respondent_email.trim().toLowerCase(),
+            telefone: respondent_phone?.trim() || null,
+            evento_conversao: eventoConversao,
+            produto: "Consultoria",
+            tipo_registro: "contato",
+            data_conversao: new Date().toISOString(),
+          });
         }
       } catch (glaErr) {
         console.error("GLA Supabase lead sync error:", glaErr);

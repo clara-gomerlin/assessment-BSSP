@@ -1,5 +1,6 @@
 import { NextRequest } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { getGLASupabase } from "@/lib/supabase";
 import { createDeal } from "@/lib/hubspot";
 
 function getSupabase() {
@@ -74,6 +75,27 @@ export async function POST(request: NextRequest) {
       });
     } catch (logErr) {
       console.error("Integration event log error:", logErr);
+    }
+
+    // Sync to GLA Supabase eventos_conversao for the Máquina de Receita quiz
+    const GLA_QUIZ_ID = "57a01f5f-47d2-4d06-903e-99ffc3dff78d";
+    if (quiz_id === GLA_QUIZ_ID) {
+      try {
+        const glaSupa = getGLASupabase();
+        if (glaSupa) {
+          // Fluxo 2: Insert conversion event (negócio) into GLA eventos_conversao
+          await glaSupa.from("eventos_conversao").insert({
+            nome: contact_name.trim(),
+            email: contact_email || null,
+            evento_conversao: eventoConversao,
+            tipo_registro: "negócio",
+            etapa_negocio: "Pendente",
+            data_conversao: new Date().toISOString(),
+          });
+        }
+      } catch (glaErr) {
+        console.error("GLA eventos_conversao sync error:", glaErr);
+      }
     }
 
     return Response.json({ success: true, deal_id: dealId });
