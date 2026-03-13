@@ -266,7 +266,7 @@ export async function createDeal({
   scores?: ComputedScores | null;
 }): Promise<string | null> {
   const properties: Record<string, string> = {
-    dealname: `Consultoria — ${contactName}`,
+    dealname: contactName,
     pipeline: "823967148",
     dealstage: "1219760709",
     evento_de_conversao: `Assessment ${quizName}`,
