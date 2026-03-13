@@ -614,12 +614,12 @@ function RevenueSocialProofCard({
           flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
-          gap: 6,
+          gap: 8,
           borderRadius: 12,
-          border: "2px solid #fff",
           background: "#fff",
           boxShadow:
             "rgba(56,70,174,0.05) 0px 4px 9px, rgba(56,70,174,0.04) 0px 16px 16px",
+          minHeight: 180,
         }}
       >
         <div
@@ -628,7 +628,6 @@ function RevenueSocialProofCard({
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            minHeight: 133,
             padding: "18px 24px",
             width: "100%",
             borderRadius: 8,
@@ -660,7 +659,7 @@ function RevenueSocialProofCard({
             <QuoteSVG />
           </span>
         </div>
-        <span style={{ fontSize: 16, fontWeight: 200, color: "#000" }}>
+        <span style={{ fontSize: 14, fontWeight: 200, color: "#000" }}>
           {author}
         </span>
         <StarsSVG />
