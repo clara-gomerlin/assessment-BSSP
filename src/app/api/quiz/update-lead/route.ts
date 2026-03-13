@@ -4,6 +4,7 @@ import { getTableNames, getGLASupabase } from "@/lib/supabase";
 import { QuizSettings } from "@/lib/types";
 import { upsertContact } from "@/lib/hubspot";
 import { sendDiagnosticResultEmail } from "@/lib/email";
+import { syncToChatwoot } from "@/lib/chatwoot";
 
 function getSupabase() {
   return createClient(
@@ -191,13 +192,12 @@ export async function POST(request: NextRequest) {
     const quizDimensions = (quiz?.dimensions || []) as { code: string; name: string; emoji: string }[];
 
     if (computedScores && quizDimensions.length > 0) {
+      const sorted = [...computedScores.dimensions].sort((a, b) => b.normalizedScore - a.normalizedScore);
+      const strongest = sorted[0];
+      const weakest = sorted[sorted.length - 1];
+      const dimLookup = new Map(quizDimensions.map((d) => [d.code, d]));
+
       try {
-        const sorted = [...computedScores.dimensions].sort((a, b) => b.normalizedScore - a.normalizedScore);
-        const strongest = sorted[0];
-        const weakest = sorted[sorted.length - 1];
-
-        const dimLookup = new Map(quizDimensions.map((d) => [d.code, d]));
-
         await sendDiagnosticResultEmail({
           recipientName: respondent_name.trim(),
           recipientEmail: respondent_email.trim().toLowerCase(),
@@ -226,6 +226,35 @@ export async function POST(request: NextRequest) {
         });
       } catch (emailErr) {
         console.error("Result email error:", emailErr);
+      }
+
+      // Sync to Chatwoot
+      try {
+        await syncToChatwoot({
+          recipientName: respondent_name.trim(),
+          recipientEmail: respondent_email.trim().toLowerCase(),
+          recipientPhone: respondent_phone?.trim(),
+          quizTitle,
+          scoreGeral: computedScores.scoreGeral,
+          scoreGeralLabel: getScoreLabel(computedScores.scoreGeral),
+          dimensions: computedScores.dimensions.map((d) => ({
+            name: dimLookup.get(d.code)?.name || d.label,
+            emoji: dimLookup.get(d.code)?.emoji || "📊",
+            normalizedScore: d.normalizedScore,
+          })),
+          strongest: {
+            name: dimLookup.get(strongest.code)?.name || strongest.label,
+            emoji: dimLookup.get(strongest.code)?.emoji || "📊",
+            normalizedScore: strongest.normalizedScore,
+          },
+          weakest: {
+            name: dimLookup.get(weakest.code)?.name || weakest.label,
+            emoji: dimLookup.get(weakest.code)?.emoji || "📊",
+            normalizedScore: weakest.normalizedScore,
+          },
+        });
+      } catch (cwErr) {
+        console.error("Chatwoot sync error:", cwErr);
       }
     }
 
