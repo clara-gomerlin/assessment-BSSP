@@ -171,6 +171,7 @@ export async function syncToChatwoot(data: {
   weakest: { name: string; emoji: string; normalizedScore: number };
 }): Promise<{ contactId: number | null; conversationId: number | null }> {
   if (!process.env.CHATWOOT_API_TOKEN) {
+    console.error("Chatwoot: CHATWOOT_API_TOKEN not set, skipping sync");
     return { contactId: null, conversationId: null };
   }
 
@@ -197,9 +198,13 @@ export async function syncToChatwoot(data: {
     return { contactId: null, conversationId: null };
   }
 
+  console.log("Chatwoot: contact synced, id:", contactId);
+
   // 2. Create conversation with result message
   const message = buildResultMessage(data);
   const conversationId = await createConversation(contactId, message);
+
+  console.log("Chatwoot: conversation created, id:", conversationId);
 
   return { contactId, conversationId };
 }
