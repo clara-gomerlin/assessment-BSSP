@@ -183,18 +183,12 @@ export async function upsertContact({
   lastName,
   phone,
   quizName,
-  answers,
-  questions,
-  scores,
 }: {
   email: string;
   firstName: string;
   lastName: string;
   phone?: string;
   quizName: string;
-  answers?: QuizAnswer[];
-  questions?: QuestionInfo[];
-  scores?: ComputedScores | null;
 }): Promise<string | null> {
   const properties: Record<string, string> = {
     email,
@@ -208,13 +202,7 @@ export async function upsertContact({
     properties.phone = phone;
   }
 
-  // Map quiz answers and scores to HubSpot properties
-  if (answers && questions) {
-    const quizProps = mapAnswersToProperties(answers, questions, scores || null);
-    Object.assign(properties, quizProps);
-  }
-
-  // Try to create with all properties
+  // Try to create contact
   const createRes = await hubspotFetch("/crm/v3/objects/contacts", {
     method: "POST",
     body: JSON.stringify({ properties }),
@@ -222,24 +210,6 @@ export async function upsertContact({
 
   if (createRes.ok && createRes.data?.id) {
     return createRes.data.id;
-  }
-
-  // If creation failed with 400 (invalid properties), retry with only standard props
-  if (createRes.status === 400) {
-    console.warn("HubSpot: creation failed with 400, retrying with standard properties only");
-    const standardProps: Record<string, string> = { email, firstname: firstName, lastname: lastName };
-    if (phone) standardProps.phone = phone;
-    standardProps.lead_source = properties.lead_source;
-    standardProps.produto = properties.produto;
-
-    const retryRes = await hubspotFetch("/crm/v3/objects/contacts", {
-      method: "POST",
-      body: JSON.stringify({ properties: standardProps }),
-    });
-
-    if (retryRes.ok && retryRes.data?.id) {
-      return retryRes.data.id;
-    }
   }
 
   // If contact already exists (409 conflict) or creation failed, search by email
@@ -263,7 +233,7 @@ export async function upsertContact({
     return null;
   }
 
-  // Update existing contact with all properties
+  // Update existing contact with standard properties
   await hubspotFetch(`/crm/v3/objects/contacts/${existingId}`, {
     method: "PATCH",
     body: JSON.stringify({ properties }),
@@ -274,25 +244,41 @@ export async function upsertContact({
 
 /**
  * Create a deal in HubSpot and associate it to a contact.
+ * Includes quiz answer and score properties on the deal.
  */
 export async function createDeal({
   contactId,
   contactName,
   quizName,
+  answers,
+  questions,
+  scores,
 }: {
   contactId: string;
   contactName: string;
   quizName: string;
+  answers?: QuizAnswer[];
+  questions?: QuestionInfo[];
+  scores?: ComputedScores | null;
 }): Promise<string | null> {
+  const properties: Record<string, string> = {
+    dealname: `Consultoria — ${contactName}`,
+    pipeline: "823967148",
+    dealstage: "1219760709",
+    evento_de_conversao: `Assessment ${quizName}`,
+    produto: "Consultoria",
+  };
+
+  // Map quiz answers and scores to deal properties
+  if (answers && questions) {
+    const quizProps = mapAnswersToProperties(answers, questions, scores || null);
+    Object.assign(properties, quizProps);
+  }
+
   const result = await hubspotFetch("/crm/v3/objects/deals", {
     method: "POST",
     body: JSON.stringify({
-      properties: {
-        dealname: `Consultoria — ${contactName}`,
-        dealstage: "1219760709",
-        evento_de_conversao: `Assessment ${quizName}`,
-        produto: "Consultoria",
-      },
+      properties,
       associations: [
         {
           to: { id: contactId },

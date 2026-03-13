@@ -1,7 +1,8 @@
 import { NextRequest } from "next/server";
 import { createClient } from "@supabase/supabase-js";
-import { getGLASupabase } from "@/lib/supabase";
-import { createDeal } from "@/lib/hubspot";
+import { getTableNames, getGLASupabase } from "@/lib/supabase";
+import { createDeal, QuizAnswer, QuestionInfo, ComputedScores } from "@/lib/hubspot";
+import { QuizSettings } from "@/lib/types";
 
 function getSupabase() {
   return createClient(
@@ -49,10 +50,54 @@ export async function POST(request: NextRequest) {
       return Response.json({ error: "quiz_title inválido" }, { status: 400 });
     }
 
+    // Fetch quiz answers and scores for deal properties
+    const supabase = getSupabase();
+    let answers: QuizAnswer[] = [];
+    let scores: ComputedScores | null = null;
+    let questionInfos: QuestionInfo[] = [];
+
+    if (quiz_id && response_id) {
+      // Get quiz settings to resolve table names
+      const { data: quiz } = await supabase
+        .from("assessment_quizzes")
+        .select("settings")
+        .eq("id", quiz_id)
+        .single();
+
+      const quizSettings = quiz?.settings as QuizSettings | null;
+      const tables = getTableNames(quizSettings?.company_code);
+
+      const { data: responseData } = await supabase
+        .from(tables.responses)
+        .select("answers, computed_scores")
+        .eq("id", response_id)
+        .single();
+
+      if (responseData) {
+        answers = (responseData.answers || []) as QuizAnswer[];
+        scores = (responseData.computed_scores || null) as ComputedScores | null;
+      }
+
+      const { data: questions } = await supabase
+        .from(tables.questions)
+        .select("id, order_index, options")
+        .eq("quiz_id", quiz_id)
+        .order("order_index", { ascending: true });
+
+      questionInfos = (questions || []).map((q: { id: string; order_index: number; options: { id: string; label: string }[] }) => ({
+        id: q.id,
+        order_index: q.order_index,
+        options: (q.options || []).map((o: { id: string; label: string }) => ({ id: o.id, label: o.label })),
+      }));
+    }
+
     const dealId = await createDeal({
       contactId: hubspot_contact_id,
       contactName: contact_name.trim(),
       quizName: quiz_title,
+      answers,
+      questions: questionInfos,
+      scores,
     });
 
     if (!dealId) {
@@ -60,7 +105,6 @@ export async function POST(request: NextRequest) {
     }
 
     // Log integration event in Supabase
-    const supabase = getSupabase();
     const eventoConversao = `Assessment ${quiz_title}`;
     try {
       await supabase.from("integration_events").insert({
