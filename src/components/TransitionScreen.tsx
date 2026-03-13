@@ -691,7 +691,7 @@ function RevenueSocialProof1({ onContinue }: { onContinue: () => void }) {
       onContinue={onContinue}
       title1="+200 empresas"
       title2="já usaram esse framework para destravar receita"
-      quote={<>Com o apoio estratégico do GLA adotamos uma mentalidade de growth, <br />implementamos frameworks de testes e imprimimos ritmo na cultura de experimentação.</>}
+      quote="Com o apoio estratégico do GLA adotamos uma mentalidade de growth, implementamos frameworks de testes e imprimimos ritmo na cultura de experimentação."
       author={<>Marcos Caringi — Dir. Marketing @Manual<br />ex-Head of Growth @Globo</>}
       footer="Baseado nas 4 alavancas de receita: Posicionamento & Preço, Geração de Demanda, Eficiência em Vendas e Expansão de Base."
     />
@@ -707,8 +707,8 @@ function RevenueSocialProof3({ onContinue }: { onContinue: () => void }) {
       onContinue={onContinue}
       title1="Antes de investir mais em aquisição"
       title2="encontre sua receita escondida"
-      quote={<>Com ajuda do GLA, eu e a equipe da Caffeine Army aumentamos a retenção de <br />clientes em 33% e reduzimos o CAC de facebook em 50%.</>}
-      author="Josean Neto — Líder de Growth @CaffeineArmy"
+      quote="Com ajuda do GLA, eu e a equipe da Caffeine Army aumentamos a retenção de clientes em 33% e reduzimos o CAC de facebook em 50%."
+      author="Josean Neto - Líder de Growth @CaffeineArmy"
       footer="O diagnóstico identifica sua melhor alavanca de receita sem investir mais em ADS."
     />
   );
