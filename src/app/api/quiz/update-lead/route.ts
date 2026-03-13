@@ -3,6 +3,7 @@ import { createClient } from "@supabase/supabase-js";
 import { getTableNames, getGLASupabase } from "@/lib/supabase";
 import { QuizSettings } from "@/lib/types";
 import { upsertContact } from "@/lib/hubspot";
+import { sendDiagnosticResultEmail } from "@/lib/email";
 
 function getSupabase() {
   return createClient(
@@ -30,6 +31,14 @@ function isRateLimited(ip: string): boolean {
   }
   entry.count++;
   return entry.count > RATE_LIMIT;
+}
+
+function getScoreLabel(score: number): string {
+  if (score >= 81) return "Máquina Afinada";
+  if (score >= 61) return "Em Aceleração";
+  if (score >= 41) return "Crescimento Vulnerável";
+  if (score >= 21) return "Na Armadilha";
+  return "Alerta Vermelho";
 }
 
 export async function POST(request: NextRequest) {
@@ -63,7 +72,7 @@ export async function POST(request: NextRequest) {
     // Resolve table name and quiz title from quiz settings
     const { data: quiz, error: quizError } = await supabase
       .from("assessment_quizzes")
-      .select("title, settings")
+      .select("title, settings, dimensions")
       .eq("id", quiz_id)
       .single();
 
@@ -77,7 +86,7 @@ export async function POST(request: NextRequest) {
     // Verify the response exists and has no lead data yet (prevents overwriting)
     const { data: existing, error: existingError } = await supabase
       .from(tables.responses)
-      .select("respondent_email")
+      .select("respondent_email, computed_scores, ai_result")
       .eq("id", response_id)
       .single();
 
@@ -173,6 +182,50 @@ export async function POST(request: NextRequest) {
         }
       } catch (glaErr) {
         console.error("GLA Supabase lead sync error:", glaErr);
+      }
+    }
+
+    // Send result email if we have scores (diagnostic quiz)
+    const computedScores = existing.computed_scores as { scoreGeral: number; dimensions: { code: string; label: string; normalizedScore: number }[] } | null;
+    const aiResult = existing.ai_result as { diagnostico?: string; sinais?: string; acao?: string; acao_passos?: string[] } | null;
+    const quizDimensions = (quiz?.dimensions || []) as { code: string; name: string; emoji: string }[];
+
+    if (computedScores && quizDimensions.length > 0) {
+      try {
+        const sorted = [...computedScores.dimensions].sort((a, b) => b.normalizedScore - a.normalizedScore);
+        const strongest = sorted[0];
+        const weakest = sorted[sorted.length - 1];
+
+        const dimLookup = new Map(quizDimensions.map((d) => [d.code, d]));
+
+        await sendDiagnosticResultEmail({
+          recipientName: respondent_name.trim(),
+          recipientEmail: respondent_email.trim().toLowerCase(),
+          scoreGeral: computedScores.scoreGeral,
+          scoreGeralLabel: getScoreLabel(computedScores.scoreGeral),
+          dimensions: computedScores.dimensions.map((d) => ({
+            name: dimLookup.get(d.code)?.name || d.label,
+            emoji: dimLookup.get(d.code)?.emoji || "📊",
+            normalizedScore: d.normalizedScore,
+            statusLabel: "",
+            statusColor: "",
+          })),
+          strongest: {
+            name: dimLookup.get(strongest.code)?.name || strongest.label,
+            emoji: dimLookup.get(strongest.code)?.emoji || "📊",
+            normalizedScore: strongest.normalizedScore,
+          },
+          weakest: {
+            name: dimLookup.get(weakest.code)?.name || weakest.label,
+            emoji: dimLookup.get(weakest.code)?.emoji || "📊",
+            normalizedScore: weakest.normalizedScore,
+          },
+          analysis: aiResult || undefined,
+          quizTitle,
+          ctaUrl: quizSettings?.cta_whatsapp_url,
+        });
+      } catch (emailErr) {
+        console.error("Result email error:", emailErr);
       }
     }
 
