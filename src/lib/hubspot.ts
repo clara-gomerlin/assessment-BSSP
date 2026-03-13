@@ -284,9 +284,16 @@ export async function createDeal({
   if (answers && questions) {
     const quizProps = mapAnswersToProperties(answers, questions, scores || null);
     Object.assign(properties, quizProps);
-    // Copy ax_papel to cargo field
+    // Map ax_papel to cargo (HubSpot select field)
     if (quizProps.ax_papel) {
-      properties.cargo = quizProps.ax_papel;
+      const cargoMap: Record<string, string> = {
+        "Fundador / CEO": "Diretor/C-Level",
+        "C-level / VP (Vendas, Receita, Operações)": "Diretor/C-Level",
+        "C-level / VP (Marketing, Growth)": "Diretor/C-Level",
+        "Gerente / Coordenador": "Gerente/Head",
+        "Analista / Assistente": "Analista/Especialista",
+      };
+      properties.cargo = cargoMap[quizProps.ax_papel] || "Diretor/C-Level";
     }
   }
 
