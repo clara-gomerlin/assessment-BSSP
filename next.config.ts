@@ -17,15 +17,7 @@ const nextConfig: NextConfig = {
           },
           {
             key: "Content-Security-Policy",
-            value: [
-              "default-src 'self'",
-              "script-src 'self' 'unsafe-inline' https://connect.facebook.net https://static.cloudflareinsights.com",
-              "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-              "font-src 'self' https://fonts.gstatic.com",
-              "img-src 'self' data: https://www.facebook.com",
-              "connect-src 'self' https://*.supabase.co https://www.facebook.com https://connect.facebook.net",
-              "frame-ancestors 'none'",
-            ].join("; "),
+            value: "frame-ancestors 'none'",
           },
         ],
       },
