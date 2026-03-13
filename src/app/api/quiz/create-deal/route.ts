@@ -55,6 +55,7 @@ export async function POST(request: NextRequest) {
     let answers: QuizAnswer[] = [];
     let scores: ComputedScores | null = null;
     let questionInfos: QuestionInfo[] = [];
+    let contactPhone: string | undefined;
 
     if (quiz_id && response_id) {
       // Get quiz settings to resolve table names
@@ -69,13 +70,14 @@ export async function POST(request: NextRequest) {
 
       const { data: responseData } = await supabase
         .from(tables.responses)
-        .select("answers, computed_scores")
+        .select("answers, computed_scores, respondent_phone")
         .eq("id", response_id)
         .single();
 
       if (responseData) {
         answers = (responseData.answers || []) as QuizAnswer[];
         scores = (responseData.computed_scores || null) as ComputedScores | null;
+        contactPhone = responseData.respondent_phone || undefined;
       }
 
       const { data: questions } = await supabase
@@ -94,6 +96,8 @@ export async function POST(request: NextRequest) {
     const dealId = await createDeal({
       contactId: hubspot_contact_id,
       contactName: contact_name.trim(),
+      contactEmail: contact_email || undefined,
+      contactPhone,
       quizName: quiz_title,
       answers,
       questions: questionInfos,

@@ -249,6 +249,8 @@ export async function upsertContact({
 export async function createDeal({
   contactId,
   contactName,
+  contactEmail,
+  contactPhone,
   quizName,
   answers,
   questions,
@@ -256,6 +258,8 @@ export async function createDeal({
 }: {
   contactId: string;
   contactName: string;
+  contactEmail?: string;
+  contactPhone?: string;
   quizName: string;
   answers?: QuizAnswer[];
   questions?: QuestionInfo[];
@@ -269,10 +273,21 @@ export async function createDeal({
     produto: "Consultoria",
   };
 
+  if (contactEmail) {
+    properties.email = contactEmail;
+  }
+  if (contactPhone) {
+    properties.phone = contactPhone;
+  }
+
   // Map quiz answers and scores to deal properties
   if (answers && questions) {
     const quizProps = mapAnswersToProperties(answers, questions, scores || null);
     Object.assign(properties, quizProps);
+    // Copy ax_papel to cargo field
+    if (quizProps.ax_papel) {
+      properties.cargo = quizProps.ax_papel;
+    }
   }
 
   const result = await hubspotFetch("/crm/v3/objects/deals", {
