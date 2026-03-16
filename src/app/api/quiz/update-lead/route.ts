@@ -138,62 +138,7 @@ export async function POST(request: NextRequest) {
       console.error("HubSpot contact sync error:", hsErr);
     }
 
-    // Log integration event in Supabase
-    const eventoConversao = `Assessment ${quizTitle}`;
-    try {
-      await supabase.from("integration_events").insert({
-        email: respondent_email.trim().toLowerCase(),
-        respondent_name: respondent_name.trim(),
-        quiz_id,
-        quiz_title: quizTitle,
-        evento_de_conversao: eventoConversao,
-        produto: "Consultoria",
-        tipo_registro: "contato",
-        hubspot_id: hubspotContactId,
-        response_id,
-      });
-    } catch (logErr) {
-      console.error("Integration event log error:", logErr);
-    }
-
-    // Sync lead data to GLA Supabase for the Máquina de Receita quiz
-    const GLA_QUIZ_ID = "57a01f5f-47d2-4d06-903e-99ffc3dff78d";
-    if (quiz_id === GLA_QUIZ_ID) {
-      try {
-        const glaSupa = getGLASupabase();
-        if (glaSupa) {
-          await glaSupa
-            .from("assessment maquina de receita")
-            .update({
-              email: respondent_email.trim().toLowerCase(),
-              respondent_name: respondent_name.trim(),
-              phone: respondent_phone?.trim() || null,
-              hubspot_contact_id: hubspotContactId,
-            })
-            .eq("response_id", response_id);
-
-          // Fluxo 1: Insert conversion event (contato) into GLA eventos_conversao
-          await glaSupa.from("eventos_conversao").insert({
-            nome: respondent_name.trim(),
-            email: respondent_email.trim().toLowerCase(),
-            telefone: respondent_phone?.trim() || null,
-            evento_conversao: eventoConversao,
-            produto: "Consultoria",
-            tipo_registro: "contato",
-            data_conversao: new Date().toISOString(),
-            campaing_source: utms.utm_source || null,
-            campaing_medium: utms.utm_medium || null,
-            campaing_name: utms.utm_campaign || null,
-            campaing_content: utms.utm_content || null,
-            campaing_term: utms.utm_term || null,
-          });
-        }
-      } catch (glaErr) {
-        console.error("GLA Supabase lead sync error:", glaErr);
-      }
-    }
-
-    // Resolve answer labels (shared by email, Chatwoot, Avalon)
+    // Resolve answer labels (needed by Chatwoot + Avalon)
     const answerLabels: Record<string, string> = {};
     const answersData = (existing.answers || []) as { question_id: string; selected_option_id: string | string[] }[];
     if (answersData.length > 0) {
@@ -219,117 +164,147 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Send result email if we have scores (diagnostic quiz)
+    // Prepare shared data
+    const eventoConversao = `Assessment ${quizTitle}`;
     const computedScores = existing.computed_scores as { scoreGeral: number; dimensions: { code: string; label: string; normalizedScore: number }[] } | null;
     const aiResult = existing.ai_result as { diagnostico?: string; sinais?: string; acao?: string; acao_passos?: string[] } | null;
     const quizDimensions = (quiz?.dimensions || []) as { code: string; name: string; emoji: string }[];
 
+    // Build parallel tasks — run ALL integrations concurrently
+    const tasks: Promise<unknown>[] = [];
+
+    // 1. Integration event log (Merlin Supabase)
+    tasks.push(
+      (async () => {
+        const { error: logErr } = await supabase.from("integration_events").insert({
+          email: respondent_email.trim().toLowerCase(),
+          respondent_name: respondent_name.trim(),
+          quiz_id,
+          quiz_title: quizTitle,
+          evento_de_conversao: eventoConversao,
+          produto: "Consultoria",
+          tipo_registro: "contato",
+          hubspot_id: hubspotContactId,
+          response_id,
+        });
+        if (logErr) console.error("Integration event log error:", logErr);
+      })()
+    );
+
+    // 2. GLA Supabase sync
+    const GLA_QUIZ_ID = "57a01f5f-47d2-4d06-903e-99ffc3dff78d";
+    if (quiz_id === GLA_QUIZ_ID) {
+      const glaSupa = getGLASupabase();
+      if (glaSupa) {
+        tasks.push(
+          Promise.all([
+            glaSupa.from("assessment maquina de receita").update({
+              email: respondent_email.trim().toLowerCase(),
+              respondent_name: respondent_name.trim(),
+              phone: respondent_phone?.trim() || null,
+              hubspot_contact_id: hubspotContactId,
+            }).eq("response_id", response_id),
+            glaSupa.from("eventos_conversao").insert({
+              nome: respondent_name.trim(),
+              email: respondent_email.trim().toLowerCase(),
+              telefone: respondent_phone?.trim() || null,
+              evento_conversao: eventoConversao,
+              produto: "Consultoria",
+              tipo_registro: "contato",
+              data_conversao: new Date().toISOString(),
+              campaing_source: utms.utm_source || null,
+              campaing_medium: utms.utm_medium || null,
+              campaing_name: utms.utm_campaign || null,
+              campaing_content: utms.utm_content || null,
+              campaing_term: utms.utm_term || null,
+            }),
+          ]).catch((err) => console.error("GLA Supabase lead sync error:", err))
+        );
+      }
+    }
+
+    // 3. Email, Chatwoot, Avalon (all parallel)
     if (computedScores && quizDimensions.length > 0) {
       const sorted = [...computedScores.dimensions].sort((a, b) => b.normalizedScore - a.normalizedScore);
       const strongest = sorted[0];
       const weakest = sorted[sorted.length - 1];
       const dimLookup = new Map(quizDimensions.map((d) => [d.code, d]));
 
-      try {
-        await sendDiagnosticResultEmail({
+      const dimsMapped = computedScores.dimensions.map((d) => ({
+        name: dimLookup.get(d.code)?.name || d.label,
+        emoji: dimLookup.get(d.code)?.emoji || "📊",
+        normalizedScore: d.normalizedScore,
+      }));
+      const strongestMapped = {
+        name: dimLookup.get(strongest.code)?.name || strongest.label,
+        emoji: dimLookup.get(strongest.code)?.emoji || "📊",
+        normalizedScore: strongest.normalizedScore,
+      };
+      const weakestMapped = {
+        name: dimLookup.get(weakest.code)?.name || weakest.label,
+        emoji: dimLookup.get(weakest.code)?.emoji || "📊",
+        normalizedScore: weakest.normalizedScore,
+      };
+
+      // Email
+      tasks.push(
+        sendDiagnosticResultEmail({
           recipientName: respondent_name.trim(),
           recipientEmail: respondent_email.trim().toLowerCase(),
           scoreGeral: computedScores.scoreGeral,
           scoreGeralLabel: getScoreLabel(computedScores.scoreGeral),
-          dimensions: computedScores.dimensions.map((d) => ({
-            name: dimLookup.get(d.code)?.name || d.label,
-            emoji: dimLookup.get(d.code)?.emoji || "📊",
-            normalizedScore: d.normalizedScore,
-            statusLabel: "",
-            statusColor: "",
-          })),
-          strongest: {
-            name: dimLookup.get(strongest.code)?.name || strongest.label,
-            emoji: dimLookup.get(strongest.code)?.emoji || "📊",
-            normalizedScore: strongest.normalizedScore,
-          },
-          weakest: {
-            name: dimLookup.get(weakest.code)?.name || weakest.label,
-            emoji: dimLookup.get(weakest.code)?.emoji || "📊",
-            normalizedScore: weakest.normalizedScore,
-          },
+          dimensions: dimsMapped.map((d) => ({ ...d, statusLabel: "", statusColor: "" })),
+          strongest: strongestMapped,
+          weakest: weakestMapped,
           analysis: aiResult || undefined,
           quizTitle,
           ctaUrl: quizSettings?.cta_whatsapp_url,
-        });
-      } catch (emailErr) {
-        console.error("Result email error:", emailErr);
-      }
+        }).catch((err) => console.error("Result email error:", err))
+      );
 
-      // Sync to Chatwoot
-      try {
-        await syncToChatwoot({
+      // Chatwoot
+      tasks.push(
+        syncToChatwoot({
           recipientName: respondent_name.trim(),
           recipientEmail: respondent_email.trim().toLowerCase(),
           recipientPhone: respondent_phone?.trim(),
           quizTitle,
           scoreGeral: computedScores.scoreGeral,
           scoreGeralLabel: getScoreLabel(computedScores.scoreGeral),
-          dimensions: computedScores.dimensions.map((d) => ({
-            name: dimLookup.get(d.code)?.name || d.label,
-            emoji: dimLookup.get(d.code)?.emoji || "📊",
-            normalizedScore: d.normalizedScore,
-          })),
-          strongest: {
-            name: dimLookup.get(strongest.code)?.name || strongest.label,
-            emoji: dimLookup.get(strongest.code)?.emoji || "📊",
-            normalizedScore: strongest.normalizedScore,
-          },
-          weakest: {
-            name: dimLookup.get(weakest.code)?.name || weakest.label,
-            emoji: dimLookup.get(weakest.code)?.emoji || "📊",
-            normalizedScore: weakest.normalizedScore,
-          },
+          dimensions: dimsMapped,
+          strongest: strongestMapped,
+          weakest: weakestMapped,
           answerLabels,
           utmParams: utms,
-        });
-      } catch (cwErr) {
-        console.error("Chatwoot sync error:", cwErr);
+        }).catch((err) => console.error("Chatwoot sync error:", err))
+      );
+
+      // Avalon
+      const avalonParams: Record<string, string | number> = {
+        score_geral: computedScores.scoreGeral,
+        classificacao: getScoreLabel(computedScores.scoreGeral),
+        alavanca_forte: `${strongestMapped.name} (${strongestMapped.normalizedScore}/100)`,
+        alavanca_fraca: `${weakestMapped.name} (${weakestMapped.normalizedScore}/100)`,
+      };
+      for (const dim of dimsMapped) {
+        avalonParams[`score_${dim.name.toLowerCase().replace(/[^a-z0-9]/g, "_").replace(/_+/g, "_")}`] = dim.normalizedScore;
       }
-    }
-
-    // Send conversion to Avalon
-    try {
-      const avalonParams: Record<string, string | number> = {};
-
-      if (computedScores) {
-        avalonParams.score_geral = computedScores.scoreGeral;
-        avalonParams.classificacao = getScoreLabel(computedScores.scoreGeral);
-        for (const dim of computedScores.dimensions) {
-          const dimInfo = quizDimensions.find((d) => d.code === dim.code);
-          const dimName = dimInfo?.name || dim.label;
-          avalonParams[`score_${dimName.toLowerCase().replace(/[^a-z0-9]/g, "_").replace(/_+/g, "_")}`] = dim.normalizedScore;
-        }
-        if (computedScores.dimensions.length > 0) {
-          const avalonSorted = [...computedScores.dimensions].sort((a, b) => b.normalizedScore - a.normalizedScore);
-          const s = avalonSorted[0];
-          const w = avalonSorted[avalonSorted.length - 1];
-          const sInfo = quizDimensions.find((d) => d.code === s.code);
-          const wInfo = quizDimensions.find((d) => d.code === w.code);
-          avalonParams.alavanca_forte = `${sInfo?.name || s.label} (${s.normalizedScore}/100)`;
-          avalonParams.alavanca_fraca = `${wInfo?.name || w.label} (${w.normalizedScore}/100)`;
-        }
-      }
-
-      // Reuse resolved answer labels
       Object.assign(avalonParams, answerLabels);
 
-      await sendAvalonConversion({
-        conversionName: `Assessment ${quizTitle}`,
-        name: respondent_name.trim(),
-        email: respondent_email.trim().toLowerCase(),
-        phone: respondent_phone?.trim(),
-        avalonParameters: avalonParams,
-        utmParams: utms,
-      });
-    } catch (avalonErr) {
-      console.error("Avalon sync error:", avalonErr);
+      tasks.push(
+        sendAvalonConversion({
+          conversionName: `Assessment ${quizTitle}`,
+          name: respondent_name.trim(),
+          email: respondent_email.trim().toLowerCase(),
+          phone: respondent_phone?.trim(),
+          avalonParameters: avalonParams,
+          utmParams: utms,
+        }).catch((err) => console.error("Avalon sync error:", err))
+      );
     }
+
+    // Run all integrations in parallel — don't block the response
+    await Promise.allSettled(tasks);
 
     return Response.json({ success: true, hubspot_contact_id: hubspotContactId });
   } catch (error) {
