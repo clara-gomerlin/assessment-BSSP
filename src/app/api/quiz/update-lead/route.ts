@@ -187,6 +187,32 @@ export async function POST(request: NextRequest) {
       }
     }
 
+    // Resolve answer labels (shared by email, Chatwoot, Avalon)
+    const answerLabels: Record<string, string> = {};
+    const answersData = (existing.answers || []) as { question_id: string; selected_option_id: string | string[] }[];
+    if (answersData.length > 0) {
+      const { data: questions } = await supabase
+        .from(tables.questions)
+        .select("id, text, options")
+        .eq("quiz_id", quiz_id);
+
+      if (questions) {
+        const qMap = new Map(questions.map((q: { id: string; text: string; options: { id: string; label: string }[] }) => [q.id, q]));
+        for (const ans of answersData) {
+          const q = qMap.get(ans.question_id);
+          if (!q) continue;
+          const optIds = Array.isArray(ans.selected_option_id) ? ans.selected_option_id : [ans.selected_option_id];
+          const labels = optIds
+            .map((id: string) => q.options.find((o: { id: string; label: string }) => o.id === id)?.label)
+            .filter(Boolean);
+          if (labels.length > 0) {
+            const key = q.text.slice(0, 60).toLowerCase().replace(/[^a-z0-9]/g, "_").replace(/_+/g, "_").replace(/_+$/, "");
+            answerLabels[key] = labels.join("; ");
+          }
+        }
+      }
+    }
+
     // Send result email if we have scores (diagnostic quiz)
     const computedScores = existing.computed_scores as { scoreGeral: number; dimensions: { code: string; label: string; normalizedScore: number }[] } | null;
     const aiResult = existing.ai_result as { diagnostico?: string; sinais?: string; acao?: string; acao_passos?: string[] } | null;
@@ -253,6 +279,7 @@ export async function POST(request: NextRequest) {
             emoji: dimLookup.get(weakest.code)?.emoji || "📊",
             normalizedScore: weakest.normalizedScore,
           },
+          answerLabels,
         });
       } catch (cwErr) {
         console.error("Chatwoot sync error:", cwErr);
@@ -272,9 +299,9 @@ export async function POST(request: NextRequest) {
           avalonParams[`score_${dimName.toLowerCase().replace(/[^a-z0-9]/g, "_").replace(/_+/g, "_")}`] = dim.normalizedScore;
         }
         if (computedScores.dimensions.length > 0) {
-          const sorted = [...computedScores.dimensions].sort((a, b) => b.normalizedScore - a.normalizedScore);
-          const s = sorted[0];
-          const w = sorted[sorted.length - 1];
+          const avalonSorted = [...computedScores.dimensions].sort((a, b) => b.normalizedScore - a.normalizedScore);
+          const s = avalonSorted[0];
+          const w = avalonSorted[avalonSorted.length - 1];
           const sInfo = quizDimensions.find((d) => d.code === s.code);
           const wInfo = quizDimensions.find((d) => d.code === w.code);
           avalonParams.alavanca_forte = `${sInfo?.name || s.label} (${s.normalizedScore}/100)`;
@@ -282,30 +309,8 @@ export async function POST(request: NextRequest) {
         }
       }
 
-      // Resolve answer labels
-      const answersData = (existing.answers || []) as { question_id: string; selected_option_id: string | string[] }[];
-      if (answersData.length > 0) {
-        const { data: questions } = await supabase
-          .from(tables.questions)
-          .select("id, text, options")
-          .eq("quiz_id", quiz_id);
-
-        if (questions) {
-          const qMap = new Map(questions.map((q: { id: string; text: string; options: { id: string; label: string }[] }) => [q.id, q]));
-          for (const ans of answersData) {
-            const q = qMap.get(ans.question_id);
-            if (!q) continue;
-            const optIds = Array.isArray(ans.selected_option_id) ? ans.selected_option_id : [ans.selected_option_id];
-            const labels = optIds
-              .map((id: string) => q.options.find((o: { id: string; label: string }) => o.id === id)?.label)
-              .filter(Boolean);
-            if (labels.length > 0) {
-              const key = q.text.slice(0, 60).toLowerCase().replace(/[^a-z0-9]/g, "_").replace(/_+/g, "_").replace(/_+$/, "");
-              avalonParams[key] = labels.join("; ");
-            }
-          }
-        }
-      }
+      // Reuse resolved answer labels
+      Object.assign(avalonParams, answerLabels);
 
       await sendAvalonConversion({
         conversionName: `Assessment ${quizTitle}`,
