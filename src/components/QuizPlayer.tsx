@@ -366,8 +366,8 @@ export default function QuizPlayer({ quiz, questions }: QuizPlayerProps) {
           if (data.hubspot_contact_id) {
             setHubspotContactId(data.hubspot_contact_id);
           }
-          // Fire Meta Pixel "Contato" event on successful lead capture
-          if (typeof window !== "undefined" && typeof (window as /* eslint-disable-line @typescript-eslint/no-explicit-any */ any).fbq === "function") {
+          // Fire Meta Pixel "Contato" event only on successful lead capture (not 409)
+          if (res.ok && typeof window !== "undefined" && typeof (window as /* eslint-disable-line @typescript-eslint/no-explicit-any */ any).fbq === "function") {
             (window as /* eslint-disable-line @typescript-eslint/no-explicit-any */ any).fbq("trackCustom", "Contato", { value: "0.00", currency: "BRL" });
           }
         } catch (error) {
