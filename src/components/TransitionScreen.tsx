@@ -659,7 +659,7 @@ function RevenueSocialProofCard({
             <QuoteSVG />
           </span>
         </div>
-        <span style={{ fontSize: 14, fontWeight: 200, color: "#000" }}>
+        <span style={{ fontSize: 14, fontWeight: 200, color: "#000", textAlign: "center", display: "block" }}>
           {author}
         </span>
         <StarsSVG />
@@ -723,7 +723,7 @@ function RevenueSocialProof4({ onContinue }: { onContinue: () => void }) {
       title1="Toda empresa B2B que cresce rápido"
       title2="tem receita escondida na operação"
       quote={<>Quando os desafios de Growth começaram a escalar a consultoria do GLA trouxe <br />expertise técnica, e qualidade nas discussões sobre as alavancas.</>}
-      author="Marco Piacentini — Head of Growth @QueroEducação"
+      author={<>Marco Piacentini — Head of Growth<br />@Quero Educação</>}
       footer="Consultoria que entrega método, diagnóstico com dados, plano de ação e ritmo de execução."
     />
   );

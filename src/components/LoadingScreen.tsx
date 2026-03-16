@@ -34,7 +34,8 @@ const DIAGNOSTIC_TESTIMONIALS = [
     quote:
       "Com o apoio estratégico do GLA adotamos uma mentalidade de growth, implementamos frameworks de testes e imprimimos ritmo na cultura de experimentação.",
     author: "Marcos Caringi",
-    role: "Dir. Marketing @Manual | ex-Head of Growth @Globo",
+    role: "Dir. Marketing @Manual",
+    role2: "ex-Head of Growth @Globo",
   },
   {
     quote:
@@ -302,8 +303,9 @@ export default function LoadingScreen({ apiReady, onContinue, labels, quizType }
                 <QuoteSVG />
               </span>
             </div>
-            <span style={{ fontSize: 14, fontWeight: 200, color: "#000" }}>
+            <span style={{ fontSize: 14, fontWeight: 200, color: "#000", textAlign: "center", display: "block" }}>
               {testimonial.author} - {testimonial.role}
+              {(testimonial as { role2?: string }).role2 && <><br />{(testimonial as { role2?: string }).role2}</>}
             </span>
             <StarsSVG />
           </div>
