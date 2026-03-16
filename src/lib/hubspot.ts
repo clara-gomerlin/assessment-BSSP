@@ -283,6 +283,7 @@ export async function createDeal({
     pipeline: "823967148",
     dealstage: "1219760709",
     evento_de_conversao: `Assessment ${quizName}`,
+    origem: `Assessment ${quizName}`,
     produto: "Consultoria",
   };
 
