@@ -183,12 +183,14 @@ export async function upsertContact({
   lastName,
   phone,
   quizName,
+  utmParams,
 }: {
   email: string;
   firstName: string;
   lastName: string;
   phone?: string;
   quizName: string;
+  utmParams?: Record<string, string>;
 }): Promise<string | null> {
   const properties: Record<string, string> = {
     email,
@@ -200,6 +202,14 @@ export async function upsertContact({
 
   if (phone) {
     properties.phone = phone;
+  }
+
+  if (utmParams) {
+    if (utmParams.utm_source) properties.utm_source = utmParams.utm_source;
+    if (utmParams.utm_medium) properties.utm_medium = utmParams.utm_medium;
+    if (utmParams.utm_campaign) properties.utm_campaign = utmParams.utm_campaign;
+    if (utmParams.utm_content) properties.utm_content = utmParams.utm_content;
+    if (utmParams.utm_term) properties.utm_term = utmParams.utm_term;
   }
 
   // Try to create contact

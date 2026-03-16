@@ -133,6 +133,7 @@ export async function POST(request: NextRequest) {
         lastName,
         phone: respondent_phone?.trim(),
         quizName: quizTitle,
+        utmParams: Object.keys(utms).length > 0 ? utms : undefined,
       });
     } catch (hsErr) {
       console.error("HubSpot contact sync error:", hsErr);
