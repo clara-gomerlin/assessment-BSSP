@@ -36,7 +36,8 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { hubspot_contact_id, contact_name, contact_email, quiz_title, quiz_id, response_id } = body;
+    const { hubspot_contact_id, contact_name, contact_email, quiz_title, quiz_id, response_id, utm_params } = body;
+    const utms = (utm_params || {}) as Record<string, string>;
 
     if (!hubspot_contact_id || typeof hubspot_contact_id !== "string") {
       return Response.json({ error: "hubspot_contact_id inválido" }, { status: 400 });
@@ -141,6 +142,11 @@ export async function POST(request: NextRequest) {
             tipo_registro: "negócio",
             etapa_negocio: "Pendente",
             data_conversao: new Date().toISOString(),
+            campaing_source: utms.utm_source || null,
+            campaing_medium: utms.utm_medium || null,
+            campaing_name: utms.utm_campaign || null,
+            campaing_content: utms.utm_content || null,
+            campaing_term: utms.utm_term || null,
           });
         }
       } catch (glaErr) {

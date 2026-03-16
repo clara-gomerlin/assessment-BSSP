@@ -52,7 +52,8 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { response_id, quiz_id, respondent_name, respondent_email, respondent_phone } = body;
+    const { response_id, quiz_id, respondent_name, respondent_email, respondent_phone, utm_params } = body;
+    const utms = (utm_params || {}) as Record<string, string>;
 
     if (!response_id || typeof response_id !== "string" || !UUID_RE.test(response_id))
       return Response.json({ error: "response_id inválido" }, { status: 400 });
@@ -180,6 +181,11 @@ export async function POST(request: NextRequest) {
             produto: "Consultoria",
             tipo_registro: "contato",
             data_conversao: new Date().toISOString(),
+            campaing_source: utms.utm_source || null,
+            campaing_medium: utms.utm_medium || null,
+            campaing_name: utms.utm_campaign || null,
+            campaing_content: utms.utm_content || null,
+            campaing_term: utms.utm_term || null,
           });
         }
       } catch (glaErr) {
@@ -280,6 +286,7 @@ export async function POST(request: NextRequest) {
             normalizedScore: weakest.normalizedScore,
           },
           answerLabels,
+          utmParams: utms,
         });
       } catch (cwErr) {
         console.error("Chatwoot sync error:", cwErr);
@@ -318,6 +325,7 @@ export async function POST(request: NextRequest) {
         email: respondent_email.trim().toLowerCase(),
         phone: respondent_phone?.trim(),
         avalonParameters: avalonParams,
+        utmParams: utms,
       });
     } catch (avalonErr) {
       console.error("Avalon sync error:", avalonErr);

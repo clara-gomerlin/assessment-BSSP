@@ -115,6 +115,7 @@ export async function POST(request: NextRequest) {
       return Response.json({ error: validation.error }, { status: 400 });
     }
     const { quiz_id, respondent_name, respondent_email, respondent_phone, answers } = validation.data;
+    const utm_params = body.utm_params as Record<string, string> | undefined;
     const displayName = respondent_name || "Profissional";
 
     const supabase = getSupabase();
@@ -332,6 +333,7 @@ Foque a análise na alavanca mais fraca (${diagResult.weakest.name}). Responda A
           selected_option_id,
         })),
         computed_scores: computedScores,
+        utm_params: utm_params || null,
       });
 
     if (saveError) {

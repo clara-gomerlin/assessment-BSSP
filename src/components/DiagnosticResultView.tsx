@@ -40,6 +40,7 @@ interface DiagnosticResultViewProps {
   ctaWhatsappUrl?: string;
   hubspotContactId?: string | null;
   quizTitle?: string;
+  utmParams?: Record<string, string>;
 }
 
 const DEFAULT_WHATSAPP_URL = "https://wa.me/5511932727443?text=Ol%C3%A1%2C%20recebi%20meu%20diagn%C3%B3stico%20de%20receita%20e%20gostaria%20de%20saber%20mais%20sobre%20a%20consultoria%20do%20GLA.";
@@ -797,6 +798,7 @@ export default function DiagnosticResultView({
   ctaWhatsappUrl,
   hubspotContactId,
   quizTitle,
+  utmParams,
 }: DiagnosticResultViewProps) {
   const firstName = respondentName.split(" ")[0] || "Empresa";
   const { canvasRef, generate } = useBragTag();
@@ -815,9 +817,10 @@ export default function DiagnosticResultView({
         quiz_title: quizTitle || "Quiz",
         quiz_id: quizId,
         response_id: responseId,
+        utm_params: utmParams && Object.keys(utmParams).length > 0 ? utmParams : undefined,
       }),
     }).catch((err) => console.error("Deal creation error:", err));
-  }, [hubspotContactId, respondentName, respondentEmail, quizTitle, quizId, responseId, dealCreated]);
+  }, [hubspotContactId, respondentName, respondentEmail, quizTitle, quizId, responseId, dealCreated, utmParams]);
 
   return (
     <div style={{ width: "100%", fontFamily: "var(--font-quiz)" }}>

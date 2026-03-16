@@ -195,6 +195,7 @@ interface QuizData {
   strongest: { name: string; emoji: string; normalizedScore: number };
   weakest: { name: string; emoji: string; normalizedScore: number };
   answerLabels?: Record<string, string>;
+  utmParams?: Record<string, string>;
 }
 
 /**
@@ -235,6 +236,15 @@ function buildCustomAttributes(
     for (const [key, value] of Object.entries(data.answerLabels)) {
       attrs[key] = value;
     }
+  }
+
+  // UTM parameters
+  if (data.utmParams) {
+    if (data.utmParams.utm_source) attrs.utm_source = data.utmParams.utm_source;
+    if (data.utmParams.utm_medium) attrs.utm_medium = data.utmParams.utm_medium;
+    if (data.utmParams.utm_campaign) attrs.utm_campaign = data.utmParams.utm_campaign;
+    if (data.utmParams.utm_content) attrs.utm_content = data.utmParams.utm_content;
+    if (data.utmParams.utm_term) attrs.utm_term = data.utmParams.utm_term;
   }
 
   return attrs;

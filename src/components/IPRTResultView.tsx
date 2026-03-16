@@ -43,6 +43,7 @@ interface IPRTResultViewProps {
   ctaWhatsappUrl?: string;
   hubspotContactId?: string | null;
   quizTitle?: string;
+  utmParams?: Record<string, string>;
 }
 
 // --- Stage copy ---

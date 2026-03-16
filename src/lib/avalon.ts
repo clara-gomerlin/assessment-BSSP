@@ -16,6 +16,7 @@ interface AvalonConversionData {
   email: string;
   phone?: string;
   avalonParameters: Record<string, string | number>;
+  utmParams?: Record<string, string>;
 }
 
 export async function sendAvalonConversion(data: AvalonConversionData): Promise<boolean> {
@@ -37,9 +38,9 @@ export async function sendAvalonConversion(data: AvalonConversionData): Promise<
         { kind: "email", value: data.email },
         ...(data.phone ? [{ kind: "phone", value: data.phone }] : []),
       ],
-      magic_source: "",
-      magic_medium: "direct",
-      magic_campaign: "",
+      magic_source: data.utmParams?.utm_source || "",
+      magic_medium: data.utmParams?.utm_medium || "direct",
+      magic_campaign: data.utmParams?.utm_campaign || "",
       avalon_parameters: data.avalonParameters,
     },
   };

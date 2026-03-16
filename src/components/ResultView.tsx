@@ -17,6 +17,7 @@ interface ResultViewProps {
   ctaWhatsappUrl?: string;
   hubspotContactId?: string | null;
   quizTitle?: string;
+  utmParams?: Record<string, string>;
 }
 
 export default function ResultView({

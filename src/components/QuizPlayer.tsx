@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useCallback, useMemo, useRef, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import { Question, Quiz, Answers } from "@/lib/types";
 import QuestionCard from "./QuestionCard";
 import LeadCapture from "./LeadCapture";
@@ -133,6 +134,17 @@ export default function QuizPlayer({ quiz, questions }: QuizPlayerProps) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [analysisData, setAnalysisData] = useState<any>(null);
   const [hubspotContactId, setHubspotContactId] = useState<string | null>(null);
+
+  // Capture UTM params from URL
+  const searchParams = useSearchParams();
+  const utmParams = useMemo(() => {
+    const params: Record<string, string> = {};
+    for (const key of ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term"]) {
+      const val = searchParams.get(key);
+      if (val) params[key] = val;
+    }
+    return params;
+  }, [searchParams]);
 
   const currentQuestion = questions[currentIndex];
 
@@ -294,6 +306,7 @@ export default function QuizPlayer({ quiz, questions }: QuizPlayerProps) {
             quiz_id: quiz.id,
             answers,
             other_texts: Object.keys(otherTexts).length > 0 ? otherTexts : undefined,
+            utm_params: Object.keys(utmParams).length > 0 ? utmParams : undefined,
           }),
         });
 
@@ -339,7 +352,7 @@ export default function QuizPlayer({ quiz, questions }: QuizPlayerProps) {
         console.error(error);
       }
     },
-    [quiz.id, answers, otherTexts]
+    [quiz.id, answers, otherTexts, utmParams]
   );
 
   // Handle lead capture submission (update lead data + show result)
@@ -360,6 +373,7 @@ export default function QuizPlayer({ quiz, questions }: QuizPlayerProps) {
               respondent_name: name,
               respondent_email: email,
               respondent_phone: phone,
+              utm_params: Object.keys(utmParams).length > 0 ? utmParams : undefined,
             }),
           });
           const data = await res.json();
@@ -470,6 +484,7 @@ export default function QuizPlayer({ quiz, questions }: QuizPlayerProps) {
             ctaWhatsappUrl={quiz.settings.cta_whatsapp_url}
             hubspotContactId={hubspotContactId}
             quizTitle={quiz.title}
+            utmParams={utmParams}
           />
         </div>
       );
@@ -488,6 +503,7 @@ export default function QuizPlayer({ quiz, questions }: QuizPlayerProps) {
           ctaWhatsappUrl={quiz.settings.cta_whatsapp_url}
           hubspotContactId={hubspotContactId}
           quizTitle={quiz.title}
+          utmParams={utmParams}
         />
       );
     }
@@ -505,6 +521,7 @@ export default function QuizPlayer({ quiz, questions }: QuizPlayerProps) {
         ctaWhatsappUrl={quiz.settings.cta_whatsapp_url}
         hubspotContactId={hubspotContactId}
         quizTitle={quiz.title}
+        utmParams={utmParams}
       />
     );
   }
