@@ -199,15 +199,14 @@ interface QuizData {
 }
 
 /**
- * Build custom attributes for the diagnostic quiz (Máquina de Receita).
+ * Build CONTACT attributes (only fatos + produto).
  */
-function buildCustomAttributes(
+function buildContactAttributes(
   data: QuizData,
   existingFatos?: string
 ): Record<string, string | number | null> {
   const conversionEvent = `Assessment ${data.quizTitle}`;
 
-  // Build fatos (accumulate history like n8n)
   let fatos: string;
   if (!existingFatos) {
     fatos = `Lead veio do ${conversionEvent}`;
@@ -215,21 +214,19 @@ function buildCustomAttributes(
     fatos = `${existingFatos}; Preencheu o ${conversionEvent}`;
   }
 
-  const attrs: Record<string, string | number | null> = {
-    fatos,
-    produto: "Consultoria",
-    assessment_nome: data.quizTitle,
-    score_geral: data.scoreGeral,
-    classificacao: data.scoreGeralLabel,
-    alavanca_forte: `${data.strongest.name} (${data.strongest.normalizedScore}/100)`,
-    alavanca_fraca: `${data.weakest.name} (${data.weakest.normalizedScore}/100)`,
-  };
+  return { fatos, produto: "Consultoria" };
+}
 
-  // Dimension scores
-  for (const dim of data.dimensions) {
-    const key = `score_${dim.name.toLowerCase().replace(/[^a-z0-9]/g, "_").replace(/_+/g, "_")}`;
-    attrs[key] = dim.normalizedScore;
-  }
+/**
+ * Build CONVERSATION attributes (answers + UTMs).
+ */
+function buildConversationAttributes(
+  data: QuizData
+): Record<string, string | number | null> {
+  const attrs: Record<string, string | number | null> = {
+    fatos: `Lead veio do Assessment ${data.quizTitle}`,
+    produto: "Consultoria",
+  };
 
   // Answer labels (mapped by question property name)
   if (data.answerLabels) {
@@ -295,39 +292,40 @@ export async function syncToChatwoot(data: QuizData): Promise<{
   }
 
   const existing = await searchContact(data.recipientPhone, data.recipientEmail);
+  const convAttributes = buildConversationAttributes(data);
 
   if (existing) {
     // ===== EXISTING CONTACT =====
-    const customAttributes = buildCustomAttributes(
+    const contactAttrs = buildContactAttributes(
       data,
       existing.custom_attributes?.fatos as string | undefined
     );
 
-    // Update contact attributes
-    await updateContactAttributes(existing.id, customAttributes);
+    // Update contact with only fatos + produto
+    await updateContactAttributes(existing.id, contactAttrs);
     console.log("Chatwoot: existing contact updated, id:", existing.id);
 
-    // Get existing conversation and update attributes, or create new one
+    // Get existing conversation and update with answers + UTMs, or create new one
     const conv = await getContactConversations(existing.id);
     if (conv) {
-      await updateConversationAttributes(conv.id, customAttributes);
+      await updateConversationAttributes(conv.id, convAttributes);
       console.log("Chatwoot: existing conversation updated, id:", conv.id);
       return { contactId: existing.id, conversationId: conv.id };
     } else {
       const message = buildResultMessage(data);
-      const conversationId = await createConversation(existing.id, message, customAttributes);
+      const conversationId = await createConversation(existing.id, message, convAttributes);
       console.log("Chatwoot: new conversation created for existing contact, id:", conversationId);
       return { contactId: existing.id, conversationId };
     }
   } else {
     // ===== NEW CONTACT =====
-    const customAttributes = buildCustomAttributes(data);
+    const contactAttrs = buildContactAttributes(data);
 
     const created = await createContact({
       name: data.recipientName,
       email: data.recipientEmail,
       phone: data.recipientPhone,
-      customAttributes,
+      customAttributes: contactAttrs,
     });
 
     if (!created) {
@@ -337,9 +335,9 @@ export async function syncToChatwoot(data: QuizData): Promise<{
 
     console.log("Chatwoot: new contact created, id:", created.contactId);
 
-    // Create conversation with custom attributes
+    // Create conversation with answers + UTMs
     const message = buildResultMessage(data);
-    const conversationId = await createConversation(created.contactId, message, customAttributes);
+    const conversationId = await createConversation(created.contactId, message, convAttributes);
     console.log("Chatwoot: conversation created, id:", conversationId);
 
     return { contactId: created.contactId, conversationId };
