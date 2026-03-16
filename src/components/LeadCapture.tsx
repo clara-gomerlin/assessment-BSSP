@@ -62,6 +62,7 @@ export default function LeadCapture({ onSubmit, quizType }: LeadCaptureProps) {
         width: "100%",
         margin: "0 auto",
         padding: "0 20px",
+        fontFamily: "'Rubik', system-ui, sans-serif",
       }}
     >
       {/* Logo */}
