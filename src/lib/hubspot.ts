@@ -265,12 +265,14 @@ export async function createDeal({
   answers,
   questions,
   scores,
+  utmParams,
 }: {
   contactId: string;
   contactName: string;
   contactEmail?: string;
   contactPhone?: string;
   quizName: string;
+  utmParams?: Record<string, string>;
   answers?: QuizAnswer[];
   questions?: QuestionInfo[];
   scores?: ComputedScores | null;
@@ -288,6 +290,14 @@ export async function createDeal({
   }
   if (contactPhone) {
     properties.phone = contactPhone;
+  }
+
+  if (utmParams) {
+    if (utmParams.utm_source) properties.utm_source = utmParams.utm_source;
+    if (utmParams.utm_medium) properties.utm_medium = utmParams.utm_medium;
+    if (utmParams.utm_campaign) properties.utm_campaign = utmParams.utm_campaign;
+    if (utmParams.utm_content) properties.utm_content = utmParams.utm_content;
+    if (utmParams.utm_term) properties.utm_term = utmParams.utm_term;
   }
 
   // Map quiz answers and scores to deal properties

@@ -103,6 +103,7 @@ export async function POST(request: NextRequest) {
       answers,
       questions: questionInfos,
       scores,
+      utmParams: Object.keys(utms).length > 0 ? utms : undefined,
     });
 
     if (!dealId) {
