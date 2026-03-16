@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { getSupabase, getTableNames } from "@/lib/supabase";
 import { Quiz, Question } from "@/lib/types";
 import QuizPlayer from "@/components/QuizPlayer";
@@ -38,10 +39,12 @@ export default async function QuizPage({ params }: PageProps) {
   }
 
   return (
-    <QuizPlayer
-      quiz={quiz as Quiz}
-      questions={questions as Question[]}
-    />
+    <Suspense>
+      <QuizPlayer
+        quiz={quiz as Quiz}
+        questions={questions as Question[]}
+      />
+    </Suspense>
   );
 }
 
