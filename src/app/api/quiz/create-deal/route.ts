@@ -135,7 +135,9 @@ export async function POST(request: NextRequest) {
           await glaSupa.from("eventos_conversao").insert({
             nome: contact_name.trim(),
             email: (contact_email || "").trim().toLowerCase(),
+            telefone: contactPhone || null,
             evento_conversao: eventoConversao,
+            produto: "Consultoria",
             tipo_registro: "negócio",
             etapa_negocio: "Pendente",
             data_conversao: new Date().toISOString(),
