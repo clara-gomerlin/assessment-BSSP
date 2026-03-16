@@ -103,7 +103,7 @@ export default function HeroScreen({ quiz, onStart }: HeroScreenProps) {
               {isIPRT ? (
                 <>Índice de Prontidão<br />para a Reforma<br />Tributária</>
               ) : isDiagnostic ? (
-                <>Auditoria de eficiência em receita</>
+                <>Revenue Efficiency Index</>
               ) : (
                 <>Diagnóstico<br />de Carreira:<br />Os 5 Arquétipos</>
               )}
@@ -316,7 +316,7 @@ export default function HeroScreen({ quiz, onStart }: HeroScreenProps) {
           className="continue-button"
           style={{ maxWidth: 540 }}
         >
-          {isDiagnostic ? "Iniciar minha auditoria" : "Começar"}
+          {isDiagnostic ? "Iniciar meu diagnóstico" : "Começar"}
         </button>
       </div>
     </div>

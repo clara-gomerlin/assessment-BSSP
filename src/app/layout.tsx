@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Assessment | Growth Leaders Academy",
-  description: "Descubra seu arquétipo de carreira e receba recomendações personalizadas.",
+  title: "Revenue Efficiency Index | Growth Leaders Academy",
+  description: "Descubra o índice de eficiência de receita da sua operação e receba um diagnóstico personalizado.",
 };
 
 export default function RootLayout({

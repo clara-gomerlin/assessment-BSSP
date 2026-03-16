@@ -203,7 +203,7 @@ function buildDiagnosticEmailHtml(data: DiagnosticEmailData): string {
                       🚀 Consultoria estratégica para destravar a receita que já existe na sua operação
                     </h2>
                     <p style="margin: 0 0 8px; font-size: 14px; color: #374151; line-height: 1.6;">
-                      Você acabou de ver um retrato da sua máquina de crescimento.
+                      Você acabou de ver um retrato da eficiência de receita da sua operação.
                     </p>
                     <p style="margin: 0 0 16px; font-size: 14px; color: #374151; line-height: 1.6;">
                       O próximo passo agora é transformar esse diagnóstico em <strong>um plano de ação</strong>.

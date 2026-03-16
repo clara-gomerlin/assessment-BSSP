@@ -127,7 +127,7 @@ export async function POST(request: NextRequest) {
       console.error("Integration event log error:", logErr);
     }
 
-    // Sync to GLA Supabase eventos_conversao for the Máquina de Receita quiz
+    // Sync to GLA Supabase eventos_conversao for the Revenue Efficiency Index quiz
     const GLA_QUIZ_ID = "57a01f5f-47d2-4d06-903e-99ffc3dff78d";
     if (quiz_id === GLA_QUIZ_ID) {
       try {

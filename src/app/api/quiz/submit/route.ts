@@ -359,7 +359,7 @@ Foque a análise na alavanca mais fraca (${diagResult.weakest.name}). Responda A
       return Response.json({ error: "Erro ao salvar respostas" }, { status: 500 });
     }
 
-    // Sync to GLA Supabase for the Máquina de Receita quiz
+    // Sync to GLA Supabase for the Revenue Efficiency Index quiz
     const GLA_QUIZ_ID = "57a01f5f-47d2-4d06-903e-99ffc3dff78d";
     if (quiz_id === GLA_QUIZ_ID) {
       try {
@@ -367,9 +367,9 @@ Foque a análise na alavanca mais fraca (${diagResult.weakest.name}). Responda A
         if (glaSupa) {
           await glaSupa.from("assessment maquina de receita").insert({
             quiz_id,
-            quiz_title: quiz.title || "Máquina de Receita",
+            quiz_title: quiz.title || "Revenue Efficiency Index",
             response_id: responseId,
-            evento_de_conversao: `Assessment ${quiz.title || "Máquina de Receita"}`,
+            evento_de_conversao: `Assessment ${quiz.title || "Revenue Efficiency Index"}`,
             produto: "Consultoria",
             tipo_registro: "contato",
             answers: Object.entries(answers).map(([question_id, selected_option_id]) => ({

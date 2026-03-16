@@ -361,10 +361,10 @@ function useBragTag() {
       ctx.fillStyle = "#0f172a";
       ctx.font = font(700, 36);
       ctx.textAlign = "center";
-      ctx.fillText(`${firstName}, aqui está o diagnóstico da sua`, W / 2, 160);
+      ctx.fillText(`${firstName}, aqui está o seu`, W / 2, 160);
       ctx.fillStyle = "#2D3246";
       ctx.font = font(700, 36);
-      ctx.fillText("Máquina de Receita", W / 2, 205);
+      ctx.fillText("Revenue Efficiency Index", W / 2, 205);
 
       // Score — large number
       ctx.fillStyle = "#0f172a";
@@ -531,7 +531,7 @@ function useBragTag() {
 
       // Download
       const link = document.createElement("a");
-      link.download = `diagnostico-receita-${firstName.toLowerCase()}.png`;
+      link.download = `revenue-efficiency-index-${firstName.toLowerCase()}.png`;
       link.href = canvas.toDataURL("image/png");
       link.click();
     },
@@ -571,8 +571,8 @@ function ScoreHero({
         className="result-headline"
         style={{ margin: "12px auto 20px" }}
       >
-        {firstName}, aqui está o diagnóstico da sua{" "}
-        <span style={{ color: "#2D3246" }}>Máquina de Receita</span>
+        {firstName}, aqui está o seu{" "}
+        <span style={{ color: "#2D3246" }}>Revenue Efficiency Index</span>
       </h1>
 
       {/* Score main display */}

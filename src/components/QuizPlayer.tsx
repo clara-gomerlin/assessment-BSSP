@@ -181,7 +181,7 @@ export default function QuizPlayer({ quiz, questions }: QuizPlayerProps) {
 
   // --- Loading screen copy based on quiz type ---
   const loadingLabels = isDiagnostic
-    ? ["Analisando sua máquina de receita", "Calculando score por alavanca", "Gerando diagnóstico personalizado"]
+    ? ["Analisando sua eficiência em receita", "Calculando score por alavanca", "Gerando diagnóstico personalizado"]
     : isIPRT
     ? ["Calculando seu Índice de Prontidão", "Analisando suas 4 dimensões", "Gerando diagnóstico personalizado"]
     : undefined;
