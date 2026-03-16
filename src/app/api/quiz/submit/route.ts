@@ -320,7 +320,12 @@ Foque a análise na alavanca mais fraca (${diagResult.weakest.name}). Responda A
     // Save response to database
     // Generate ID client-side to avoid RLS issues with RETURNING
     const responseId = crypto.randomUUID();
-    const { error: saveError } = await supabase
+    const answersArray = Object.entries(answers).map(([question_id, selected_option_id]) => ({
+      question_id,
+      selected_option_id,
+    }));
+
+    let { error: saveError } = await supabase
       .from(tables.responses)
       .insert({
         id: responseId,
@@ -328,13 +333,26 @@ Foque a análise na alavanca mais fraca (${diagResult.weakest.name}). Responda A
         respondent_name: respondent_name || null,
         respondent_email: respondent_email || null,
         respondent_phone: respondent_phone || null,
-        answers: Object.entries(answers).map(([question_id, selected_option_id]) => ({
-          question_id,
-          selected_option_id,
-        })),
+        answers: answersArray,
         computed_scores: computedScores,
         utm_params: utm_params || null,
       });
+
+    // Fallback: if utm_params column doesn't exist yet, retry without it
+    if (saveError && saveError.code === "PGRST204") {
+      console.warn("utm_params column not found, retrying without it");
+      ({ error: saveError } = await supabase
+        .from(tables.responses)
+        .insert({
+          id: responseId,
+          quiz_id,
+          respondent_name: respondent_name || null,
+          respondent_email: respondent_email || null,
+          respondent_phone: respondent_phone || null,
+          answers: answersArray,
+          computed_scores: computedScores,
+        }));
+    }
 
     if (saveError) {
       console.error("Save error:", saveError.message, saveError.code);
