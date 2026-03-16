@@ -91,9 +91,9 @@ export default function HeroScreen({ quiz, onStart }: HeroScreenProps) {
           >
             <h1
               style={{
-                fontFamily: isIPRT ? "'Montserrat', system-ui, sans-serif" : isDiagnostic ? "'Rubik', var(--font-quiz)" : "'Fraunces', Georgia, serif",
+                fontFamily: isIPRT ? "'Montserrat', system-ui, sans-serif" : isDiagnostic ? "'Unbounded', system-ui, sans-serif" : "'Fraunces', Georgia, serif",
                 fontWeight: 700,
-                fontSize: "clamp(1.75rem, 6vw, 2.5rem)",
+                fontSize: isDiagnostic ? 50 : "clamp(1.75rem, 6vw, 2.5rem)",
                 lineHeight: 1.15,
                 color: isIPRT ? "#031D31" : "#0f172a",
                 marginBottom: 24,
