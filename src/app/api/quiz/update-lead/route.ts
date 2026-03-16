@@ -5,6 +5,7 @@ import { QuizSettings } from "@/lib/types";
 import { upsertContact } from "@/lib/hubspot";
 import { sendDiagnosticResultEmail } from "@/lib/email";
 import { syncToChatwoot } from "@/lib/chatwoot";
+import { sendAvalonConversion } from "@/lib/avalon";
 
 function getSupabase() {
   return createClient(
@@ -87,7 +88,7 @@ export async function POST(request: NextRequest) {
     // Verify the response exists and has no lead data yet (prevents overwriting)
     const { data: existing, error: existingError } = await supabase
       .from(tables.responses)
-      .select("respondent_email, computed_scores, ai_result")
+      .select("respondent_email, computed_scores, ai_result, answers")
       .eq("id", response_id)
       .single();
 
@@ -256,6 +257,65 @@ export async function POST(request: NextRequest) {
       } catch (cwErr) {
         console.error("Chatwoot sync error:", cwErr);
       }
+    }
+
+    // Send conversion to Avalon
+    try {
+      const avalonParams: Record<string, string | number> = {};
+
+      if (computedScores) {
+        avalonParams.score_geral = computedScores.scoreGeral;
+        avalonParams.classificacao = getScoreLabel(computedScores.scoreGeral);
+        for (const dim of computedScores.dimensions) {
+          const dimInfo = quizDimensions.find((d) => d.code === dim.code);
+          const dimName = dimInfo?.name || dim.label;
+          avalonParams[`score_${dimName.toLowerCase().replace(/[^a-z0-9]/g, "_").replace(/_+/g, "_")}`] = dim.normalizedScore;
+        }
+        if (computedScores.dimensions.length > 0) {
+          const sorted = [...computedScores.dimensions].sort((a, b) => b.normalizedScore - a.normalizedScore);
+          const s = sorted[0];
+          const w = sorted[sorted.length - 1];
+          const sInfo = quizDimensions.find((d) => d.code === s.code);
+          const wInfo = quizDimensions.find((d) => d.code === w.code);
+          avalonParams.alavanca_forte = `${sInfo?.name || s.label} (${s.normalizedScore}/100)`;
+          avalonParams.alavanca_fraca = `${wInfo?.name || w.label} (${w.normalizedScore}/100)`;
+        }
+      }
+
+      // Resolve answer labels
+      const answersData = (existing.answers || []) as { question_id: string; selected_option_id: string | string[] }[];
+      if (answersData.length > 0) {
+        const { data: questions } = await supabase
+          .from(tables.questions)
+          .select("id, text, options")
+          .eq("quiz_id", quiz_id);
+
+        if (questions) {
+          const qMap = new Map(questions.map((q: { id: string; text: string; options: { id: string; label: string }[] }) => [q.id, q]));
+          for (const ans of answersData) {
+            const q = qMap.get(ans.question_id);
+            if (!q) continue;
+            const optIds = Array.isArray(ans.selected_option_id) ? ans.selected_option_id : [ans.selected_option_id];
+            const labels = optIds
+              .map((id: string) => q.options.find((o: { id: string; label: string }) => o.id === id)?.label)
+              .filter(Boolean);
+            if (labels.length > 0) {
+              const key = q.text.slice(0, 60).toLowerCase().replace(/[^a-z0-9]/g, "_").replace(/_+/g, "_").replace(/_+$/, "");
+              avalonParams[key] = labels.join("; ");
+            }
+          }
+        }
+      }
+
+      await sendAvalonConversion({
+        conversionName: `Assessment ${quizTitle}`,
+        name: respondent_name.trim(),
+        email: respondent_email.trim().toLowerCase(),
+        phone: respondent_phone?.trim(),
+        avalonParameters: avalonParams,
+      });
+    } catch (avalonErr) {
+      console.error("Avalon sync error:", avalonErr);
     }
 
     return Response.json({ success: true, hubspot_contact_id: hubspotContactId });
