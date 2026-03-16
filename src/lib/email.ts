@@ -193,79 +193,55 @@ function buildDiagnosticEmailHtml(data: DiagnosticEmailData): string {
             </td>
           </tr>
 
-          <!-- AI Analysis -->
-          ${
-            data.analysis?.diagnostico
-              ? `
+          <!-- Consultancy Pitch -->
           <tr>
             <td style="padding: 16px 40px;">
-              <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background: #fef3c7; border-radius: 12px; border-left: 4px solid #f59e0b;">
+              <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background: #f8fafc; border-radius: 12px; padding: 24px;">
                 <tr>
-                  <td style="padding: 20px;">
-                    <div style="font-size: 13px; font-weight: 700; color: #92400e; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">Diagnóstico</div>
-                    <div style="font-size: 14px; color: #374151; line-height: 1.6; font-family: 'DM Sans', Arial, sans-serif;">
-                      ${data.analysis.diagnostico}
-                    </div>
-                  </td>
-                </tr>
-              </table>
-            </td>
-          </tr>
-          `
-              : ""
-          }
-
-          ${
-            data.analysis?.sinais
-              ? `
-          <tr>
-            <td style="padding: 8px 40px;">
-              <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background: #fef2f2; border-radius: 12px; border-left: 4px solid #ef4444;">
-                <tr>
-                  <td style="padding: 20px;">
-                    <div style="font-size: 13px; font-weight: 700; color: #991b1b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">Sinais de Alerta</div>
-                    <div style="font-size: 14px; color: #374151; line-height: 1.6; font-family: 'DM Sans', Arial, sans-serif;">
-                      ${data.analysis.sinais}
-                    </div>
-                  </td>
-                </tr>
-              </table>
-            </td>
-          </tr>
-          `
-              : ""
-          }
-
-          <!-- Action Steps -->
-          ${
-            actionSteps
-              ? `
-          <tr>
-            <td style="padding: 16px 40px;">
-              <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background: #f0fdf4; border-radius: 12px; border-left: 4px solid #22c55e;">
-                <tr>
-                  <td style="padding: 20px;">
-                    <div style="font-size: 13px; font-weight: 700; color: #166534; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px;">Próximos Passos</div>
-                    <table width="100%" cellpadding="0" cellspacing="0" border="0">
-                      ${actionSteps}
+                  <td style="padding: 24px;">
+                    <h2 style="margin: 0 0 16px; font-size: 20px; font-weight: 700; color: #0f172a; font-family: Georgia, 'Times New Roman', serif; line-height: 1.3;">
+                      🚀 Consultoria estratégica para destravar a receita que já existe na sua operação
+                    </h2>
+                    <p style="margin: 0 0 8px; font-size: 14px; color: #374151; line-height: 1.6;">
+                      Você acabou de ver um retrato da sua máquina de crescimento.
+                    </p>
+                    <p style="margin: 0 0 16px; font-size: 14px; color: #374151; line-height: 1.6;">
+                      O próximo passo agora é transformar esse diagnóstico em <strong>um plano de ação</strong>.
+                    </p>
+                    <p style="margin: 0 0 12px; font-size: 14px; color: #374151; line-height: 1.6;">
+                      Na consultoria do GLA, você vai:
+                    </p>
+                    <table cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 4px;">
+                      <tr>
+                        <td style="padding: 6px 0; font-size: 14px; color: #374151; line-height: 1.5;">
+                          • Destravar sua alavanca de maior retorno de receita
+                        </td>
+                      </tr>
+                      <tr>
+                        <td style="padding: 6px 0; font-size: 14px; color: #374151; line-height: 1.5;">
+                          • Desenvolver Inteligência analítica para tomada de decisão
+                        </td>
+                      </tr>
+                      <tr>
+                        <td style="padding: 6px 0; font-size: 14px; color: #374151; line-height: 1.5;">
+                          • Ter acompanhamento por 6 meses para implementar e dar ritmo ao seu plano de ação
+                        </td>
+                      </tr>
                     </table>
                   </td>
                 </tr>
               </table>
             </td>
           </tr>
-          `
-              : ""
-          }
 
           <!-- CTA -->
           <tr>
-            <td style="padding: 24px 40px;">
+            <td style="padding: 16px 40px 24px;">
               <table width="100%" cellpadding="0" cellspacing="0" border="0">
                 <tr>
                   <td align="center">
-                    <a href="${data.ctaUrl || "https://wa.me/5511999999999"}" style="display: inline-block; padding: 16px 40px; background: #0f172a; color: #ffffff; font-size: 15px; font-weight: 700; text-decoration: none; border-radius: 12px; letter-spacing: 0.3px;">
-                      Quero acelerar meu crescimento
+                    <a href="${data.ctaUrl || "https://wa.me/5511999999999"}" style="display: inline-block; padding: 16px 40px; background: #0f172a; color: #ffffff; font-size: 15px; font-weight: 700; text-decoration: none; border-radius: 12px; letter-spacing: 0.3px; width: 80%; text-align: center;">
+                      Quero conhecer a consultoria
                     </a>
                   </td>
                 </tr>
