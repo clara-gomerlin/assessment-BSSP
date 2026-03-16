@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useCallback, useMemo, useRef, useEffect } from "react";
-import { useSearchParams } from "next/navigation";
 import { Question, Quiz, Answers } from "@/lib/types";
 import QuestionCard from "./QuestionCard";
 import LeadCapture from "./LeadCapture";
@@ -135,16 +134,17 @@ export default function QuizPlayer({ quiz, questions }: QuizPlayerProps) {
   const [analysisData, setAnalysisData] = useState<any>(null);
   const [hubspotContactId, setHubspotContactId] = useState<string | null>(null);
 
-  // Capture UTM params from URL
-  const searchParams = useSearchParams();
-  const utmParams = useMemo(() => {
-    const params: Record<string, string> = {};
+  // Capture UTM params from URL on initial load
+  const utmParamsRef = useRef<Record<string, string>>({});
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const utms: Record<string, string> = {};
     for (const key of ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term"]) {
-      const val = searchParams.get(key);
-      if (val) params[key] = val;
+      const val = params.get(key);
+      if (val) utms[key] = val;
     }
-    return params;
-  }, [searchParams]);
+    utmParamsRef.current = utms;
+  }, []);
 
   const currentQuestion = questions[currentIndex];
 
@@ -306,7 +306,7 @@ export default function QuizPlayer({ quiz, questions }: QuizPlayerProps) {
             quiz_id: quiz.id,
             answers,
             other_texts: Object.keys(otherTexts).length > 0 ? otherTexts : undefined,
-            utm_params: Object.keys(utmParams).length > 0 ? utmParams : undefined,
+            utm_params: Object.keys(utmParamsRef.current).length > 0 ? utmParamsRef.current : undefined,
           }),
         });
 
@@ -352,7 +352,7 @@ export default function QuizPlayer({ quiz, questions }: QuizPlayerProps) {
         console.error(error);
       }
     },
-    [quiz.id, answers, otherTexts, utmParams]
+    [quiz.id, answers, otherTexts]
   );
 
   // Handle lead capture submission (update lead data + show result)
@@ -373,7 +373,7 @@ export default function QuizPlayer({ quiz, questions }: QuizPlayerProps) {
               respondent_name: name,
               respondent_email: email,
               respondent_phone: phone,
-              utm_params: Object.keys(utmParams).length > 0 ? utmParams : undefined,
+              utm_params: Object.keys(utmParamsRef.current).length > 0 ? utmParamsRef.current : undefined,
             }),
           });
           const data = await res.json();
@@ -484,7 +484,7 @@ export default function QuizPlayer({ quiz, questions }: QuizPlayerProps) {
             ctaWhatsappUrl={quiz.settings.cta_whatsapp_url}
             hubspotContactId={hubspotContactId}
             quizTitle={quiz.title}
-            utmParams={utmParams}
+            utmParams={utmParamsRef.current}
           />
         </div>
       );
@@ -503,7 +503,7 @@ export default function QuizPlayer({ quiz, questions }: QuizPlayerProps) {
           ctaWhatsappUrl={quiz.settings.cta_whatsapp_url}
           hubspotContactId={hubspotContactId}
           quizTitle={quiz.title}
-          utmParams={utmParams}
+          utmParams={utmParamsRef.current}
         />
       );
     }
@@ -521,7 +521,7 @@ export default function QuizPlayer({ quiz, questions }: QuizPlayerProps) {
         ctaWhatsappUrl={quiz.settings.cta_whatsapp_url}
         hubspotContactId={hubspotContactId}
         quizTitle={quiz.title}
-        utmParams={utmParams}
+        utmParams={utmParamsRef.current}
       />
     );
   }
