@@ -140,16 +140,47 @@ export async function POST(request: NextRequest) {
     }
 
     // Resolve answer labels (needed by Chatwoot + Avalon)
+    // Map order_index to fixed attribute keys matching Chatwoot definitions
+    const ANSWER_KEY_MAP: Record<number, string> = {
+      0: "faturamento_anual",
+      1: "papel_na_empresa",
+      2: "crm_principal",
+      3: "sentimento_crescimento",
+      4: "furos_aquisicao",
+      5: "resultados_vs_vaidade",
+      6: "bater_meta",
+      7: "tendencias_performance",
+      8: "onde_investir_energia",
+      9: "dependencia_ads",
+      10: "atribuicao_canais",
+      11: "alinhamento_mkt_vendas",
+      12: "cac_ltv",
+      13: "followup_leads",
+      14: "acuracia_forecast",
+      15: "pipeline_review",
+      16: "deals_envelhecidos",
+      17: "tempo_operacional_vs_estrategico",
+      18: "receita_upsell_crosssell",
+      19: "risco_churn",
+      20: "relacionamento_clientes",
+      21: "estrategia_ticket",
+      22: "revisao_pricing",
+      23: "reacao_desconto",
+      24: "diferencial_competitivo",
+      25: "willingness_to_pay",
+      26: "custo_inacao",
+    };
+
     const answerLabels: Record<string, string> = {};
     const answersData = (existing.answers || []) as { question_id: string; selected_option_id: string | string[] }[];
     if (answersData.length > 0) {
       const { data: questions } = await supabase
         .from(tables.questions)
-        .select("id, text, options")
+        .select("id, order_index, options")
         .eq("quiz_id", quiz_id);
 
       if (questions) {
-        const qMap = new Map(questions.map((q: { id: string; text: string; options: { id: string; label: string }[] }) => [q.id, q]));
+        const qMap = new Map(questions.map((q: { id: string; order_index: number; options: { id: string; label: string }[] }) => [q.id, q]));
         for (const ans of answersData) {
           const q = qMap.get(ans.question_id);
           if (!q) continue;
@@ -158,7 +189,7 @@ export async function POST(request: NextRequest) {
             .map((id: string) => q.options.find((o: { id: string; label: string }) => o.id === id)?.label)
             .filter(Boolean);
           if (labels.length > 0) {
-            const key = q.text.slice(0, 60).toLowerCase().replace(/[^a-z0-9]/g, "_").replace(/_+/g, "_").replace(/_+$/, "");
+            const key = ANSWER_KEY_MAP[q.order_index] || `pergunta_${q.order_index}`;
             answerLabels[key] = labels.join("; ");
           }
         }

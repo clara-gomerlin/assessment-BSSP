@@ -197,6 +197,7 @@ export async function upsertContact({
     firstname: firstName,
     lastname: lastName,
     lead_source: `Assessment ${quizName}`,
+    evento_de_conversao: `Assessment ${quizName}`,
     produto: "Consultoria",
   };
 
