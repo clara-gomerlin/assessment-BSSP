@@ -192,8 +192,8 @@ function REIHero({ onStart }: { onStart: () => void }) {
               { src: "/logos/clients/conta-simples.png", alt: "Conta Simples" },
               { src: "/logos/clients/omie.png", alt: "Omie" },
             ].map((logo) => (
-              <div key={logo.alt} style={{ display: "flex", alignItems: "center", justifyContent: "center", height: 40, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 6, padding: "6px 12px" }}>
-                <img src={logo.src} alt={logo.alt} style={{ maxHeight: 24, maxWidth: "80%", objectFit: "contain", opacity: 0.7, filter: "brightness(0) invert(1)" }} />
+              <div key={logo.alt} style={{ display: "flex", alignItems: "center", justifyContent: "center", height: 56, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 8, padding: "8px 16px" }}>
+                <img src={logo.src} alt={logo.alt} style={{ maxHeight: 36, maxWidth: "90%", objectFit: "contain", opacity: 0.7, filter: "brightness(0) invert(1)" }} />
               </div>
             ))}
           </div>
