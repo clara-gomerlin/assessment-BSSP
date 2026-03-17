@@ -15,6 +15,16 @@ const DIMENSION_THRESHOLDS: { max: number; label: string; color: string }[] = [
   { max: 100, label: "Alavanca Ativa", color: "#1dbf73" },
 ];
 
+const CONFIDENCE_THRESHOLDS: { max: number; label: string; color: string }[] = [
+  { max: 30, label: "Voando no Escuro", color: "#e84343" },
+  { max: 50, label: "Visão Parcial", color: "#f5a623" },
+  { max: 70, label: "Visão Razoável", color: "#eab308" },
+  { max: 100, label: "Painel de Controle", color: "#1dbf73" },
+];
+
+// Categories for confidence questions (P1-P5)
+const CONFIDENCE_CATEGORY = "confianca";
+
 // Tie-break priority for weakest lever (first = most impactful if weak)
 const WEAKEST_PRIORITY = ["PP", "EV", "GD", "EB"];
 
@@ -163,6 +173,24 @@ export function calculateDiagnosticScores(
     }
   }
 
+  // 6. Calculate confidence score (from confianca category questions)
+  let confidenceRaw = 0;
+  let confidenceCount = 0;
+  for (const question of questions) {
+    if (question.category === CONFIDENCE_CATEGORY) {
+      const selectedId = answers[question.id];
+      if (!selectedId || Array.isArray(selectedId)) continue;
+      const option = question.options.find((o) => o.id === selectedId);
+      if (option) {
+        confidenceRaw += option.value ?? 0;
+        confidenceCount++;
+      }
+    }
+  }
+  const confidenceMax = (confidenceCount || 5) * 5;
+  const confidenceScore = confidenceMax > 0 ? Math.round((confidenceRaw / confidenceMax) * 100) : 0;
+  const { label: confidenceLabel, color: confidenceColor } = getLabel(confidenceScore, CONFIDENCE_THRESHOLDS);
+
   return {
     scoreGeral,
     scoreGeralLabel,
@@ -171,5 +199,8 @@ export function calculateDiagnosticScores(
     strongest,
     weakest,
     qualification: { faturamento, papel, emocionalTags, crm },
+    confidenceScore,
+    confidenceLabel,
+    confidenceColor,
   };
 }

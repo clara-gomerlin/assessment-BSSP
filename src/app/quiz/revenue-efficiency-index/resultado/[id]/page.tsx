@@ -97,6 +97,9 @@ export default async function ResultadoPage({ params }: PageProps) {
   // Reconstruct result data from computed_scores
   const computedScores = response.computed_scores as {
     scoreGeral: number;
+    confidenceScore?: number;
+    confidenceLabel?: string;
+    confidenceColor?: string;
     dimensions: { code: string; normalizedScore: number; label: string }[];
   } | null;
 
@@ -152,6 +155,9 @@ export default async function ResultadoPage({ params }: PageProps) {
       emocionalTags: [] as string[],
       crm: "",
     },
+    confidenceScore: computedScores.confidenceScore || 0,
+    confidenceLabel: computedScores.confidenceLabel || "",
+    confidenceColor: computedScores.confidenceColor || "",
   };
 
   if (quizType === "diagnostic") {

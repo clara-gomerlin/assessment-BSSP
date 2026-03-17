@@ -96,6 +96,9 @@ export interface DiagnosticResult {
     emocionalTags: string[];
     crm: string;
   };
+  confidenceScore: number;
+  confidenceLabel: string;
+  confidenceColor: string;
 }
 
 // --- IPRT assessment result ---

@@ -258,6 +258,9 @@ Recomende 2-3 módulos mais relevantes para este perfil e suas lacunas. Responda
       );
       computedScores = {
         scoreGeral: diagResult.scoreGeral,
+        confidenceScore: diagResult.confidenceScore,
+        confidenceLabel: diagResult.confidenceLabel,
+        confidenceColor: diagResult.confidenceColor,
         dimensions: diagResult.dimensions.map((d) => ({
           code: d.code,
           normalizedScore: d.normalizedScore,
