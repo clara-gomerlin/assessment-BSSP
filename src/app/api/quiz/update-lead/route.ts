@@ -225,7 +225,7 @@ export async function POST(request: NextRequest) {
 
     // 1b. HubSpot note with result link
     if (hubspotContactId) {
-      const resultUrl = `https://assessment.growthleaders.academy/resultado/${response_id}`;
+      const resultUrl = `https://assessment.growthleaders.academy/quiz/revenue-efficiency-index/resultado/${response_id}`;
       tasks.push(
         createContactNote({
           contactId: hubspotContactId,

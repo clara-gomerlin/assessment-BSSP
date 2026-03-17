@@ -204,7 +204,7 @@ function buildDiagnosticEmailHtml(data: DiagnosticEmailData): string {
                     <p style="margin: 0 0 12px; font-size: 14px; color: #374151; line-height: 1.5;">
                       Acesse seu resultado completo a qualquer momento:
                     </p>
-                    <a href="https://assessment.growthleaders.academy/resultado/${data.responseId}" style="display: inline-block; padding: 12px 28px; background: #2D3246; color: #ffffff; font-size: 14px; font-weight: 600; text-decoration: none; border-radius: 10px;">
+                    <a href="https://assessment.growthleaders.academy/quiz/revenue-efficiency-index/resultado/${data.responseId}" style="display: inline-block; padding: 12px 28px; background: #2D3246; color: #ffffff; font-size: 14px; font-weight: 600; text-decoration: none; border-radius: 10px;">
                       Ver meu resultado completo
                     </a>
                   </td>
