@@ -621,8 +621,6 @@ function ScoreHero({
         </span>
       </div>
 
-      {/* Radar Chart */}
-      <RadarChart dimensions={result.dimensions} />
     </div>
   );
 }
