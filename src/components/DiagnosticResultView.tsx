@@ -824,12 +824,11 @@ export default function DiagnosticResultView({
     <div style={{ width: "100%", fontFamily: "var(--font-quiz)" }}>
       {/* ===== DESKTOP LAYOUT (>=768px) ===== */}
       <div className="diag-desktop-layout">
-        <div className="diag-desktop-left">
+        <div style={{ maxWidth: 680, width: "100%", margin: "0 auto", padding: "0 24px" }}>
           <ScoreHero result={result} firstName={firstName} />
-        </div>
-        <div className="diag-desktop-right">
+
           {/* Breakdown card */}
-          <div className="result-top-card" style={{ padding: "24px 20px", marginTop: 16, animationDelay: "0.3s" }}>
+          <div className="result-top-card" style={{ padding: "24px 20px", marginTop: 24, animationDelay: "0.3s" }}>
             <DimensionsBreakdown result={result} />
           </div>
 
