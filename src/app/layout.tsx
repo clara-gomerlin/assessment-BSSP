@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import "./bssp.css";
 
 export const metadata: Metadata = {
   title: "Revenue Efficiency Index | Growth Leaders Academy",
