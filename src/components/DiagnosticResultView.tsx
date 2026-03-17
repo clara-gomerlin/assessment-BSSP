@@ -853,29 +853,8 @@ export default function DiagnosticResultView({
             )}
           </div>
 
-          {/* Brag + CTAs */}
-          <div style={{ marginTop: 32, textAlign: "center" }}>
-            <button
-              onClick={() => generate(respondentName, result.scoreGeral, result.scoreGeralLabel, result.scoreGeralColor, result.dimensions)}
-              className="diagnostic-brag-btn"
-            >
-              📥 Baixar meu Diagnóstico (imagem)
-            </button>
-            <canvas ref={canvasRef} style={{ display: "none" }} />
-          </div>
-
           {/* Consultancy Pitch */}
           <ConsultancyPitch ctaUrl={ctaWhatsappUrl || DEFAULT_WHATSAPP_URL} onCtaClick={handleCtaClick} />
-
-          <div style={{ marginTop: 32, display: "flex", flexDirection: "column", gap: 12 }}>
-            <button onClick={() => window.location.reload()} className="result-secondary-cta">
-              Refazer diagnóstico
-            </button>
-          </div>
-
-          <p style={{ fontSize: 12, fontWeight: 200, color: "#515151", textAlign: "center", marginTop: 24, lineHeight: 1.3 }}>
-            Resultado gerado com IA baseado nas suas respostas. Para uma análise aprofundada, fale com nosso time.
-          </p>
         </div>
       </div>
 
@@ -907,30 +886,8 @@ export default function DiagnosticResultView({
             )}
           </div>
 
-          {/* Brag */}
-          <div style={{ marginTop: 32, textAlign: "center" }}>
-            <button
-              onClick={() => generate(respondentName, result.scoreGeral, result.scoreGeralLabel, result.scoreGeralColor, result.dimensions)}
-              className="diagnostic-brag-btn"
-            >
-              📥 Baixar meu Diagnóstico (imagem)
-            </button>
-            <canvas ref={canvasRef} style={{ display: "none" }} />
-          </div>
-
           {/* Consultancy Pitch */}
           <ConsultancyPitch ctaUrl={ctaWhatsappUrl || DEFAULT_WHATSAPP_URL} onCtaClick={handleCtaClick} />
-
-          {/* CTAs */}
-          <div style={{ marginTop: 32, display: "flex", flexDirection: "column", gap: 12 }}>
-            <button onClick={() => window.location.reload()} className="result-secondary-cta">
-              Refazer diagnóstico
-            </button>
-          </div>
-
-          <p style={{ fontSize: 12, fontWeight: 200, color: "#515151", textAlign: "center", marginTop: 24, lineHeight: 1.3 }}>
-            Resultado gerado com IA baseado nas suas respostas. Para uma análise aprofundada, fale com nosso time.
-          </p>
         </div>
       </div>
     </div>

@@ -3,6 +3,17 @@
 import { useState } from "react";
 import { Question } from "@/lib/types";
 
+function renderLabel(label: string) {
+  // Support **bold** markdown in labels
+  const parts = label.split(/(\*\*[^*]+\*\*)/g);
+  return parts.map((part, i) => {
+    if (part.startsWith("**") && part.endsWith("**")) {
+      return <strong key={i}>{part.slice(2, -2)}</strong>;
+    }
+    return part;
+  });
+}
+
 interface QuestionCardProps {
   question: Question;
   selectedOption: string | string[] | undefined;
@@ -207,7 +218,7 @@ export default function QuestionCard({
                         letterSpacing: "0.192px",
                       }}
                     >
-                      {option.label}
+                      {renderLabel(option.label)}
                     </span>
                   </div>
                 </div>

@@ -598,11 +598,11 @@ function RevenueSocialProofCard({
   return (
     <Content onContinue={onContinue}>
       <div style={{ textAlign: "center", marginBottom: 16 }}>
-        <span style={{ fontSize: 24, fontWeight: 700, color: "#2D3246" }}>
+        <span style={{ fontSize: 22, fontWeight: 700, color: "#2D3246" }}>
           {title1}
         </span>
         <br />
-        <span style={{ fontSize: 16, fontWeight: 500, color: "#000" }}>
+        <span style={{ fontSize: 16, fontWeight: 600, color: "#2D3246" }}>
           {title2}
         </span>
       </div>
