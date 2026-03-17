@@ -24,14 +24,7 @@ export default function HeroScreen({ quiz, onStart }: HeroScreenProps) {
           inset: 0,
           zIndex: -1,
           pointerEvents: "none",
-          background: isIPRT
-            ? `radial-gradient(ellipse 80% 60% at 10% 90%, rgba(3, 29, 49, 0.06) 0%, transparent 50%),
-               radial-gradient(ellipse 60% 50% at 90% 20%, rgba(3, 29, 49, 0.04) 0%, transparent 50%),
-               linear-gradient(180deg, #ffffff 0%, #f8fafc 100%)`
-            : `radial-gradient(ellipse 80% 60% at 10% 90%, rgba(99, 102, 241, 0.08) 0%, transparent 50%),
-               radial-gradient(ellipse 60% 50% at 90% 20%, rgba(129, 140, 248, 0.06) 0%, transparent 50%),
-               radial-gradient(ellipse 100% 80% at 50% 100%, rgba(99, 102, 241, 0.04) 0%, transparent 40%),
-               linear-gradient(180deg, #ffffff 0%, #f8fafc 100%)`,
+          background: `var(--bg-dark)`,
         }}
       />
 
@@ -95,7 +88,7 @@ export default function HeroScreen({ quiz, onStart }: HeroScreenProps) {
                 fontWeight: 700,
                 fontSize: isDiagnostic ? 40 : "clamp(1.75rem, 6vw, 2.5rem)",
                 lineHeight: 1.15,
-                color: isIPRT ? "#031D31" : "#0f172a",
+                color: "var(--neutral-50)",
                 marginBottom: 24,
                 letterSpacing: "-0.02em",
               }}
@@ -113,11 +106,11 @@ export default function HeroScreen({ quiz, onStart }: HeroScreenProps) {
                 style={{
                   fontSize: "clamp(1.1rem, 4vw, 1.35rem)",
                   fontWeight: 600,
-                  color: "#0f172a",
+                  color: "var(--neutral-50)",
                   lineHeight: 1.3,
                   maxWidth: 400,
                   margin: "8px auto 0",
-                  fontFamily: "'Rubik', var(--font-quiz)",
+                  fontFamily: "var(--font-editorial)",
                 }}
               >
                 Descubra onde está vazando dinheiro na sua operação de receita
@@ -126,7 +119,7 @@ export default function HeroScreen({ quiz, onStart }: HeroScreenProps) {
             <p
               style={{
                 fontSize: "clamp(0.9375rem, 3.5vw, 1.0625rem)",
-                color: "#64748b",
+                color: "rgba(232, 232, 227, 0.7)",
                 lineHeight: 1.55,
                 maxWidth: 400,
                 margin: isDiagnostic ? "16px auto 0" : "0 auto",
@@ -176,19 +169,18 @@ export default function HeroScreen({ quiz, onStart }: HeroScreenProps) {
                   alignItems: "center",
                   gap: 8,
                   padding: "12px 16px",
-                  background: "#ffffff",
-                  border: "1px solid #e2e8f0",
-                  borderRadius: 9999,
-                  fontSize: "0.875rem",
-                  fontWeight: 500,
-                  color: "#334155",
-                  boxShadow: "0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.03)",
+                  background: "rgba(255, 255, 255, 0.04)",
+                  border: "1px solid rgba(255, 255, 255, 0.12)",
+                  borderRadius: 100,
+                  fontSize: "13px",
+                  fontWeight: 600,
+                  color: "var(--text-on-dark)",
                   whiteSpace: "nowrap",
-                  fontFamily: isDiagnostic ? "'Rubik', sans-serif" : undefined,
+                  fontFamily: "var(--font-editorial)",
                 }}
               >
                 <span style={{ fontSize: "1rem", lineHeight: 1 }}>{badge.icon}</span>
-                <span style={{ fontWeight: 600, color: "#0f172a" }}>{badge.value}</span>
+                <span style={{ fontWeight: 600, color: "var(--neutral-50)" }}>{badge.value}</span>
                 <span>{badge.label}</span>
               </span>
             ))}
@@ -202,14 +194,14 @@ export default function HeroScreen({ quiz, onStart }: HeroScreenProps) {
               style={{
                 textAlign: "center",
                 fontSize: "0.875rem",
-                color: "#64748b",
+                color: "rgba(232, 232, 227, 0.7)",
                 marginBottom: 16,
               }}
             >
               {isIPRT
                 ? "Ao final do diagnóstico, você vai ter:"
                 : isDiagnostic
-                ? <><strong style={{ fontWeight: 700, color: "#0f172a", fontFamily: "'Rubik', sans-serif" }}>10 minutos, 27 perguntas e um mapa claro de onde agir.</strong></>
+                ? <><strong style={{ fontWeight: 700, color: "var(--neutral-50)", fontFamily: "var(--font-editorial)" }}>10 minutos, 27 perguntas e um mapa claro de onde agir.</strong></>
                 : "Ao final do diagnóstico, você vai ter:"}
             </p>
             <ul
@@ -245,7 +237,7 @@ export default function HeroScreen({ quiz, onStart }: HeroScreenProps) {
                     alignItems: "flex-start",
                     gap: 12,
                     fontSize: "0.9375rem",
-                    color: "#334155",
+                    color: "var(--text-on-dark)",
                     lineHeight: 1.5,
                   }}
                 >
@@ -254,7 +246,7 @@ export default function HeroScreen({ quiz, onStart }: HeroScreenProps) {
                       flexShrink: 0,
                       width: 20,
                       height: 20,
-                      background: isIPRT ? "#031D31" : "#10b981",
+                      background: "var(--coral-500)",
                       borderRadius: 8,
                       display: "flex",
                       alignItems: "center",
@@ -284,7 +276,7 @@ export default function HeroScreen({ quiz, onStart }: HeroScreenProps) {
                 paddingTop: 16,
                 borderTop: "1px solid #e2e8f0",
                 fontSize: "0.8125rem",
-                color: "#64748b",
+                color: "rgba(232, 232, 227, 0.7)",
                 textAlign: "center",
                 lineHeight: 1.5,
               }}
@@ -307,7 +299,7 @@ export default function HeroScreen({ quiz, onStart }: HeroScreenProps) {
           left: 0,
           right: 0,
           padding: "16px 24px",
-          background: "linear-gradient(to top, #ffffff 60%, transparent)",
+          background: "linear-gradient(to top, var(--bg-dark) 60%, transparent)",
           animation: "fadeSlideUp 0.7s ease-out 0.4s both",
         }}
       >

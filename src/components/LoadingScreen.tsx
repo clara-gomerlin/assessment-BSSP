@@ -258,9 +258,8 @@ export default function LoadingScreen({ apiReady, onContinue, labels, quizType }
               alignItems: "center",
               gap: 8,
               borderRadius: 12,
-              background: "#fff",
-              boxShadow:
-                "rgba(56,70,174,0.05) 0px 4px 9px, rgba(56,70,174,0.04) 0px 16px 16px",
+              background: "var(--bg-dark-elevated)",
+              border: "1px solid rgba(255,255,255,0.08)",
               opacity: testimonialVisible ? 1 : 0,
               transition: "opacity 0.4s ease",
               minHeight: 180,
@@ -274,7 +273,7 @@ export default function LoadingScreen({ apiReady, onContinue, labels, quizType }
                 alignItems: "center",
                 padding: "18px 24px",
                 borderRadius: 8,
-                background: "#f3f6fc",
+                background: "rgba(255,255,255,0.04)",
                 width: "100%",
               }}
             >
@@ -286,7 +285,7 @@ export default function LoadingScreen({ apiReady, onContinue, labels, quizType }
                   fontSize: 15,
                   fontWeight: 400,
                   textAlign: "center",
-                  color: "#161616",
+                  color: "var(--text-on-dark)",
                   lineHeight: 1.4,
                 }}
               >
@@ -303,7 +302,7 @@ export default function LoadingScreen({ apiReady, onContinue, labels, quizType }
                 <QuoteSVG />
               </span>
             </div>
-            <span style={{ fontSize: 14, fontWeight: 200, color: "#000", textAlign: "center", display: "block" }}>
+            <span style={{ fontSize: 14, fontWeight: 200, color: "var(--text-on-dark-secondary)", textAlign: "center", display: "block" }}>
               {testimonial.author} - {testimonial.role}
               {(testimonial as { role2?: string }).role2 && <><br />{(testimonial as { role2?: string }).role2}</>}
             </span>

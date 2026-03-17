@@ -76,7 +76,7 @@ export default function QuestionCard({
             fontFamily: "var(--font-quiz)",
             fontSize: 22,
             fontWeight: 700,
-            color: "#000",
+            color: "var(--neutral-50)",
             lineHeight: 1.3,
             textAlign: "center",
           }}
@@ -89,7 +89,7 @@ export default function QuestionCard({
               fontFamily: "var(--font-quiz)",
               fontSize: 14,
               fontWeight: 500,
-              color: "#5F687B",
+              color: "var(--text-on-dark-secondary)",
               marginTop: 4,
               textAlign: "center",
             }}
@@ -103,7 +103,7 @@ export default function QuestionCard({
               fontFamily: "var(--font-quiz)",
               fontSize: 14,
               fontWeight: 500,
-              color: "#5F687B",
+              color: "var(--text-on-dark-secondary)",
               marginTop: 6,
               textAlign: "center",
             }}
@@ -157,9 +157,9 @@ export default function QuestionCard({
                         height: 22,
                         borderRadius: 6,
                         border: isSelected
-                          ? "2px solid #2D3246"
-                          : "2px solid #c4c7cc",
-                        background: isSelected ? "#2D3246" : "transparent",
+                          ? "2px solid var(--coral-500)"
+                          : "2px solid rgba(255,255,255,0.2)",
+                        background: isSelected ? "var(--coral-500)" : "transparent",
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
@@ -212,7 +212,7 @@ export default function QuestionCard({
                         fontFamily: "var(--font-quiz)",
                         fontSize: 16,
                         fontWeight: 400,
-                        color: isSelected ? "#2D3246" : "#000",
+                        color: isSelected ? "var(--neutral-50)" : "var(--text-on-dark)",
                         textAlign: "left",
                         lineHeight: 1.35,
                         letterSpacing: "0.192px",
@@ -259,15 +259,15 @@ export default function QuestionCard({
               width: "100%",
               padding: "14px 16px",
               borderRadius: 12,
-              border: "1.5px solid #c4c7cc",
+              border: "1.5px solid rgba(255,255,255,0.15)",
               fontSize: 16,
               fontFamily: "var(--font-quiz)",
-              color: "#000",
+              color: "var(--neutral-50)",
               outline: "none",
-              background: "#fff",
+              background: "var(--bg-dark-elevated)",
             }}
-            onFocus={(e) => (e.target.style.borderColor = "#2D3246")}
-            onBlur={(e) => (e.target.style.borderColor = "#c4c7cc")}
+            onFocus={(e) => (e.target.style.borderColor = "var(--coral-500)")}
+            onBlur={(e) => (e.target.style.borderColor = "rgba(255,255,255,0.15)")}
           />
           {otherText.trim() && (
             <button
@@ -295,8 +295,7 @@ export default function QuestionCard({
             padding: "10px 20px",
             textAlign: "center",
             zIndex: 999,
-            background:
-              "linear-gradient(rgba(250,250,250,0.8) 0%, rgba(250,250,250,0) 92.42%), linear-gradient(90deg, rgba(80,186,246,0.12) 0%, rgba(151,88,231,0.12) 91.61%), rgb(250,250,250)",
+            background: "linear-gradient(to top, var(--bg-dark) 60%, transparent)",
             opacity: selectedArray.length > 0 ? 1 : 0.4,
             transition: "opacity 0.3s",
             pointerEvents: selectedArray.length > 0 ? "auto" : "none",

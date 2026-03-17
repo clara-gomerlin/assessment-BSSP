@@ -82,7 +82,7 @@ function Transition1({ onContinue }: { onContinue: () => void }) {
             minHeight: 133,
             padding: "18px 24px",
             borderRadius: 8,
-            background: "#f3f6fc",
+            background: "rgba(255,255,255,0.04)",
           }}
         >
           <span style={{ position: "absolute", top: 8, left: 13.5 }}>
@@ -93,7 +93,7 @@ function Transition1({ onContinue }: { onContinue: () => void }) {
               fontSize: 15,
               fontWeight: 400,
               textAlign: "center",
-              color: "#161616",
+              color: "var(--text-on-dark)",
               lineHeight: 1.4,
             }}
           >
@@ -315,7 +315,7 @@ function Transition2({ onContinue }: { onContinue: () => void }) {
           fontSize: 14,
           fontWeight: 400,
           textAlign: "center",
-          color: "#000",
+          color: "var(--text-on-dark-secondary)",
         }}
       >
         Taciana Serafim — Diretora de Growth e Marketing @Looptomize
@@ -553,7 +553,7 @@ function RevenueConfiancaIntro({ onContinue }: { onContinue: () => void }) {
           style={{
             fontSize: 18,
             fontWeight: 500,
-            color: "#000",
+            color: "var(--text-on-dark-secondary)",
             lineHeight: 1.4,
             marginBottom: 24,
           }}
@@ -564,7 +564,7 @@ function RevenueConfiancaIntro({ onContinue }: { onContinue: () => void }) {
           style={{
             fontSize: 15,
             fontWeight: 400,
-            color: "#64748b",
+            color: "var(--text-on-dark-secondary)",
             lineHeight: 1.5,
             maxWidth: 520,
             margin: "0 auto",
@@ -616,9 +616,8 @@ function RevenueSocialProofCard({
           alignItems: "center",
           gap: 8,
           borderRadius: 12,
-          background: "#fff",
-          boxShadow:
-            "rgba(56,70,174,0.05) 0px 4px 9px, rgba(56,70,174,0.04) 0px 16px 16px",
+          background: "var(--bg-dark-elevated)",
+          border: "1px solid rgba(255,255,255,0.08)",
           minHeight: 180,
         }}
       >
@@ -631,7 +630,7 @@ function RevenueSocialProofCard({
             padding: "18px 24px",
             width: "100%",
             borderRadius: 8,
-            background: "#f3f6fc",
+            background: "rgba(255,255,255,0.04)",
           }}
         >
           <span style={{ position: "absolute", top: 8, left: 12 }}>
@@ -642,7 +641,7 @@ function RevenueSocialProofCard({
               fontSize: 15,
               fontWeight: 400,
               textAlign: "center",
-              color: "#161616",
+              color: "var(--text-on-dark)",
               lineHeight: 1.4,
             }}
           >
@@ -659,7 +658,7 @@ function RevenueSocialProofCard({
             <QuoteSVG />
           </span>
         </div>
-        <span style={{ fontSize: 14, fontWeight: 200, color: "#000", textAlign: "center", display: "block" }}>
+        <span style={{ fontSize: 14, fontWeight: 200, color: "var(--text-on-dark-secondary)", textAlign: "center", display: "block" }}>
           {author}
         </span>
         <StarsSVG />
@@ -670,7 +669,7 @@ function RevenueSocialProofCard({
           style={{
             fontSize: 15,
             fontWeight: 500,
-            color: "#64748b",
+            color: "var(--text-on-dark-secondary)",
             lineHeight: 1.5,
           }}
         >
@@ -850,7 +849,7 @@ function BSSPTransition1({ onContinue }: { onContinue: () => void }) {
             minHeight: 100,
             padding: "18px 24px",
             borderRadius: 8,
-            background: "#f3f6fc",
+            background: "rgba(255,255,255,0.04)",
           }}
         >
           <span style={{ position: "absolute", top: 8, left: 13.5 }}>
@@ -861,7 +860,7 @@ function BSSPTransition1({ onContinue }: { onContinue: () => void }) {
               fontSize: 15,
               fontWeight: 400,
               textAlign: "center",
-              color: "#161616",
+              color: "var(--text-on-dark)",
               lineHeight: 1.4,
             }}
           >
@@ -1100,7 +1099,7 @@ function BSSPTransition3({ onContinue }: { onContinue: () => void }) {
           fontSize: 13,
           fontWeight: 400,
           textAlign: "center",
-          color: "#000",
+          color: "var(--text-on-dark-secondary)",
         }}
       >
         Cliente A — Empresa X

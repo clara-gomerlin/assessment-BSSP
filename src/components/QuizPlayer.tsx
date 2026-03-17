@@ -454,8 +454,8 @@ export default function QuizPlayer({ quiz, questions }: QuizPlayerProps) {
     return (
       <div className={isIPRT ? "bssp-theme" : ""}>
         <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 16, padding: 24 }}>
-          <div style={{ width: 40, height: 40, border: "3px solid #e5e7eb", borderTopColor: isIPRT ? "#031D31" : "#6366f1", borderRadius: "50%", animation: "spin 0.8s linear infinite" }} />
-          <p style={{ fontSize: 16, fontWeight: 500, color: "#334155" }}>Gerando seu resultado...</p>
+          <div style={{ width: 40, height: 40, border: "3px solid rgba(255,255,255,0.1)", borderTopColor: "var(--coral-500)", borderRadius: "50%", animation: "spin 0.8s linear infinite" }} />
+          <p style={{ fontSize: 16, fontWeight: 500, color: "var(--text-on-dark)" }}>Gerando seu resultado...</p>
         </div>
       </div>
     );
@@ -466,8 +466,8 @@ export default function QuizPlayer({ quiz, questions }: QuizPlayerProps) {
     return (
       <div className={isIPRT ? "bssp-theme" : ""}>
         <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 16, padding: 24 }}>
-          <div style={{ width: 40, height: 40, border: "3px solid #e5e7eb", borderTopColor: isIPRT ? "#031D31" : "#6366f1", borderRadius: "50%", animation: "spin 0.8s linear infinite" }} />
-          <p style={{ fontSize: 16, fontWeight: 500, color: "#334155" }}>Finalizando seu resultado...</p>
+          <div style={{ width: 40, height: 40, border: "3px solid rgba(255,255,255,0.1)", borderTopColor: "var(--coral-500)", borderRadius: "50%", animation: "spin 0.8s linear infinite" }} />
+          <p style={{ fontSize: 16, fontWeight: 500, color: "var(--text-on-dark)" }}>Finalizando seu resultado...</p>
         </div>
       </div>
     );
@@ -552,7 +552,7 @@ export default function QuizPlayer({ quiz, questions }: QuizPlayerProps) {
             padding: "10px 20px",
             display: "flex",
             justifyContent: "center",
-            borderBottom: "1px solid rgb(227, 228, 230)",
+            borderBottom: "1px solid rgba(255, 255, 255, 0.06)",
           }}
         >
           <img
@@ -568,7 +568,7 @@ export default function QuizPlayer({ quiz, questions }: QuizPlayerProps) {
         style={{
           position: "relative",
           padding: "12px 20px",
-          borderBottom: "1px solid rgb(227, 228, 230)",
+          borderBottom: "1px solid rgba(255, 255, 255, 0.06)",
         }}
       >
         {isDiagnostic && diagnosticProgress ? (
@@ -597,14 +597,14 @@ export default function QuizPlayer({ quiz, questions }: QuizPlayerProps) {
               >
                 <svg width="24" height="24" fill="none" viewBox="0 0 24 24">
                   <path
-                    fill="#222"
+                    fill="var(--neutral-50)"
                     fillRule="evenodd"
                     d="M15.279 6.579a1 1 0 0 0 0-1.424l-.469-.462a1 1 0 0 0-1.404 0L6.72 11.288a1 1 0 0 0 0 1.424l6.685 6.595a1 1 0 0 0 1.404 0l.468-.462a1 1 0 0 0 0-1.423L9.785 12z"
                     clipRule="evenodd"
                   />
                 </svg>
               </button>
-              <span style={{ fontSize: 16, fontWeight: 700, color: "#000", fontFamily: isIPRT ? "'Montserrat', system-ui, sans-serif" : "var(--font-quiz)" }}>
+              <span style={{ fontSize: 16, fontWeight: 700, color: "var(--neutral-50)", fontFamily: isIPRT ? "'Montserrat', system-ui, sans-serif" : "var(--font-quiz)" }}>
                 {currentSectionLabel}
               </span>
               <div style={{ width: 32, visibility: "hidden" }} />
@@ -659,7 +659,7 @@ export default function QuizPlayer({ quiz, questions }: QuizPlayerProps) {
               >
                 <svg width="24" height="24" fill="none" viewBox="0 0 24 24">
                   <path
-                    fill="#222"
+                    fill="var(--neutral-50)"
                     fillRule="evenodd"
                     d="M15.279 6.579a1 1 0 0 0 0-1.424l-.469-.462a1 1 0 0 0-1.404 0L6.72 11.288a1 1 0 0 0 0 1.424l6.685 6.595a1 1 0 0 0 1.404 0l.468-.462a1 1 0 0 0 0-1.423L9.785 12z"
                     clipRule="evenodd"

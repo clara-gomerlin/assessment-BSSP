@@ -88,19 +88,19 @@ export default function LeadCapture({ onSubmit, quizType }: LeadCaptureProps) {
           style={{
             fontSize: 22,
             fontWeight: 700,
-            color: isIPRT ? "#031D31" : "#000",
+            color: "var(--neutral-50)",
             lineHeight: 1.3,
             fontFamily: isIPRT ? "'Montserrat', system-ui, sans-serif" : undefined,
           }}
         >
           {isIPRT ? (
             <>Descubra seu Índice de Prontidão e receba{" "}
-            <span style={{ color: "#64748b" }}>insights personalizados</span></>
+            <span style={{ color: "var(--text-on-dark-secondary)" }}>insights personalizados</span></>
           ) : isDiagnostic ? (
             <>Descubra onde sua empresa está perdendo receita</>
           ) : (
             <>Descubra seu arquétipo e receba um guia para{" "}
-            <span style={{ color: "#64748b" }}>acelerar a carreira</span></>
+            <span style={{ color: "var(--text-on-dark-secondary)" }}>acelerar a carreira</span></>
           )}
         </h2>
       </div>
@@ -158,7 +158,7 @@ export default function LeadCapture({ onSubmit, quizType }: LeadCaptureProps) {
               style={{
                 padding: "0 0 0 18px",
                 fontSize: 16,
-                color: "#555",
+                color: "var(--text-on-dark-secondary)",
                 whiteSpace: "nowrap",
                 pointerEvents: "none",
                 lineHeight: "52px",
@@ -196,7 +196,7 @@ export default function LeadCapture({ onSubmit, quizType }: LeadCaptureProps) {
         {/* Privacy note */}
         <div style={{ display: "flex", alignItems: "flex-start", gap: 8, marginTop: 4 }}>
           <span style={{ fontSize: 16, lineHeight: 1, flexShrink: 0 }}>🔒</span>
-          <p style={{ fontSize: 12, fontWeight: 400, color: "#5f687b", lineHeight: 1.4, margin: 0 }}>
+          <p style={{ fontSize: 12, fontWeight: 400, color: "var(--text-on-dark-secondary)", lineHeight: 1.4, margin: 0 }}>
             Respeitamos a sua privacidade e estamos empenhados em proteger os seus dados pessoais.
           </p>
         </div>
@@ -209,12 +209,13 @@ export default function LeadCapture({ onSubmit, quizType }: LeadCaptureProps) {
             gap: 12,
             padding: "12px 16px",
             borderRadius: 12,
-            background: "linear-gradient(90deg, rgba(45, 50, 70, 0.08) 0%, rgba(45, 50, 70, 0.16) 100%)",
+            background: "rgba(255, 255, 255, 0.04)",
+            border: "1px solid rgba(255, 255, 255, 0.08)",
             marginTop: 8,
           }}
         >
           <span style={{ fontSize: 36, lineHeight: 1, flexShrink: 0 }}>🎁</span>
-          <p style={{ fontSize: 14, fontWeight: 500, color: "#000", lineHeight: 1.4, margin: 0 }}>
+          <p style={{ fontSize: 14, fontWeight: 500, color: "var(--neutral-50)", lineHeight: 1.4, margin: 0 }}>
             {isIPRT ? (
               <>Garanta que seu email é válido! Vamos enviar seu{" "}
               <strong>relatório completo de prontidão</strong> para lá.</>
@@ -237,7 +238,7 @@ export default function LeadCapture({ onSubmit, quizType }: LeadCaptureProps) {
             padding: "10px 20px",
             textAlign: "center",
             zIndex: 999,
-            background: "linear-gradient(rgba(250,250,250,0.8) 0%, rgba(250,250,250,0) 92.42%), linear-gradient(90deg, rgba(80,186,246,0.12) 0%, rgba(151,88,231,0.12) 91.61%), rgb(250,250,250)",
+            background: "linear-gradient(to top, var(--bg-dark) 60%, transparent)",
           }}
         >
           <button type="submit" className="continue-button" style={{ maxWidth: 480 }}>
