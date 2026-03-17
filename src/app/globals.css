@@ -10,7 +10,7 @@
   --color-surface: #ffffff;
   --color-surface-soft: #f8fafc;
   --color-border: #e2e8f0;
-  --font-display: 'Fraunces', Georgia, serif;
+  --font-display: 'Unbounded', system-ui, sans-serif;
   --font-body: 'DM Sans', system-ui, sans-serif;
   --font-quiz: 'Rubik', system-ui, sans-serif;
 }
