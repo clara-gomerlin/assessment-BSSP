@@ -302,7 +302,7 @@ export default function LoadingScreen({ apiReady, onContinue, labels, quizType }
                 <QuoteSVG />
               </span>
             </div>
-            <span style={{ fontSize: 14, fontWeight: 200, color: "var(--text-on-dark-secondary)", textAlign: "center", display: "block" }}>
+            <span style={{ fontSize: 14, fontWeight: 400, color: "#D3D9F8", textAlign: "center", display: "block" }}>
               {testimonial.author} - {testimonial.role}
               {(testimonial as { role2?: string }).role2 && <><br />{(testimonial as { role2?: string }).role2}</>}
             </span>

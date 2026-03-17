@@ -111,7 +111,7 @@ function Transition1({ onContinue }: { onContinue: () => void }) {
             <QuoteSVG />
           </span>
         </div>
-        <span style={{ fontSize: 16, fontWeight: 200, color: "#000" }}>
+        <span style={{ fontSize: 16, fontWeight: 400, color: "#D3D9F8" }}>
           Mariana Marins — Líder de Marketing @GoCache
         </span>
         <StarsSVG />
@@ -658,7 +658,7 @@ function RevenueSocialProofCard({
             <QuoteSVG />
           </span>
         </div>
-        <span style={{ fontSize: 14, fontWeight: 200, color: "var(--text-on-dark-secondary)", textAlign: "center", display: "block" }}>
+        <span style={{ fontSize: 14, fontWeight: 400, color: "#D3D9F8", textAlign: "center", display: "block" }}>
           {author}
         </span>
         <StarsSVG />
@@ -669,7 +669,7 @@ function RevenueSocialProofCard({
           style={{
             fontSize: 15,
             fontWeight: 500,
-            color: "var(--text-on-dark-secondary)",
+            color: "#B0B8D0",
             lineHeight: 1.5,
           }}
         >
@@ -877,7 +877,7 @@ function BSSPTransition1({ onContinue }: { onContinue: () => void }) {
             <QuoteSVG />
           </span>
         </div>
-        <span style={{ fontSize: 16, fontWeight: 200, color: "#000" }}>
+        <span style={{ fontSize: 16, fontWeight: 400, color: "#D3D9F8" }}>
           Cliente A — Empresa X
         </span>
         <StarsSVG />
