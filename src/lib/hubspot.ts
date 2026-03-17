@@ -339,3 +339,35 @@ export async function createDeal({
 
   return result.data?.id || null;
 }
+
+/**
+ * Create a note on a HubSpot contact with the result link.
+ */
+export async function createContactNote({
+  contactId,
+  body,
+}: {
+  contactId: string;
+  body: string;
+}): Promise<void> {
+  await hubspotFetch("/crm/v3/objects/notes", {
+    method: "POST",
+    body: JSON.stringify({
+      properties: {
+        hs_note_body: body,
+        hs_timestamp: new Date().toISOString(),
+      },
+      associations: [
+        {
+          to: { id: contactId },
+          types: [
+            {
+              associationCategory: "HUBSPOT_DEFINED",
+              associationTypeId: 202, // note-to-contact
+            },
+          ],
+        },
+      ],
+    }),
+  });
+}

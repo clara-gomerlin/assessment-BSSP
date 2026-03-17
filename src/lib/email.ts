@@ -26,6 +26,7 @@ interface DiagnosticEmailData {
   };
   quizTitle: string;
   ctaUrl?: string;
+  responseId?: string;
 }
 
 function getScoreColor(score: number): string {
@@ -192,6 +193,26 @@ function buildDiagnosticEmailHtml(data: DiagnosticEmailData): string {
               </table>
             </td>
           </tr>
+
+          <!-- Result Link -->
+          ${data.responseId ? `
+          <tr>
+            <td style="padding: 8px 40px 16px;">
+              <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background: #f0f4ff; border-radius: 12px; border: 1px solid #dbe4f0;">
+                <tr>
+                  <td style="padding: 20px; text-align: center;">
+                    <p style="margin: 0 0 12px; font-size: 14px; color: #374151; line-height: 1.5;">
+                      Acesse seu resultado completo a qualquer momento:
+                    </p>
+                    <a href="https://assessment.growthleaders.academy/resultado/${data.responseId}" style="display: inline-block; padding: 12px 28px; background: #2D3246; color: #ffffff; font-size: 14px; font-weight: 600; text-decoration: none; border-radius: 10px;">
+                      Ver meu resultado completo
+                    </a>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          ` : ""}
 
           <!-- Consultancy Pitch -->
           <tr>

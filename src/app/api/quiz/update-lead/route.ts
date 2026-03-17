@@ -2,7 +2,7 @@ import { NextRequest } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { getTableNames, getGLASupabase } from "@/lib/supabase";
 import { QuizSettings } from "@/lib/types";
-import { upsertContact } from "@/lib/hubspot";
+import { upsertContact, createContactNote } from "@/lib/hubspot";
 import { sendDiagnosticResultEmail } from "@/lib/email";
 import { syncToChatwoot } from "@/lib/chatwoot";
 import { sendAvalonConversion } from "@/lib/avalon";
@@ -223,6 +223,17 @@ export async function POST(request: NextRequest) {
       })()
     );
 
+    // 1b. HubSpot note with result link
+    if (hubspotContactId) {
+      const resultUrl = `https://assessment.growthleaders.academy/resultado/${response_id}`;
+      tasks.push(
+        createContactNote({
+          contactId: hubspotContactId,
+          body: `📊 Resultado do ${quizTitle}\n\nLink: ${resultUrl}`,
+        }).catch((err) => console.error("HubSpot note error:", err))
+      );
+    }
+
     // 2. GLA Supabase sync
     const GLA_QUIZ_ID = "57a01f5f-47d2-4d06-903e-99ffc3dff78d";
     if (quiz_id === GLA_QUIZ_ID) {
@@ -291,6 +302,7 @@ export async function POST(request: NextRequest) {
           analysis: aiResult || undefined,
           quizTitle,
           ctaUrl: quizSettings?.cta_whatsapp_url,
+          responseId: response_id,
         }).catch((err) => console.error("Result email error:", err))
       );
 
