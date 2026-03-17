@@ -389,7 +389,12 @@ export default function QuizPlayer({ quiz, questions }: QuizPlayerProps) {
         }
       }
 
-      setPhase("result");
+      // Redirect to persistent result page
+      if (responseId) {
+        window.location.href = `/resultado/${responseId}`;
+      } else {
+        setPhase("result");
+      }
     },
     [quiz.id, responseId]
   );
