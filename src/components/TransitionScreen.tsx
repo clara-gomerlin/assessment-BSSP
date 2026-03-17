@@ -33,7 +33,7 @@ function QuoteSVG() {
   return (
     <svg width="15" height="11" viewBox="0 0 15 11" fill="none">
       <path
-        fill="#2D3246"
+        fill="var(--text-on-dark-secondary)"
         d="M.555 10.67V7.5q0-1.35.528-2.759.528-1.41 1.395-2.657Q3.343.837 4.356 0l2.76 1.63a14.5 14.5 0 0 0-1.35 2.7q-.514 1.41-.514 3.141v3.2zm7.412 0V7.5q0-1.35.529-2.759.528-1.41 1.394-2.657T11.769 0l2.76 1.63a14.5 14.5 0 0 0-1.351 2.7q-.514 1.41-.514 3.141v3.2z"
       />
     </svg>
@@ -48,7 +48,7 @@ function Transition1({ onContinue }: { onContinue: () => void }) {
     <Content onContinue={onContinue}>
       {/* Headline */}
       <div style={{ textAlign: "center", marginBottom: 12 }}>
-        <span style={{ fontSize: 24, fontWeight: 700, color: "#2D3246" }}>
+        <span style={{ fontSize: 24, fontWeight: 700, color: "var(--neutral-50)" }}>
           Mais de 200 alunos
         </span>
         <br />
@@ -67,8 +67,8 @@ function Transition1({ onContinue }: { onContinue: () => void }) {
           alignItems: "center",
           gap: 6,
           borderRadius: 12,
-          border: "2px solid #fff",
-          background: "#fff",
+          border: "1px solid rgba(255,255,255,0.1)",
+          background: "var(--bg-dark-elevated)",
           boxShadow:
             "rgba(56,70,174,0.05) 0px 4px 9px, rgba(56,70,174,0.04) 0px 16px 16px",
         }}
@@ -123,7 +123,7 @@ function Transition1({ onContinue }: { onContinue: () => void }) {
           style={{
             fontSize: 16,
             fontWeight: 500,
-            color: "#161616",
+            color: "var(--text-on-dark)",
             marginBottom: 20,
           }}
         >
@@ -181,7 +181,7 @@ function Transition2({ onContinue }: { onContinue: () => void }) {
         style={{
           fontSize: 22,
           fontWeight: 700,
-          color: "#2D3246",
+          color: "var(--neutral-50)",
           textAlign: "center",
           lineHeight: 1.3,
           marginBottom: 24,
@@ -194,7 +194,7 @@ function Transition2({ onContinue }: { onContinue: () => void }) {
       {/* Chart illustration (SVG) */}
       <div
         style={{
-          background: "#fff",
+          background: "var(--bg-dark-elevated)",
           borderRadius: 12,
           padding: "16px 20px",
           boxShadow: "rgba(20, 28, 40, 0.04) 0 8px 24px",
@@ -203,10 +203,10 @@ function Transition2({ onContinue }: { onContinue: () => void }) {
       >
         <svg viewBox="0 0 400 200" style={{ width: "100%", height: "auto" }}>
           {/* Grid */}
-          <line x1="50" y1="20" x2="50" y2="180" stroke="#e9e9ef" strokeWidth="1" />
-          <line x1="50" y1="180" x2="380" y2="180" stroke="#e9e9ef" strokeWidth="1" />
+          <line x1="50" y1="20" x2="50" y2="180" stroke="rgba(255,255,255,0.1)" strokeWidth="1" />
+          <line x1="50" y1="180" x2="380" y2="180" stroke="rgba(255,255,255,0.1)" strokeWidth="1" />
           {[60, 100, 140].map((y) => (
-            <line key={y} x1="50" y1={y} x2="380" y2={y} stroke="#e9e9ef" strokeWidth="0.5" strokeDasharray="4" />
+            <line key={y} x1="50" y1={y} x2="380" y2={y} stroke="rgba(255,255,255,0.1)" strokeWidth="0.5" strokeDasharray="4" />
           ))}
 
           {/* Y-axis label */}
@@ -289,7 +289,7 @@ function Transition2({ onContinue }: { onContinue: () => void }) {
             fontSize: 15,
             fontWeight: 400,
             textAlign: "center",
-            color: "#161616",
+            color: "var(--text-on-dark)",
             lineHeight: 1.4,
             margin: 0,
           }}
@@ -334,7 +334,7 @@ function Transition3({ onContinue }: { onContinue: () => void }) {
         style={{
           fontSize: 22,
           fontWeight: 700,
-          color: "#0f172a",
+          color: "var(--neutral-50)",
           textAlign: "center",
           lineHeight: 1.3,
           marginBottom: 28,
@@ -359,7 +359,7 @@ function Transition3({ onContinue }: { onContinue: () => void }) {
             style={{
               fontSize: "1rem",
               fontWeight: 600,
-              color: "#475569",
+              color: "var(--text-on-dark-secondary)",
               marginBottom: 12,
             }}
           >
@@ -367,14 +367,14 @@ function Transition3({ onContinue }: { onContinue: () => void }) {
           </h3>
           <div
             style={{
-              background: "#f8fafc",
+              background: "rgba(255,255,255,0.03)",
               borderRadius: 12,
               padding: "20px 28px",
               minWidth: 150,
             }}
           >
             <strong
-              style={{ display: "block", fontSize: "1.8rem", color: "#0f172a" }}
+              style={{ display: "block", fontSize: "1.8rem", color: "var(--neutral-50)" }}
             >
               2 anos
             </strong>
@@ -384,7 +384,7 @@ function Transition3({ onContinue }: { onContinue: () => void }) {
           </div>
         </div>
 
-        <span style={{ fontWeight: 400, color: "#2D3246", fontSize: 14 }}>
+        <span style={{ fontWeight: 400, color: "var(--neutral-50)", fontSize: 14 }}>
           vs
         </span>
 
@@ -393,7 +393,7 @@ function Transition3({ onContinue }: { onContinue: () => void }) {
             style={{
               fontSize: "1rem",
               fontWeight: 600,
-              color: "#475569",
+              color: "var(--text-on-dark-secondary)",
               marginBottom: 12,
             }}
           >
@@ -401,14 +401,14 @@ function Transition3({ onContinue }: { onContinue: () => void }) {
           </h3>
           <div
             style={{
-              background: "rgba(45, 50, 70, 0.15)",
+              background: "rgba(255,255,255,0.06)",
               borderRadius: 12,
               padding: "20px 28px",
               minWidth: 150,
             }}
           >
             <strong
-              style={{ display: "block", fontSize: "1.8rem", color: "#0f172a" }}
+              style={{ display: "block", fontSize: "1.8rem", color: "var(--neutral-50)" }}
             >
               6 meses
             </strong>
@@ -428,15 +428,15 @@ function Transition3({ onContinue }: { onContinue: () => void }) {
           marginBottom: 32,
         }}
       >
-        <p style={{ fontSize: "1rem", color: "#334155" }}>
+        <p style={{ fontSize: "1rem", color: "var(--text-on-dark)" }}>
           🎯 <strong>Clareza:</strong> Você entende exatamente seu próximo passo
           de carreira
         </p>
-        <p style={{ fontSize: "1rem", color: "#334155" }}>
+        <p style={{ fontSize: "1rem", color: "var(--text-on-dark)" }}>
           ⭐ <strong>Confiança:</strong> Você assume protagonismo sem medo de
           &quot;parecer arrogante&quot;
         </p>
-        <p style={{ fontSize: "1rem", color: "#334155" }}>
+        <p style={{ fontSize: "1rem", color: "var(--text-on-dark)" }}>
           🏆 <strong>Autoridade:</strong> Profissionais acelerados
         </p>
       </div>
@@ -445,12 +445,12 @@ function Transition3({ onContinue }: { onContinue: () => void }) {
       <div
         style={{
           margin: "0 0 16px",
-          background: "#f8fafc",
-          borderLeft: "4px solid #2D3246",
+          background: "rgba(255,255,255,0.03)",
+          borderLeft: "4px solid var(--coral-500)",
           padding: "16px 20px",
           borderRadius: 8,
           fontSize: "0.95rem",
-          color: "#334155",
+          color: "var(--text-on-dark)",
         }}
       >
         &quot;Evoluí meu salário chegando a quase{" "}
@@ -515,7 +515,7 @@ function Content({
           bottom: 0,
           left: 0,
           zIndex: 999,
-          background: "linear-gradient(rgba(250,250,250,0.8) 0%, rgba(250,250,250,0) 92.42%), linear-gradient(90deg, rgba(80,186,246,0.12) 0%, rgba(151,88,231,0.12) 91.61%), rgb(250,250,250)",
+          background: "linear-gradient(to top, var(--bg-dark) 60%, transparent)",
         }}
       >
         <button
@@ -541,7 +541,7 @@ function RevenueConfiancaIntro({ onContinue }: { onContinue: () => void }) {
           style={{
             fontSize: 24,
             fontWeight: 700,
-            color: "#2D3246",
+            color: "var(--neutral-50)",
             lineHeight: 1.3,
             marginBottom: 12,
           }}
@@ -598,11 +598,11 @@ function RevenueSocialProofCard({
   return (
     <Content onContinue={onContinue}>
       <div style={{ textAlign: "center", marginBottom: 16 }}>
-        <span style={{ fontSize: 22, fontWeight: 700, color: "#2D3246" }}>
+        <span style={{ fontSize: 22, fontWeight: 700, color: "var(--neutral-50)" }}>
           {title1}
         </span>
         <br />
-        <span style={{ fontSize: 16, fontWeight: 600, color: "#2D3246" }}>
+        <span style={{ fontSize: 16, fontWeight: 600, color: "var(--neutral-50)" }}>
           {title2}
         </span>
       </div>
@@ -754,7 +754,7 @@ function RevenueSocialProof2({ onContinue }: { onContinue: () => void }) {
         style={{
           fontSize: 22,
           fontWeight: 700,
-          color: "#2D3246",
+          color: "var(--neutral-50)",
           textAlign: "center",
           lineHeight: 1.3,
           marginBottom: 24,
@@ -777,14 +777,14 @@ function RevenueSocialProof2({ onContinue }: { onContinue: () => void }) {
               alignItems: "flex-start",
               gap: 12,
               padding: "14px 16px",
-              background: "#fff",
+              background: "var(--bg-dark-elevated)",
               borderRadius: 12,
               boxShadow: "rgba(20, 28, 40, 0.04) 0px 4px 16px",
             }}
           >
             <span style={{ fontSize: 28, lineHeight: 1, flexShrink: 0 }}>{lever.emoji}</span>
             <div>
-              <p style={{ fontSize: 15, fontWeight: 600, color: "#0f172a", margin: "0 0 4px" }}>
+              <p style={{ fontSize: 15, fontWeight: 600, color: "var(--neutral-50)", margin: "0 0 4px" }}>
                 {lever.name}
               </p>
               <p style={{ fontSize: 14, color: "#64748b", margin: 0, lineHeight: 1.4 }}>
@@ -817,7 +817,7 @@ function BSSPTransition1({ onContinue }: { onContinue: () => void }) {
   return (
     <Content onContinue={onContinue}>
       <div style={{ textAlign: "center", marginBottom: 16 }}>
-        <span style={{ fontSize: 24, fontWeight: 700, color: "#031D31", fontFamily: "'Montserrat', system-ui, sans-serif" }}>
+        <span style={{ fontSize: 24, fontWeight: 700, color: "var(--neutral-50)", fontFamily: "'Montserrat', system-ui, sans-serif" }}>
           +10.000 alunos
         </span>
         <br />
@@ -835,8 +835,8 @@ function BSSPTransition1({ onContinue }: { onContinue: () => void }) {
           alignItems: "center",
           gap: 6,
           borderRadius: 12,
-          border: "2px solid #fff",
-          background: "#fff",
+          border: "1px solid rgba(255,255,255,0.1)",
+          background: "var(--bg-dark-elevated)",
           boxShadow: "rgba(56,70,174,0.05) 0px 4px 9px, rgba(56,70,174,0.04) 0px 16px 16px",
         }}
       >
@@ -902,7 +902,7 @@ function BSSPTransition2({ onContinue }: { onContinue: () => void }) {
         style={{
           fontSize: 22,
           fontWeight: 700,
-          color: "#031D31",
+          color: "var(--neutral-50)",
           textAlign: "center",
           lineHeight: 1.3,
           marginBottom: 24,
@@ -926,14 +926,14 @@ function BSSPTransition2({ onContinue }: { onContinue: () => void }) {
               alignItems: "flex-start",
               gap: 12,
               padding: "14px 16px",
-              background: "#fff",
+              background: "var(--bg-dark-elevated)",
               borderRadius: 15,
               boxShadow: "rgba(20, 28, 40, 0.04) 0px 4px 16px",
             }}
           >
             <span style={{ fontSize: 28, lineHeight: 1, flexShrink: 0 }}>{dim.emoji}</span>
             <div>
-              <p style={{ fontSize: 15, fontWeight: 600, color: "#031D31", margin: "0 0 4px" }}>
+              <p style={{ fontSize: 15, fontWeight: 600, color: "var(--neutral-50)", margin: "0 0 4px" }}>
                 {dim.name}
               </p>
               <p style={{ fontSize: 14, color: "#64748b", margin: 0, lineHeight: 1.4 }}>
@@ -969,7 +969,7 @@ function BSSPTransition3({ onContinue }: { onContinue: () => void }) {
         style={{
           fontSize: 20,
           fontWeight: 700,
-          color: "#031D31",
+          color: "var(--neutral-50)",
           textAlign: "center",
           lineHeight: 1.3,
           marginBottom: 24,
@@ -983,7 +983,7 @@ function BSSPTransition3({ onContinue }: { onContinue: () => void }) {
       {/* Chart */}
       <div
         style={{
-          background: "#fff",
+          background: "var(--bg-dark-elevated)",
           borderRadius: 15,
           padding: "16px 20px",
           boxShadow: "rgba(20, 28, 40, 0.04) 0 8px 24px",
@@ -992,10 +992,10 @@ function BSSPTransition3({ onContinue }: { onContinue: () => void }) {
       >
         <svg viewBox="0 0 400 200" style={{ width: "100%", height: "auto" }}>
           {/* Grid */}
-          <line x1="50" y1="20" x2="50" y2="180" stroke="#e9e9ef" strokeWidth="1" />
-          <line x1="50" y1="180" x2="380" y2="180" stroke="#e9e9ef" strokeWidth="1" />
+          <line x1="50" y1="20" x2="50" y2="180" stroke="rgba(255,255,255,0.1)" strokeWidth="1" />
+          <line x1="50" y1="180" x2="380" y2="180" stroke="rgba(255,255,255,0.1)" strokeWidth="1" />
           {[60, 100, 140].map((y) => (
-            <line key={y} x1="50" y1={y} x2="380" y2={y} stroke="#e9e9ef" strokeWidth="0.5" strokeDasharray="4" />
+            <line key={y} x1="50" y1={y} x2="380" y2={y} stroke="rgba(255,255,255,0.1)" strokeWidth="0.5" strokeDasharray="4" />
           ))}
 
           {/* Y-axis label */}
@@ -1076,7 +1076,7 @@ function BSSPTransition3({ onContinue }: { onContinue: () => void }) {
             fontSize: 14,
             fontWeight: 400,
             textAlign: "center",
-            color: "#161616",
+            color: "var(--text-on-dark)",
             lineHeight: 1.4,
             margin: 0,
           }}

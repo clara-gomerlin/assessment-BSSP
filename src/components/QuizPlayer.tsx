@@ -590,7 +590,7 @@ export default function QuizPlayer({ quiz, questions }: QuizPlayerProps) {
                   height: 32,
                   padding: 4,
                   borderRadius: 8,
-                  backgroundColor: "rgb(230, 232, 236)",
+                  backgroundColor: "rgba(255,255,255,0.08)",
                   border: "none",
                   cursor: "pointer",
                 }}
@@ -652,7 +652,7 @@ export default function QuizPlayer({ quiz, questions }: QuizPlayerProps) {
                   height: 32,
                   padding: 4,
                   borderRadius: 8,
-                  backgroundColor: "rgb(230, 232, 236)",
+                  backgroundColor: "rgba(255,255,255,0.08)",
                   border: "none",
                   cursor: "pointer",
                 }}

@@ -85,7 +85,7 @@ function QuoteSVG() {
   return (
     <svg width="15" height="11" viewBox="0 0 15 11" fill="none">
       <path
-        fill="#2D3246"
+        fill="var(--text-on-dark-secondary)"
         d="M.555 10.67V7.5q0-1.35.528-2.759.528-1.41 1.395-2.657Q3.343.837 4.356 0l2.76 1.63a14.5 14.5 0 0 0-1.35 2.7q-.514 1.41-.514 3.141v3.2zm7.412 0V7.5q0-1.35.529-2.759.528-1.41 1.394-2.657T11.769 0l2.76 1.63a14.5 14.5 0 0 0-1.351 2.7q-.514 1.41-.514 3.141v3.2z"
       />
     </svg>
@@ -200,13 +200,13 @@ export default function LoadingScreen({ apiReady, onContinue, labels, quizType }
             style={{
               fontSize: 22,
               fontWeight: 600,
-              color: "#000",
+              color: "var(--neutral-50)",
               marginBottom: 8,
             }}
           >
             Preparando seu resultado...
           </h2>
-          <p style={{ fontSize: 14, color: "#5f687b" }}>
+          <p style={{ fontSize: 14, color: "var(--text-on-dark-secondary)" }}>
             Estamos criando sua análise personalizada
           </p>
         </div>
@@ -223,7 +223,7 @@ export default function LoadingScreen({ apiReady, onContinue, labels, quizType }
               }}
             >
               <span
-                style={{ fontSize: 16, fontWeight: 500, color: "#000" }}
+                style={{ fontSize: 16, fontWeight: 500, color: "var(--neutral-50)" }}
               >
                 {item.label}
               </span>
@@ -231,7 +231,7 @@ export default function LoadingScreen({ apiReady, onContinue, labels, quizType }
                 style={{
                   fontSize: 14,
                   fontWeight: 500,
-                  color: "#5f687b",
+                  color: "var(--text-on-dark-secondary)",
                   minWidth: 32,
                 }}
               >
@@ -326,7 +326,7 @@ export default function LoadingScreen({ apiReady, onContinue, labels, quizType }
                   height: 8,
                   borderRadius: "50%",
                   background:
-                    i === activeTestimonial ? "#2D3246" : "rgba(45,50,70,0.2)",
+                    i === activeTestimonial ? "var(--coral-500)" : "rgba(255,255,255,0.15)",
                   transition: "background 0.3s ease",
                 }}
               />
@@ -346,7 +346,7 @@ export default function LoadingScreen({ apiReady, onContinue, labels, quizType }
           textAlign: "center",
           zIndex: 999,
           background:
-            "linear-gradient(rgba(250,250,250,0.8) 0%, rgba(250,250,250,0) 92.42%), linear-gradient(90deg, rgba(80,186,246,0.12) 0%, rgba(151,88,231,0.12) 91.61%), rgb(250,250,250)",
+            "linear-gradient(to top, var(--bg-dark) 60%, transparent)",
           opacity: canContinue ? 1 : 0,
           transform: canContinue ? "translateY(0)" : "translateY(20px)",
           transition: "opacity 0.5s ease, transform 0.5s ease",

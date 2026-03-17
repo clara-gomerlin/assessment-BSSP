@@ -694,6 +694,56 @@ body {
   background: #eef2ff;
 }
 
+/* ===== Sticky WhatsApp CTA ===== */
+.iprt-sticky-cta {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  padding: 12px 20px;
+  padding-bottom: max(12px, env(safe-area-inset-bottom));
+  background: linear-gradient(0deg, #ffffff 70%, transparent);
+  pointer-events: none;
+}
+
+.iprt-sticky-cta .result-primary-cta {
+  display: block;
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+  text-align: center;
+  pointer-events: auto;
+}
+
+/* ===== Share Button Variants ===== */
+.iprt-share-prominent {
+  padding: 20px 16px;
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+  border-radius: 14px;
+}
+
+.diagnostic-brag-btn--highlight {
+  background: #166534;
+  color: #ffffff;
+  border-color: #166534;
+}
+
+.diagnostic-brag-btn--highlight:hover {
+  background: #14532d;
+}
+
+.diagnostic-brag-btn--subtle {
+  font-size: 14px;
+  padding: 10px 20px;
+  opacity: 0.7;
+}
+
+.diagnostic-brag-btn--subtle:hover {
+  opacity: 1;
+}
+
 /* ===== BSSP Brand Overrides ===== */
 .bssp-theme {
   --bssp-primary: #031D31;

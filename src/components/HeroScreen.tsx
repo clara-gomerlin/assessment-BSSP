@@ -52,8 +52,7 @@ function REIHero({ onStart }: { onStart: () => void }) {
       {/* Navbar */}
       <nav style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: "16px 64px", borderBottom: "1px solid rgba(255,255,255,0.06)", maxWidth: 1440, margin: "0 auto" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          <div style={{ width: 36, height: 36, background: "var(--neutral-50)", borderRadius: 9, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "var(--font-display)", fontWeight: 700, fontSize: 18, color: "var(--black-900)" }}>G</div>
-          <span style={{ fontFamily: "var(--font-editorial)", fontWeight: 600, fontSize: 14, color: "var(--text-on-dark)", letterSpacing: 0.3 }}>Growth Leaders Academy</span>
+          <img src="/logos/gla-logo-white.webp" alt="Growth Leaders Academy" style={{ height: 32 }} />
         </div>
       </nav>
 

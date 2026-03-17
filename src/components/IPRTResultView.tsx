@@ -331,15 +331,20 @@ function useBragTag() {
       ctx.font = "500 20px sans-serif";
       ctx.fillText("BSSP Pós-Graduação", cx, H - 40);
 
-      const link = document.createElement("a");
-      link.download = `iprt-${name.split(" ")[0].toLowerCase()}.png`;
-      link.href = canvas.toDataURL("image/png");
-      link.click();
     },
     []
   );
 
-  return { canvasRef, generate };
+  const download = useCallback(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const link = document.createElement("a");
+    link.download = `iprt-resultado.png`;
+    link.href = canvas.toDataURL("image/png");
+    link.click();
+  }, []);
+
+  return { canvasRef, generate, download };
 }
 
 export default function IPRTResultView({
@@ -355,8 +360,22 @@ export default function IPRTResultView({
   quizTitle,
 }: IPRTResultViewProps) {
   const firstName = respondentName.split(" ")[0] || "Profissional";
-  const { canvasRef, generate } = useBragTag();
+  const { canvasRef, generate, download } = useBragTag();
   const [dealCreated, setDealCreated] = useState(false);
+
+  // WhatsApp URL with pre-filled message including score and weakest dimension
+  const whatsappMessage = encodeURIComponent(
+    `Olá! Fiz o diagnóstico IPRT e gostaria de saber mais sobre a Especialização em Reforma Tributária.\n\n` +
+    `Meu índice: ${result.iprtScore}% (${result.stage})\n` +
+    `Maior lacuna: ${result.weakestDimension.name} (${result.weakestDimension.percentage}%)\n` +
+    `Perfil: ${result.qualification.perfil}`
+  );
+  const whatsappUrl = ctaWhatsappUrl
+    ? `${ctaWhatsappUrl}?text=${whatsappMessage}`
+    : "#";
+
+  // Share: prominent when score > 55%
+  const showProminentShare = result.iprtScore > 55;
 
   const handleCtaClick = useCallback(() => {
     if (dealCreated || !hubspotContactId) return;
@@ -664,28 +683,74 @@ export default function IPRTResultView({
         )}
       </div>
 
-      {/* Shareable Card Download */}
+      {/* Shareable Card */}
       <div style={{ marginTop: 32, textAlign: "center" }}>
-        <button
-          onClick={() => {
-            const sorted = [...result.dimensions].sort((a, b) => b.percentage - a.percentage);
-            generate(
-              respondentName,
-              result.iprtScore,
-              result.stage,
-              result.stageColor,
-              sorted[0],
-              sorted[sorted.length - 1],
-            );
-          }}
-          className="diagnostic-brag-btn"
-        >
-          📥 Baixar meu resultado (imagem)
-        </button>
+        {showProminentShare ? (
+          <div className="iprt-share-prominent">
+            <p style={{ fontSize: 15, fontWeight: 600, color: "#166534", textAlign: "center", margin: "0 0 12px" }}>
+              Mostre ao mercado que você está preparado!
+            </p>
+            <button
+              onClick={async () => {
+                const sorted = [...result.dimensions].sort((a, b) => b.percentage - a.percentage);
+                await generate(
+                  respondentName,
+                  result.iprtScore,
+                  result.stage,
+                  result.stageColor,
+                  sorted[0],
+                  sorted[sorted.length - 1],
+                );
+                const canvas = canvasRef.current;
+                if (canvas && typeof navigator.share === "function" && typeof navigator.canShare === "function") {
+                  try {
+                    const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, "image/png"));
+                    if (blob) {
+                      const file = new File([blob], `iprt-${firstName.toLowerCase()}.png`, { type: "image/png" });
+                      if (navigator.canShare({ files: [file] })) {
+                        await navigator.share({
+                          title: `Meu IPRT: ${result.iprtScore}%`,
+                          text: `Fiz o diagnóstico de prontidão para a Reforma Tributária e meu índice é ${result.iprtScore}% (${result.stage}). Faça o seu também!`,
+                          files: [file],
+                        });
+                        return;
+                      }
+                    }
+                  } catch {
+                    /* user cancelled or share unavailable */
+                  }
+                }
+                // Fallback: download image
+                download();
+              }}
+              className="diagnostic-brag-btn diagnostic-brag-btn--highlight"
+            >
+              Compartilhar meu resultado
+            </button>
+          </div>
+        ) : (
+          <button
+            onClick={async () => {
+              const sorted = [...result.dimensions].sort((a, b) => b.percentage - a.percentage);
+              await generate(
+                respondentName,
+                result.iprtScore,
+                result.stage,
+                result.stageColor,
+                sorted[0],
+                sorted[sorted.length - 1],
+              );
+              download();
+            }}
+            className="diagnostic-brag-btn diagnostic-brag-btn--subtle"
+          >
+            Baixar resultado (imagem)
+          </button>
+        )}
         <canvas ref={canvasRef} style={{ display: "none" }} />
       </div>
 
-      {/* CTAs */}
+      {/* CTA inline */}
       <div
         style={{
           marginTop: 48,
@@ -708,7 +773,7 @@ export default function IPRTResultView({
           Quer fechar essas lacunas com profundidade?
         </p>
         <a
-          href={ctaWhatsappUrl || "#"}
+          href={whatsappUrl}
           target="_blank"
           rel="noopener noreferrer"
           className="result-primary-cta"
@@ -716,12 +781,19 @@ export default function IPRTResultView({
         >
           Falar com um especialista BSSP
         </a>
-        <button
-          onClick={() => window.location.reload()}
-          className="result-secondary-cta"
+      </div>
+
+      {/* Sticky CTA — fixed bottom bar */}
+      <div className="iprt-sticky-cta">
+        <a
+          href={whatsappUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="result-primary-cta"
+          onClick={handleCtaClick}
         >
-          Refazer diagnóstico
-        </button>
+          Falar com um especialista BSSP
+        </a>
       </div>
 
       {/* Legal */}
