@@ -1,4 +1,4 @@
-import { getSupabase, getTableNames } from "@/lib/supabase";
+import { getSupabase } from "@/lib/supabase";
 import { Quiz, Dimension, DimensionResult } from "@/lib/types";
 import DiagnosticResultView from "@/components/DiagnosticResultView";
 import { notFound } from "next/navigation";
@@ -46,21 +46,11 @@ export default async function ResultadoPage({ params }: PageProps) {
   const { id } = await params;
   const supabase = getSupabase();
 
-  // We don't know the table yet — try shared table first, then check quiz for company_code
-  // First, try to find in shared assessment_responses
-  let response = null;
-  let quiz: Quiz | null = null;
-
-  // Try shared table
-  const { data: sharedResponse } = await supabase
+  const { data: response } = await supabase
     .from("assessment_responses")
     .select("*")
     .eq("id", id)
     .single();
-
-  if (sharedResponse) {
-    response = sharedResponse;
-  }
 
   if (!response) {
     notFound();
@@ -77,22 +67,8 @@ export default async function ResultadoPage({ params }: PageProps) {
     notFound();
   }
 
-  quiz = quizData as Quiz;
+  const quiz = quizData as Quiz;
   const quizType = quiz.settings?.quiz_type;
-
-  // If it's a different table (company_code), re-fetch from correct table
-  if (quiz.settings?.company_code) {
-    const tables = getTableNames(quiz.settings.company_code);
-    const { data: companyResponse } = await supabase
-      .from(tables.responses)
-      .select("*")
-      .eq("id", id)
-      .single();
-
-    if (companyResponse) {
-      response = companyResponse;
-    }
-  }
 
   // Reconstruct result data from computed_scores
   const computedScores = response.computed_scores as {

@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { getSupabase, getTableNames } from "@/lib/supabase";
+import { getSupabase } from "@/lib/supabase";
 import { Quiz, Question } from "@/lib/types";
 import QuizPlayer from "@/components/QuizPlayer";
 import { notFound } from "next/navigation";
@@ -24,12 +24,9 @@ export default async function QuizPage({ params }: PageProps) {
     notFound();
   }
 
-  // Resolve table based on company_code
-  const tables = getTableNames(quiz.settings?.company_code);
-
   // Fetch questions ordered
   const { data: questions, error: qError } = await supabase
-    .from(tables.questions)
+    .from("assessment_questions")
     .select("*")
     .eq("quiz_id", quiz.id)
     .order("order_index", { ascending: true });

@@ -1,16 +1,7 @@
 import { NextRequest } from "next/server";
-import { createClient } from "@supabase/supabase-js";
-import { getTableNames, getGLASupabase } from "@/lib/supabase";
+import { getSupabase, getGLASupabase } from "@/lib/supabase";
 import { createDeal, QuizAnswer, QuestionInfo, ComputedScores } from "@/lib/hubspot";
 import { QuizSettings } from "@/lib/types";
-
-function getSupabase() {
-  return createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    { db: { schema: "customer_assessments" } }
-  );
-}
 
 // Rate limiter (per IP, 5 requests per minute)
 const rateMap = new Map<string, { count: number; resetAt: number }>();
@@ -66,11 +57,8 @@ export async function POST(request: NextRequest) {
         .eq("id", quiz_id)
         .single();
 
-      const quizSettings = quiz?.settings as QuizSettings | null;
-      const tables = getTableNames(quizSettings?.company_code);
-
       const { data: responseData } = await supabase
-        .from(tables.responses)
+        .from("assessment_responses")
         .select("answers, computed_scores, respondent_phone")
         .eq("id", response_id)
         .single();
@@ -82,7 +70,7 @@ export async function POST(request: NextRequest) {
       }
 
       const { data: questions } = await supabase
-        .from(tables.questions)
+        .from("assessment_questions")
         .select("id, order_index, options")
         .eq("quiz_id", quiz_id)
         .order("order_index", { ascending: true });

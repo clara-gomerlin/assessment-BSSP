@@ -1,20 +1,10 @@
 import { NextRequest } from "next/server";
-import { createClient } from "@supabase/supabase-js";
 import Anthropic from "@anthropic-ai/sdk";
 import { calculateScores, getWinnerArchetype } from "@/lib/scoring";
 import { calculateDiagnosticScores } from "@/lib/scoring-diagnostic";
 import { calculateIPRTScores } from "@/lib/scoring-iprt";
-import { getTableNames, getGLASupabase } from "@/lib/supabase";
+import { getSupabase, getGLASupabase } from "@/lib/supabase";
 import { Question, SubmitPayload, QuizSettings, Dimension, Answers } from "@/lib/types";
-
-// Lazy init to avoid build-time errors when env vars aren't set
-function getSupabase() {
-  return createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    { db: { schema: "customer_assessments" } }
-  );
-}
 
 function getAnthropic() {
   return new Anthropic({
@@ -131,13 +121,11 @@ export async function POST(request: NextRequest) {
       return Response.json({ error: "Quiz não encontrado" }, { status: 404 });
     }
 
-    // Resolve tables based on company_code
     const quizSettings = quiz.settings as QuizSettings | null;
-    const tables = getTableNames(quizSettings?.company_code);
 
     // Fetch questions
     const { data: questions, error: qError } = await supabase
-      .from(tables.questions)
+      .from("assessment_questions")
       .select("*")
       .eq("quiz_id", quiz_id)
       .order("order_index");
@@ -329,7 +317,7 @@ Foque a análise na alavanca mais fraca (${diagResult.weakest.name}). Responda A
     }));
 
     let { error: saveError } = await supabase
-      .from(tables.responses)
+      .from("assessment_responses")
       .insert({
         id: responseId,
         quiz_id,
@@ -345,7 +333,7 @@ Foque a análise na alavanca mais fraca (${diagResult.weakest.name}). Responda A
     if (saveError && saveError.code === "PGRST204") {
       console.warn("utm_params column not found, retrying without it");
       ({ error: saveError } = await supabase
-        .from(tables.responses)
+        .from("assessment_responses")
         .insert({
           id: responseId,
           quiz_id,
@@ -456,7 +444,7 @@ Foque a análise na alavanca mais fraca (${diagResult.weakest.name}). Responda A
 
         // Update response with AI result
         await supabase
-          .from(tables.responses)
+          .from("assessment_responses")
           .update({
             ai_result: aiResultData,
             result_markdown: fullText,

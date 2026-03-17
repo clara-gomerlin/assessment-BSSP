@@ -1,19 +1,10 @@
 import { NextRequest } from "next/server";
-import { createClient } from "@supabase/supabase-js";
-import { getTableNames, getGLASupabase } from "@/lib/supabase";
+import { getSupabase, getGLASupabase } from "@/lib/supabase";
 import { QuizSettings } from "@/lib/types";
 import { upsertContact, createContactNote } from "@/lib/hubspot";
 import { sendDiagnosticResultEmail } from "@/lib/email";
 import { syncToChatwoot } from "@/lib/chatwoot";
 import { sendAvalonConversion } from "@/lib/avalon";
-
-function getSupabase() {
-  return createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    { db: { schema: "customer_assessments" } }
-  );
-}
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
@@ -84,11 +75,10 @@ export async function POST(request: NextRequest) {
     }
 
     const quizSettings = quiz?.settings as QuizSettings | null;
-    const tables = getTableNames(quizSettings?.company_code);
 
     // Verify the response exists and has no lead data yet (prevents overwriting)
     const { data: existing, error: existingError } = await supabase
-      .from(tables.responses)
+      .from("assessment_responses")
       .select("respondent_email, computed_scores, ai_result, answers")
       .eq("id", response_id)
       .single();
@@ -106,7 +96,7 @@ export async function POST(request: NextRequest) {
     }
 
     const { error } = await supabase
-      .from(tables.responses)
+      .from("assessment_responses")
       .update({
         respondent_name: respondent_name.trim(),
         respondent_email: respondent_email.trim().toLowerCase(),
@@ -175,7 +165,7 @@ export async function POST(request: NextRequest) {
     const answersData = (existing.answers || []) as { question_id: string; selected_option_id: string | string[] }[];
     if (answersData.length > 0) {
       const { data: questions } = await supabase
-        .from(tables.questions)
+        .from("assessment_questions")
         .select("id, order_index, options")
         .eq("quiz_id", quiz_id);
 
