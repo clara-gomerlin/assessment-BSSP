@@ -105,7 +105,7 @@ function getBadgeClass(label: string): string {
 }
 
 function getBadgeColor(label: string): { bg: string; color: string; border: string } {
-  if (label === "Alavanca Ativa") return { bg: "rgba(34,197,94,0.12)", color: "#f59e0b", border: "rgba(255,165,0,0.25)" };
+  if (label === "Alavanca Ativa") return { bg: "rgba(34,197,94,0.12)", color: "#16a34a", border: "rgba(34,197,94,0.25)" };
   if (label === "Na Armadilha") return { bg: "rgba(239,68,68,0.12)", color: "#dc2626", border: "rgba(239,68,68,0.25)" };
   if (label === "Crescimento Vulnerável") return { bg: "rgba(255,165,0,0.12)", color: "#f59e0b", border: "rgba(255,165,0,0.25)" };
   if (label === "Crescimento Desequilibrado") return { bg: "rgba(255,165,0,0.12)", color: "#f59e0b", border: "rgba(255,165,0,0.25)" };
@@ -126,7 +126,7 @@ export default function DiagnosticResultView({
   quizTitle,
   utmParams,
 }: DiagnosticResultViewProps) {
-  const firstName = respondentName.split(" ")[0] || "Empresa";
+  const firstName = (respondentName || "").trim().split(" ")[0] || "Empresa";
   const [dealCreated, setDealCreated] = useState(false);
 
   const handleCtaClick = useCallback(() => {
@@ -155,6 +155,20 @@ export default function DiagnosticResultView({
   const offset = circumference - (circumference * result.scoreGeral) / 100;
   const badgeColors = getBadgeColor(result.scoreGeralLabel);
   const ctaUrl = ctaWhatsappUrl || DEFAULT_WHATSAPP_URL;
+
+  // Confidence
+  const confScore = result.confidenceScore ?? 0;
+  const confLabel = result.confidenceLabel || "";
+  const confColor = result.confidenceColor || "#f59e0b";
+  const CONF_TEXTS: Record<string, string> = {
+    "Voando no Escuro": "Suas decisões de crescimento são baseadas em instinto, não em dados. E o instinto sob pressão faz o oposto do que deveria: estreita as opções e te leva a dobrar a aposta no que já conhece.",
+    "Visão Parcial": "Você tem uma noção do que acontece, mas precisa juntar dados de várias fontes na mão — e quando a análise fica pronta, a janela de ação já passou.",
+    "Visão Razoável": "Você responde a maioria das perguntas, mas sem a velocidade e o detalhe que decisão real exige.",
+    "Painel de Controle": "Você responde rápido, com dados, e sabe onde olhar pra tomar cada decisão. Menos de 15% dos líderes que diagnosticamos operam nesse nível.",
+  };
+  const confText = CONF_TEXTS[confLabel] || "";
+  const showSection3B = confScore > 0 && confScore <= 30 && result.weakest.normalizedScore <= 33;
+  const isSmall = (result.qualification?.faturamento || "").toLowerCase().includes("até") || (result.qualification?.faturamento || "").toLowerCase().includes("menos");
 
   return (
     <div className="rei-result-page">
@@ -225,6 +239,20 @@ export default function DiagnosticResultView({
             </div>
           </div>
 
+          {/* Confidence Score */}
+          {confScore > 0 && confLabel && (
+            <div className="rei-section-card" style={{ padding: "20px 32px" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
+                <span style={{ fontFamily: "var(--font-editorial)", fontWeight: 700, fontSize: 14, color: "var(--text-primary)", textTransform: "uppercase", letterSpacing: 0.5 }}>Score de Confiança</span>
+                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                  <span style={{ fontSize: 11, fontWeight: 600, padding: "3px 10px", borderRadius: 100, color: confColor, background: `${confColor}18`, border: `1px solid ${confColor}33` }}>{confLabel}</span>
+                  <span style={{ fontFamily: "var(--font-editorial)", fontWeight: 700, fontSize: 14, color: "var(--text-primary)" }}>{confScore}/100</span>
+                </div>
+              </div>
+              {confText && <p style={{ fontSize: 13, color: "var(--text-secondary)", lineHeight: 1.55, margin: 0 }}>{confText}</p>}
+            </div>
+          )}
+
           {/* Mobile CTA */}
           <div className="rei-cta-mobile">
             <div className="rei-cta-card">
@@ -248,6 +276,22 @@ export default function DiagnosticResultView({
               {weakest.paragraphs.map((p, i) => (
                 <p key={i} className="rei-analysis-text">{p}</p>
               ))}
+            </div>
+          )}
+
+          {/* Section 3B — Confidence × Weakest Dimension */}
+          {showSection3B && (
+            <div className="rei-analysis-card alert">
+              <div className="rei-analysis-header">
+                <span style={{ fontSize: 20 }}>⚠️</span>
+                <span className="rei-analysis-title">Alerta: Confiança × Dimensão Fraca</span>
+              </div>
+              <p className="rei-analysis-text">
+                Nas 5 perguntas que todo líder de receita deveria responder com velocidade e confiança, seu score foi <strong>{confScore}/100</strong>. Combinado com <strong>{result.weakest.name}</strong> sendo sua dimensão mais fraca (score <strong>{result.weakest.normalizedScore}</strong>), o cenário é: você tem um problema real e não tem os dados pra dimensioná-lo.
+              </p>
+              <p className="rei-analysis-text">
+                Existe uma dissonância perigosa aqui: CROs estimam uma perda de 16% da receita por vazamento. Quem está mais perto da operação mede 26% (Clari, 2024). O risco é você estar mais perto dos 16% — achando que o problema é menor do que realmente é.
+              </p>
             </div>
           )}
 

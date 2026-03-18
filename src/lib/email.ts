@@ -37,14 +37,14 @@ function getScoreColor(score: number): string {
 }
 
 function getDimStatusLabel(score: number): string {
-  if (score >= 71) return "Alavanca Ativa";
-  if (score >= 41) return "Em Desenvolvimento";
+  if (score > 66) return "Alavanca Ativa";
+  if (score > 33) return "Em Desenvolvimento";
   return "Ponto Cego";
 }
 
 function getDimStatusColor(score: number): string {
-  if (score >= 71) return "#1dbf73";
-  if (score >= 41) return "#f5a623";
+  if (score > 66) return "#1dbf73";
+  if (score > 33) return "#f5a623";
   return "#e84343";
 }
 

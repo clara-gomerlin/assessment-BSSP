@@ -42,6 +42,48 @@ function parseAnalysis(resultMarkdown: string | null) {
   return null;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+async function reconstructQualification(supabase: any, response: any, quiz: Quiz) {
+  const qualification = { faturamento: "", papel: "", emocionalTags: [] as string[], crm: "" };
+  try {
+    const answers = response.answers as { question_id: string; selected_option_id: string | string[] }[];
+    if (!answers?.length) return qualification;
+
+    const { data: questions } = await supabase
+      .from("assessment_questions")
+      .select("id, order_index, category, type, options")
+      .eq("quiz_id", quiz.id)
+      .order("order_index");
+
+    if (!questions) return qualification;
+
+    for (const q of questions) {
+      const ans = answers.find((a: { question_id: string }) => a.question_id === q.id);
+      if (!ans) continue;
+
+      if (q.category === "contexto") {
+        if (q.type === "multiple_choice" && Array.isArray(ans.selected_option_id)) {
+          qualification.emocionalTags = ans.selected_option_id
+            .map((optId: string) => q.options.find((o: { id: string; tag?: string }) => o.id === optId)?.tag || "")
+            .filter(Boolean);
+        } else if (typeof ans.selected_option_id === "string") {
+          const opt = q.options.find((o: { id: string; label: string }) => o.id === ans.selected_option_id);
+          if (opt) {
+            if (q.order_index <= 1) qualification.faturamento = opt.label;
+            else qualification.papel = opt.label;
+          }
+        }
+      } else if (q.category === "qualificacao" && typeof ans.selected_option_id === "string") {
+        const opt = q.options.find((o: { id: string; label: string }) => o.id === ans.selected_option_id);
+        if (opt) qualification.crm = opt.label;
+      }
+    }
+  } catch (e) {
+    console.error("Failed to reconstruct qualification:", e);
+  }
+  return qualification;
+}
+
 export default async function ResultadoPage({ params }: PageProps) {
   const { id } = await params;
   const supabase = getSupabase();
@@ -125,12 +167,7 @@ export default async function ResultadoPage({ params }: PageProps) {
     dimensions: dimensionResults,
     strongest,
     weakest,
-    qualification: {
-      faturamento: "",
-      papel: "",
-      emocionalTags: [] as string[],
-      crm: "",
-    },
+    qualification: await reconstructQualification(supabase, response, quiz),
     confidenceScore: computedScores.confidenceScore || 0,
     confidenceLabel: computedScores.confidenceLabel || "",
     confidenceColor: computedScores.confidenceColor || "",

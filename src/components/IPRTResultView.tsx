@@ -150,18 +150,20 @@ function DimensionBar({
   );
 }
 
-// --- Donut Chart ---
+// --- Donut Chart (dark variant for hero) ---
 function DonutChart({
   score,
   stage,
   color,
+  dark = false,
 }: {
   score: number;
   stage: string;
   color: string;
+  dark?: boolean;
 }) {
-  const size = 180;
-  const stroke = 14;
+  const size = dark ? 200 : 180;
+  const stroke = dark ? 16 : 14;
   const radius = (size - stroke) / 2;
   const circumference = 2 * Math.PI * radius;
   const offset = circumference - (score / 100) * circumference;
@@ -169,7 +171,7 @@ function DonutChart({
   return (
     <div style={{ position: "relative", width: size, height: size, margin: "0 auto" }}>
       <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
-        <circle cx={size / 2} cy={size / 2} r={radius} fill="none" stroke="#e5e7eb" strokeWidth={stroke} />
+        <circle cx={size / 2} cy={size / 2} r={radius} fill="none" stroke={dark ? "rgba(255,255,255,0.1)" : "#e5e7eb"} strokeWidth={stroke} />
         <circle
           cx={size / 2}
           cy={size / 2}
@@ -194,26 +196,11 @@ function DonutChart({
           justifyContent: "center",
         }}
       >
-        <span style={{ fontSize: 36, fontWeight: 700, color: "#031D31", lineHeight: 1 }}>
+        <span style={{ fontSize: dark ? 48 : 36, fontWeight: 700, color: dark ? "#ffffff" : "#031D31", lineHeight: 1 }}>
           {score}%
         </span>
-        <span style={{ fontSize: 12, fontWeight: 500, color: "#64748b", marginTop: 4 }}>
+        <span style={{ fontSize: 12, fontWeight: 500, color: dark ? "rgba(255,255,255,0.5)" : "#64748b", marginTop: 4 }}>
           IPRT
-        </span>
-      </div>
-      <div style={{ textAlign: "center", marginTop: 8 }}>
-        <span
-          style={{
-            display: "inline-block",
-            padding: "4px 14px",
-            borderRadius: 20,
-            fontSize: 14,
-            fontWeight: 600,
-            color: color,
-            background: `${color}18`,
-          }}
-        >
-          {stage}
         </span>
       </div>
     </div>
@@ -423,364 +410,316 @@ export default function IPRTResultView({
     (result.qualification.formacaoCode.includes("noticias") ||
       result.qualification.formacaoCode.includes("webinars"));
 
+  // Find strongest dimension
+  const sortedDims = [...result.dimensions].sort((a, b) => b.percentage - a.percentage);
+  const strongestDimension = sortedDims[0];
+
   return (
-    <div
-      style={{
-        maxWidth: 480,
-        width: "100%",
-        margin: "0 auto",
-        padding: "0 20px",
-        paddingBottom: 90,
-      }}
-    >
-      {/* Header */}
-      <div style={{ textAlign: "center", padding: "24px 0 12px" }}>
-        <img
-          src="/logos/bssp-pos-graduacao.png"
-          alt="BSSP Pós-Graduação"
-          style={{ display: "inline-block", height: 44 }}
-        />
-      </div>
+    <div style={{ width: "100%" }}>
+      {/* ============ DARK HERO SECTION ============ */}
+      <div style={{ background: "#031D31", padding: "0 0 48px" }}>
+        <div style={{ maxWidth: 640, margin: "0 auto", padding: "0 20px" }}>
+          {/* Logo */}
+          <div style={{ textAlign: "center", padding: "24px 0 20px", opacity: 0, animation: "fadeSlideUp 0.5s ease-out 0.1s both" }}>
+            <img
+              src="/logos/bssp-pos-graduacao.png"
+              alt="BSSP Pós-Graduação"
+              style={{ display: "inline-block", height: 40 }}
+            />
+          </div>
 
-      {/* Headline */}
-      <h1
-        className="result-headline"
-        style={{
-          opacity: 0,
-          animation: "fadeUp 0.6s ease forwards",
-          animationDelay: "0.2s",
-        }}
-      >
-        {firstName}, seu Índice de Prontidão:
-      </h1>
-
-      {/* Score Card */}
-      <div
-        className="result-top-card"
-        style={{ padding: "24px 16px 20px", animationDelay: "0.3s" }}
-      >
-        <p
-          style={{
-            textAlign: "center",
-            fontSize: 14,
-            fontWeight: 500,
-            color: "#64748b",
-            marginBottom: 16,
-          }}
-        >
-          Índice de Prontidão para a Reforma Tributária
-        </p>
-
-        <DonutChart score={result.iprtScore} stage={result.stage} color={result.stageColor} />
-
-        {/* Dimension bars */}
-        <div style={{ marginTop: 28, display: "flex", flexDirection: "column", gap: 18 }}>
-          {result.dimensions.map((dim, i) => (
-            <DimensionBar key={dim.code} dim={dim} animDelay={0.8 + i * 0.15} />
-          ))}
-        </div>
-
-        {/* Weakest dimension highlight */}
-        <div
-          style={{
-            marginTop: 24,
-            padding: "14px 16px",
-            borderRadius: 12,
-            background: "#fef2f2",
-            border: "1px solid #fecaca",
-            opacity: 0,
-            animation: "fadeUp 0.5s ease forwards",
-            animationDelay: "1.6s",
-          }}
-        >
-          <p style={{ fontSize: 11, fontWeight: 600, color: "#dc2626", marginBottom: 4 }}>
-            MAIOR LACUNA IDENTIFICADA
+          {/* Greeting */}
+          <p style={{ textAlign: "center", fontFamily: "var(--font-body)", fontSize: 15, fontWeight: 500, color: "rgba(255,255,255,0.6)", margin: "0 0 4px", opacity: 0, animation: "fadeSlideUp 0.5s ease-out 0.15s both" }}>
+            {firstName}, seu Índice de Prontidão:
           </p>
-          <p style={{ fontSize: 15, fontWeight: 600, color: "#0f172a", margin: 0 }}>
-            {result.weakestDimension.emoji} {result.weakestDimension.name} — {result.weakestDimension.percentage}%
-          </p>
-        </div>
-      </div>
 
-      {/* Stage description */}
-      <div
-        className="result-section"
-        style={{
-          marginTop: 24,
-          opacity: 0,
-          animation: "fadeUp 0.5s ease forwards",
-          animationDelay: "1.8s",
-        }}
-      >
-        <div className="diag-card" style={{ background: `${result.stageColor}10`, border: `1px solid ${result.stageColor}40`, borderLeft: `4px solid ${result.stageColor}`, opacity: 1, animation: "none" }}>
-          <div className="diag-card__header">
-            <span
-              style={{
-                display: "inline-block",
-                padding: "2px 10px",
-                borderRadius: 12,
-                fontSize: 13,
-                fontWeight: 700,
-                color: result.stageColor,
-                background: `${result.stageColor}20`,
-              }}
-            >
-              {result.stage.toUpperCase()}
+          {/* IPRT title */}
+          <h1 style={{ textAlign: "center", fontFamily: "var(--font-body)", fontWeight: 700, fontSize: "clamp(36px, 6vw, 48px)", color: "#ffffff", lineHeight: 1.1, margin: "0 0 24px", letterSpacing: -0.5, opacity: 0, animation: "fadeSlideUp 0.5s ease-out 0.2s both" }}>
+            IPRT<span style={{ color: "#0ea5e9" }}>.</span>
+          </h1>
+
+          {/* Donut chart on dark */}
+          <div style={{ opacity: 0, animation: "fadeSlideUp 0.5s ease-out 0.3s both" }}>
+            <DonutChart score={result.iprtScore} stage={result.stage} color={result.stageColor} dark />
+          </div>
+
+          {/* Stage badge */}
+          <div style={{ textAlign: "center", marginTop: 16, opacity: 0, animation: "fadeSlideUp 0.5s ease-out 0.4s both" }}>
+            <span style={{ display: "inline-block", padding: "6px 18px", borderRadius: 100, fontSize: 15, fontWeight: 700, color: result.stageColor, background: `${result.stageColor}20`, border: `1px solid ${result.stageColor}40` }}>
+              {result.stage}
             </span>
           </div>
-          <p className="diag-card__text">{stageCopy}</p>
+
+          {/* Brief description */}
+          <p style={{ textAlign: "center", fontFamily: "var(--font-body)", fontSize: 14, lineHeight: 1.55, color: "rgba(255,255,255,0.6)", maxWidth: 440, margin: "16px auto 0", opacity: 0, animation: "fadeSlideUp 0.5s ease-out 0.5s both" }}>
+            Índice de Prontidão para a Reforma Tributária
+          </p>
         </div>
       </div>
 
-      {/* Gap Tension */}
-      {gapCopy && (
-        <div className="result-section" style={{ marginTop: 16 }}>
-          <div className="diag-card diag-card--red">
-            <div className="diag-card__header">
-              <span style={{ fontSize: 18 }}>🔴</span>
-              <span className="diag-card__title">SUA MAIOR LACUNA</span>
-            </div>
-            <p className="diag-card__subtitle">
-              {result.weakestDimension.emoji} {result.weakestDimension.name}
+      {/* ============ LIGHT BODY SECTION ============ */}
+      <div style={{ background: "#f8fafc", padding: "0 0 90px" }}>
+        <div style={{ maxWidth: 640, margin: "0 auto", padding: "0 20px" }}>
+
+          {/* Breakdown card with dimension bars */}
+          <div style={{ background: "#ffffff", borderRadius: 16, padding: "24px 20px", marginTop: -24, boxShadow: "0 2px 12px rgba(0,0,0,0.06), 0 8px 32px rgba(0,0,0,0.04)", opacity: 0, animation: "fadeUp 0.6s ease forwards", animationDelay: "0.6s" }}>
+            <p style={{ fontSize: 13, fontWeight: 700, color: "#031D31", letterSpacing: 0.5, textTransform: "uppercase", marginBottom: 20 }}>
+              Breakdown por Dimensão
             </p>
-            <p className="diag-card__text">{gapCopy}</p>
-          </div>
-        </div>
-      )}
-
-      {/* Profile insight */}
-      {profileInsight && (
-        <div className="result-section" style={{ marginTop: 16 }}>
-          <div className="diag-card diag-card--blue">
-            <div className="diag-card__header">
-              <span style={{ fontSize: 18 }}>👤</span>
-              <span className="diag-card__title">INSIGHT DO SEU PERFIL</span>
+            <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
+              {result.dimensions.map((dim, i) => (
+                <DimensionBar key={dim.code} dim={dim} animDelay={0.8 + i * 0.15} />
+              ))}
             </div>
-            <p className="diag-card__subtitle">{result.qualification.perfil}</p>
-            <p className="diag-card__text">{profileInsight}</p>
           </div>
-        </div>
-      )}
 
-      {/* Neutralizers */}
-      {showNeutralizerTempo && (
-        <div className="result-section" style={{ marginTop: 16 }}>
-          <div className="diag-card diag-card--amber">
-            <div className="diag-card__header">
-              <span style={{ fontSize: 18 }}>⏰</span>
-              <span className="diag-card__title">MITO: &quot;AINDA TEM TEMPO&quot;</span>
+          {/* Strongest / Weakest highlight cards */}
+          <div className="iprt-highlight-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginTop: 16 }}>
+            {/* Strongest */}
+            <div style={{ background: "#ecfdf5", border: "1px solid #a7f3d0", borderRadius: 14, padding: "16px 14px", opacity: 0, animation: "fadeUp 0.5s ease forwards", animationDelay: "1.4s" }}>
+              <p style={{ fontSize: 11, fontWeight: 700, color: "#16a34a", marginBottom: 6, letterSpacing: 0.3 }}>MAIS FORTE</p>
+              <p style={{ fontSize: 20, margin: "0 0 4px" }}>{strongestDimension.emoji}</p>
+              <p style={{ fontSize: 14, fontWeight: 600, color: "#0f172a", margin: "0 0 2px", lineHeight: 1.3 }}>{strongestDimension.name}</p>
+              <p style={{ fontSize: 22, fontWeight: 700, color: "#16a34a", margin: 0 }}>{strongestDimension.percentage}%</p>
             </div>
-            <p className="diag-card__text">
-              A transição já começou em 2026. Impactos em contratos, sistemas e precificação são reais AGORA. Profissionais que esperam vão competir com quem já se preparou.
-            </p>
-          </div>
-        </div>
-      )}
-
-      {showNeutralizerAutodidata && (
-        <div className="result-section" style={{ marginTop: 16 }}>
-          <div className="diag-card diag-card--amber">
-            <div className="diag-card__header">
-              <span style={{ fontSize: 18 }}>📚</span>
-              <span className="diag-card__title">MITO: &quot;DÁ PRA APRENDER SOZINHO&quot;</span>
+            {/* Weakest */}
+            <div style={{ background: "#fef2f2", border: "1px solid #fecaca", borderRadius: 14, padding: "16px 14px", opacity: 0, animation: "fadeUp 0.5s ease forwards", animationDelay: "1.5s" }}>
+              <p style={{ fontSize: 11, fontWeight: 700, color: "#dc2626", marginBottom: 6, letterSpacing: 0.3 }}>MAIOR LACUNA</p>
+              <p style={{ fontSize: 20, margin: "0 0 4px" }}>{result.weakestDimension.emoji}</p>
+              <p style={{ fontSize: 14, fontWeight: 600, color: "#0f172a", margin: "0 0 2px", lineHeight: 1.3 }}>{result.weakestDimension.name}</p>
+              <p style={{ fontSize: 22, fontWeight: 700, color: "#dc2626", margin: 0 }}>{result.weakestDimension.percentage}%</p>
             </div>
-            <p className="diag-card__text">
-              Das {result.totalNormativos} perguntas técnicas, você acertou{" "}
-              {result.totalNormativos - result.errosNormativos}. A complexidade da Reforma vai
-              muito além de acompanhar notícias — são novos conceitos, novas lógicas de crédito,
-              novos impactos operacionais que exigem formação estruturada.
-            </p>
           </div>
-        </div>
-      )}
 
-      {/* AI Analysis */}
-      <div className="result-section" style={{ marginTop: 24 }}>
-        {analysis ? (
-          <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-            <div className="diag-card diag-card--green">
+          {/* Stage description */}
+          <div style={{ marginTop: 20, opacity: 0, animation: "fadeUp 0.5s ease forwards", animationDelay: "1.7s" }}>
+            <div className="diag-card" style={{ background: `${result.stageColor}10`, border: `1px solid ${result.stageColor}40`, borderLeft: `4px solid ${result.stageColor}`, opacity: 1, animation: "none" }}>
               <div className="diag-card__header">
-                <span style={{ fontSize: 18 }}>🎯</span>
-                <span className="diag-card__title">ANÁLISE PERSONALIZADA</span>
+                <span style={{ display: "inline-block", padding: "2px 10px", borderRadius: 12, fontSize: 13, fontWeight: 700, color: result.stageColor, background: `${result.stageColor}20` }}>
+                  {result.stage.toUpperCase()}
+                </span>
               </div>
-              <p className="diag-card__text">{analysis.analise_personalizada}</p>
-
-              {analysis.recomendacoes?.length > 0 && (
-                <>
-                  <p
-                    style={{
-                      fontSize: 13,
-                      fontWeight: 700,
-                      color: "#0f172a",
-                      marginTop: 14,
-                      marginBottom: 6,
-                    }}
-                  >
-                    Recomendações:
-                  </p>
-                  <ul className="diag-card__list">
-                    {analysis.recomendacoes.map((r, i) => (
-                      <li key={i}>{r}</li>
-                    ))}
-                  </ul>
-                </>
-              )}
-
-              {analysis.modulos_recomendados?.length > 0 && (
-                <>
-                  <p
-                    style={{
-                      fontSize: 13,
-                      fontWeight: 700,
-                      color: "#0f172a",
-                      marginTop: 14,
-                      marginBottom: 6,
-                    }}
-                  >
-                    Módulos da Especialização mais relevantes para você:
-                  </p>
-                  <ul className="diag-card__list">
-                    {analysis.modulos_recomendados.map((m, i) => (
-                      <li key={i}>{m}</li>
-                    ))}
-                  </ul>
-                </>
-              )}
-
-              {analysis.mensagem_urgencia && (
-                <p className="diag-card__impact">
-                  ⚡ {analysis.mensagem_urgencia}
-                </p>
-              )}
+              <p className="diag-card__text">{stageCopy}</p>
             </div>
           </div>
-        ) : markdown ? (
-          <div className="prose-result">
-            <div style={{ whiteSpace: "pre-wrap" }}>{markdown}</div>
-            <span
-              style={{
-                display: "inline-block",
-                animation: "fadeUp 0.3s ease infinite alternate",
-                color: "#2D3246",
-              }}
-            >
-              ▊
-            </span>
-          </div>
-        ) : (
-          <div style={{ textAlign: "center", padding: "24px 0" }}>
-            <span
-              style={{
-                display: "inline-block",
-                animation: "fadeUp 0.3s ease infinite alternate",
-                color: "#2D3246",
-                fontSize: 18,
-              }}
-            >
-              Gerando análise personalizada...
-            </span>
-          </div>
-        )}
-      </div>
 
-      {/* Shareable Card */}
-      <div style={{ marginTop: 32, textAlign: "center" }}>
-        {showProminentShare ? (
-          <div className="iprt-share-prominent">
-            <p style={{ fontSize: 15, fontWeight: 600, color: "#166534", textAlign: "center", margin: "0 0 12px" }}>
-              Mostre ao mercado que você está preparado!
-            </p>
-            <button
-              onClick={async () => {
-                const sorted = [...result.dimensions].sort((a, b) => b.percentage - a.percentage);
-                await generate(
-                  respondentName,
-                  result.iprtScore,
-                  result.stage,
-                  result.stageColor,
-                  sorted[0],
-                  sorted[sorted.length - 1],
-                );
-                const canvas = canvasRef.current;
-                if (canvas && typeof navigator.share === "function" && typeof navigator.canShare === "function") {
-                  try {
-                    const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, "image/png"));
-                    if (blob) {
-                      const file = new File([blob], `iprt-${firstName.toLowerCase()}.png`, { type: "image/png" });
-                      if (navigator.canShare({ files: [file] })) {
-                        await navigator.share({
-                          title: `Meu IPRT: ${result.iprtScore}%`,
-                          text: `Fiz o diagnóstico de prontidão para a Reforma Tributária e meu índice é ${result.iprtScore}% (${result.stage}). Faça o seu também!`,
-                          files: [file],
-                        });
-                        return;
+          {/* Gap Tension */}
+          {gapCopy && (
+            <div style={{ marginTop: 16 }}>
+              <div className="diag-card diag-card--red">
+                <div className="diag-card__header">
+                  <span style={{ fontSize: 18 }}>🔴</span>
+                  <span className="diag-card__title">SUA MAIOR LACUNA</span>
+                </div>
+                <p className="diag-card__subtitle">
+                  {result.weakestDimension.emoji} {result.weakestDimension.name}
+                </p>
+                <p className="diag-card__text">{gapCopy}</p>
+              </div>
+            </div>
+          )}
+
+          {/* Profile insight */}
+          {profileInsight && (
+            <div style={{ marginTop: 16 }}>
+              <div className="diag-card diag-card--blue">
+                <div className="diag-card__header">
+                  <span style={{ fontSize: 18 }}>👤</span>
+                  <span className="diag-card__title">INSIGHT DO SEU PERFIL</span>
+                </div>
+                <p className="diag-card__subtitle">{result.qualification.perfil}</p>
+                <p className="diag-card__text">{profileInsight}</p>
+              </div>
+            </div>
+          )}
+
+          {/* Neutralizers */}
+          {showNeutralizerTempo && (
+            <div style={{ marginTop: 16 }}>
+              <div className="diag-card diag-card--amber">
+                <div className="diag-card__header">
+                  <span style={{ fontSize: 18 }}>⏰</span>
+                  <span className="diag-card__title">MITO: &quot;AINDA TEM TEMPO&quot;</span>
+                </div>
+                <p className="diag-card__text">
+                  A transição já começou em 2026. Impactos em contratos, sistemas e precificação são reais AGORA. Profissionais que esperam vão competir com quem já se preparou.
+                </p>
+              </div>
+            </div>
+          )}
+
+          {showNeutralizerAutodidata && (
+            <div style={{ marginTop: 16 }}>
+              <div className="diag-card diag-card--amber">
+                <div className="diag-card__header">
+                  <span style={{ fontSize: 18 }}>📚</span>
+                  <span className="diag-card__title">MITO: &quot;DÁ PRA APRENDER SOZINHO&quot;</span>
+                </div>
+                <p className="diag-card__text">
+                  Das {result.totalNormativos} perguntas técnicas, você acertou{" "}
+                  {result.totalNormativos - result.errosNormativos}. A complexidade da Reforma vai
+                  muito além de acompanhar notícias — são novos conceitos, novas lógicas de crédito,
+                  novos impactos operacionais que exigem formação estruturada.
+                </p>
+              </div>
+            </div>
+          )}
+
+          {/* AI Analysis */}
+          <div style={{ marginTop: 24 }}>
+            {analysis ? (
+              <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+                <div className="diag-card diag-card--green">
+                  <div className="diag-card__header">
+                    <span style={{ fontSize: 18 }}>🎯</span>
+                    <span className="diag-card__title">ANÁLISE PERSONALIZADA</span>
+                  </div>
+                  <p className="diag-card__text">{analysis.analise_personalizada}</p>
+
+                  {analysis.recomendacoes?.length > 0 && (
+                    <>
+                      <p style={{ fontSize: 13, fontWeight: 700, color: "#0f172a", marginTop: 14, marginBottom: 6 }}>
+                        Recomendações:
+                      </p>
+                      <ul className="diag-card__list">
+                        {analysis.recomendacoes.map((r, i) => (
+                          <li key={i}>{r}</li>
+                        ))}
+                      </ul>
+                    </>
+                  )}
+
+                  {analysis.modulos_recomendados?.length > 0 && (
+                    <>
+                      <p style={{ fontSize: 13, fontWeight: 700, color: "#0f172a", marginTop: 14, marginBottom: 6 }}>
+                        Módulos da Especialização mais relevantes para você:
+                      </p>
+                      <ul className="diag-card__list">
+                        {analysis.modulos_recomendados.map((m, i) => (
+                          <li key={i}>{m}</li>
+                        ))}
+                      </ul>
+                    </>
+                  )}
+
+                  {analysis.mensagem_urgencia && (
+                    <p className="diag-card__impact">
+                      ⚡ {analysis.mensagem_urgencia}
+                    </p>
+                  )}
+                </div>
+              </div>
+            ) : markdown ? (
+              <div className="prose-result">
+                <div style={{ whiteSpace: "pre-wrap" }}>{markdown}</div>
+                <span style={{ display: "inline-block", animation: "fadeUp 0.3s ease infinite alternate", color: "#2D3246" }}>
+                  ▊
+                </span>
+              </div>
+            ) : (
+              <div style={{ textAlign: "center", padding: "24px 0" }}>
+                <span style={{ display: "inline-block", animation: "fadeUp 0.3s ease infinite alternate", color: "#2D3246", fontSize: 18 }}>
+                  Gerando análise personalizada...
+                </span>
+              </div>
+            )}
+          </div>
+
+          {/* Shareable Card */}
+          <div style={{ marginTop: 32, textAlign: "center" }}>
+            {showProminentShare ? (
+              <div className="iprt-share-prominent">
+                <p style={{ fontSize: 15, fontWeight: 600, color: "#166534", textAlign: "center", margin: "0 0 12px" }}>
+                  Mostre ao mercado que você está preparado!
+                </p>
+                <button
+                  onClick={async () => {
+                    const sorted = [...result.dimensions].sort((a, b) => b.percentage - a.percentage);
+                    await generate(
+                      respondentName,
+                      result.iprtScore,
+                      result.stage,
+                      result.stageColor,
+                      sorted[0],
+                      sorted[sorted.length - 1],
+                    );
+                    const canvas = canvasRef.current;
+                    if (canvas && typeof navigator.share === "function" && typeof navigator.canShare === "function") {
+                      try {
+                        const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, "image/png"));
+                        if (blob) {
+                          const file = new File([blob], `iprt-${firstName.toLowerCase()}.png`, { type: "image/png" });
+                          if (navigator.canShare({ files: [file] })) {
+                            await navigator.share({
+                              title: `Meu IPRT: ${result.iprtScore}%`,
+                              text: `Fiz o diagnóstico de prontidão para a Reforma Tributária e meu índice é ${result.iprtScore}% (${result.stage}). Faça o seu também!`,
+                              files: [file],
+                            });
+                            return;
+                          }
+                        }
+                      } catch {
+                        /* user cancelled or share unavailable */
                       }
                     }
-                  } catch {
-                    /* user cancelled or share unavailable */
-                  }
-                }
-                // Fallback: download image
-                download();
-              }}
-              className="diagnostic-brag-btn diagnostic-brag-btn--highlight"
-            >
-              Compartilhar meu resultado
-            </button>
+                    // Fallback: download image
+                    download();
+                  }}
+                  className="diagnostic-brag-btn diagnostic-brag-btn--highlight"
+                >
+                  Compartilhar meu resultado
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={async () => {
+                  const sorted = [...result.dimensions].sort((a, b) => b.percentage - a.percentage);
+                  await generate(
+                    respondentName,
+                    result.iprtScore,
+                    result.stage,
+                    result.stageColor,
+                    sorted[0],
+                    sorted[sorted.length - 1],
+                  );
+                  download();
+                }}
+                className="diagnostic-brag-btn diagnostic-brag-btn--subtle"
+              >
+                Baixar resultado (imagem)
+              </button>
+            )}
+            <canvas ref={canvasRef} style={{ display: "none" }} />
           </div>
-        ) : (
-          <button
-            onClick={async () => {
-              const sorted = [...result.dimensions].sort((a, b) => b.percentage - a.percentage);
-              await generate(
-                respondentName,
-                result.iprtScore,
-                result.stage,
-                result.stageColor,
-                sorted[0],
-                sorted[sorted.length - 1],
-              );
-              download();
-            }}
-            className="diagnostic-brag-btn diagnostic-brag-btn--subtle"
-          >
-            Baixar resultado (imagem)
-          </button>
-        )}
-        <canvas ref={canvasRef} style={{ display: "none" }} />
-      </div>
 
-      {/* CTA inline */}
-      <div
-        style={{
-          marginTop: 48,
-          display: "flex",
-          flexDirection: "column",
-          gap: 12,
-          maxWidth: 640,
-          margin: "48px auto 0",
-        }}
-      >
-        <p
-          style={{
-            fontSize: 15,
-            fontWeight: 500,
-            color: "#64748b",
-            textAlign: "center",
-            marginBottom: 8,
-          }}
-        >
-          Quer fechar essas lacunas com profundidade?
-        </p>
-        <a
-          href={whatsappUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="result-primary-cta"
-          onClick={handleCtaClick}
-        >
-          Falar com um especialista BSSP
-        </a>
+          {/* CTA inline */}
+          <div style={{ marginTop: 48, display: "flex", flexDirection: "column", gap: 12 }}>
+            <p style={{ fontSize: 15, fontWeight: 500, color: "#64748b", textAlign: "center", marginBottom: 8 }}>
+              Quer fechar essas lacunas com profundidade?
+            </p>
+            <a
+              href={whatsappUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="result-primary-cta"
+              onClick={handleCtaClick}
+            >
+              Falar com um especialista BSSP
+            </a>
+          </div>
+
+          {/* Legal */}
+          <p style={{ fontSize: 11, fontWeight: 300, color: "#94a3b8", textAlign: "center", marginTop: 24, lineHeight: 1.4 }}>
+            Seus dados individuais são confidenciais. Dados agregados e anônimos podem ser utilizados
+            para pesquisa sobre o nível de preparo dos profissionais tributários brasileiros.
+          </p>
+
+          {/* Footer */}
+          <p style={{ fontSize: 12, fontWeight: 200, color: "#515151", textAlign: "center", marginTop: 12, lineHeight: 1.3 }}>
+            Resultado gerado com IA baseado nas suas respostas. Para uma análise aprofundada,
+            fale com nosso time.
+          </p>
+        </div>
       </div>
 
       {/* Sticky CTA — fixed bottom bar */}
@@ -795,36 +734,6 @@ export default function IPRTResultView({
           Falar com um especialista BSSP
         </a>
       </div>
-
-      {/* Legal */}
-      <p
-        style={{
-          fontSize: 11,
-          fontWeight: 300,
-          color: "#94a3b8",
-          textAlign: "center",
-          marginTop: 24,
-          lineHeight: 1.4,
-        }}
-      >
-        Seus dados individuais são confidenciais. Dados agregados e anônimos podem ser utilizados
-        para pesquisa sobre o nível de preparo dos profissionais tributários brasileiros.
-      </p>
-
-      {/* Footer */}
-      <p
-        style={{
-          fontSize: 12,
-          fontWeight: 200,
-          color: "#515151",
-          textAlign: "center",
-          marginTop: 12,
-          lineHeight: 1.3,
-        }}
-      >
-        Resultado gerado com IA baseado nas suas respostas. Para uma análise aprofundada,
-        fale com nosso time.
-      </p>
     </div>
   );
 }

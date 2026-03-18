@@ -50,15 +50,15 @@
 }
 
 .bssp-theme .progress-dot.active {
-  background: #031D31;
+  background: #ffffff;
 }
 
 .bssp-theme .progress-fill {
-  background-color: #031D31;
+  background-color: #ffffff;
 }
 
 .bssp-theme .progress-bar-fill {
-  background: #031D31;
+  background: #ffffff;
 }
 
 .bssp-theme .result-primary-cta {
@@ -88,6 +88,13 @@
   font-family: 'Montserrat', system-ui, sans-serif;
 }
 
+/* ===== IPRT Highlight Grid (responsive) ===== */
+@media (max-width: 400px) {
+  .iprt-highlight-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
 /* ===== IPRT Sticky WhatsApp CTA ===== */
 .iprt-sticky-cta {
   position: fixed;
@@ -97,7 +104,7 @@
   z-index: 50;
   padding: 12px 20px;
   padding-bottom: max(12px, env(safe-area-inset-bottom));
-  background: linear-gradient(0deg, #ffffff 70%, transparent);
+  background: linear-gradient(0deg, #f8fafc 70%, transparent);
   pointer-events: none;
 }
 

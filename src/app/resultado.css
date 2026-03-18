@@ -4,6 +4,7 @@
 
 /* Page tokens */
 .rei-result-page {
+  min-height: 100vh;
   --bg-page: #F8F8F5;
   --bg-card: #FFFFFF;
   --bg-card-warm: #FFFCF7;
