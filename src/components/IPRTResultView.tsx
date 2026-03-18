@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useCallback, useState } from "react";
+import { useCallback, useState } from "react";
 import { IPRTDimensionResult } from "@/lib/types";
 
 interface IPRTAnalysis {
@@ -80,258 +80,43 @@ const PROFILE_COPY: Record<string, string> = {
     "Gestores frequentemente subestimam o impacto da reforma no fluxo de caixa e na formação de preço. Seu resultado mostra que esse é justamente o ponto que exige atenção imediata para proteger a saúde financeira da operação.",
 };
 
-// --- Dimension Bar ---
-function DimensionBar({
-  dim,
-  animDelay,
-}: {
-  dim: IPRTDimensionResult;
-  animDelay: number;
-}) {
-  const barColor =
-    dim.percentage <= 30
-      ? "#e84343"
-      : dim.percentage <= 55
-      ? "#f5a623"
-      : dim.percentage <= 80
-      ? "#0ea5e9"
-      : "#1dbf73";
-
-  return (
-    <div
-      style={{
-        opacity: 0,
-        animation: "fadeUp 0.5s ease forwards",
-        animationDelay: `${animDelay}s`,
-      }}
-    >
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginBottom: 6,
-        }}
-      >
-        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <span style={{ fontSize: 20 }}>{dim.emoji}</span>
-          <span style={{ fontSize: 14, fontWeight: 600, color: "#031D31" }}>
-            {dim.name}
-          </span>
-        </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <span style={{ fontSize: 12, color: "#94a3b8" }}>
-            peso {Math.round(dim.weight * 100)}%
-          </span>
-          <span
-            style={{
-              fontSize: 13,
-              fontWeight: 600,
-              color: barColor,
-              minWidth: 40,
-              textAlign: "right",
-            }}
-          >
-            {dim.percentage}%
-          </span>
-        </div>
-      </div>
-      <div className="diagnostic-bar-track">
-        <div
-          className="diagnostic-bar-fill"
-          style={{
-            width: `${dim.percentage}%`,
-            background: barColor,
-            animationDelay: `${animDelay + 0.3}s`,
-          }}
-        />
-      </div>
-    </div>
-  );
+// --- Badge helpers ---
+function getDimBadge(pct: number): { label: string; bg: string; color: string; border: string } {
+  if (pct <= 30) return { label: "Crítico", bg: "rgba(239,68,68,0.06)", color: "#dc2626", border: "rgba(239,68,68,0.15)" };
+  if (pct <= 55) return { label: "Atenção", bg: "rgba(255,165,0,0.08)", color: "#C47F17", border: "rgba(255,165,0,0.2)" };
+  if (pct <= 80) return { label: "Em Construção", bg: "rgba(14,165,233,0.08)", color: "#0ea5e9", border: "rgba(14,165,233,0.2)" };
+  return { label: "Forte", bg: "rgba(34,197,94,0.08)", color: "#16a34a", border: "rgba(34,197,94,0.2)" };
 }
 
-// --- Donut Chart (dark variant for hero) ---
-function DonutChart({
-  score,
-  stage,
-  color,
-  dark = false,
-}: {
-  score: number;
-  stage: string;
-  color: string;
-  dark?: boolean;
-}) {
-  const size = dark ? 200 : 180;
-  const stroke = dark ? 16 : 14;
-  const radius = (size - stroke) / 2;
+function getBarColor(pct: number): string {
+  if (pct <= 30) return "#dc2626";
+  if (pct <= 55) return "#f59e0b";
+  if (pct <= 80) return "#0ea5e9";
+  return "#16a34a";
+}
+
+// --- Donut Chart ---
+function DonutChart({ score, color }: { score: number; color: string }) {
+  const size = 160;
+  const stroke = 10;
+  const radius = 39;
   const circumference = 2 * Math.PI * radius;
   const offset = circumference - (score / 100) * circumference;
 
   return (
-    <div style={{ position: "relative", width: size, height: size, margin: "0 auto" }}>
-      <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
-        <circle cx={size / 2} cy={size / 2} r={radius} fill="none" stroke={dark ? "rgba(255,255,255,0.1)" : "#e5e7eb"} strokeWidth={stroke} />
-        <circle
-          cx={size / 2}
-          cy={size / 2}
-          r={radius}
-          fill="none"
-          stroke={color}
-          strokeWidth={stroke}
-          strokeDasharray={circumference}
-          strokeDashoffset={offset}
-          strokeLinecap="round"
-          transform={`rotate(-90 ${size / 2} ${size / 2})`}
-          style={{ transition: "stroke-dashoffset 1.2s ease-out" }}
-        />
+    <div style={{ position: "relative", width: size, height: size }}>
+      <svg viewBox="0 0 100 100" style={{ transform: "rotate(-90deg)", width: size, height: size }}>
+        <circle cx="50" cy="50" r={radius} fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth={stroke} />
+        <circle cx="50" cy="50" r={radius} fill="none" stroke={color} strokeWidth={stroke} strokeLinecap="round"
+          strokeDasharray={circumference} strokeDashoffset={offset}
+          style={{ transition: "stroke-dashoffset 1.2s ease-out" }} />
       </svg>
-      <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <span style={{ fontSize: dark ? 48 : 36, fontWeight: 700, color: dark ? "#ffffff" : "#031D31", lineHeight: 1 }}>
-          {score}%
-        </span>
-        <span style={{ fontSize: 12, fontWeight: 500, color: dark ? "rgba(255,255,255,0.5)" : "#64748b", marginTop: 4 }}>
-          IPRT
-        </span>
+      <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)", textAlign: "center" }}>
+        <div style={{ fontFamily: "var(--font-body)", fontWeight: 700, fontSize: 48, color: "#E8E8E3", lineHeight: 1 }}>{score}</div>
+        <div style={{ fontFamily: "var(--font-body)", fontSize: 18, color: "rgba(232,232,227,0.4)" }}>de 100</div>
       </div>
     </div>
   );
-}
-
-// --- Brag Tag Generator ---
-function useBragTag() {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-
-  const generate = useCallback(
-    async (
-      name: string,
-      score: number,
-      stage: string,
-      stageColor: string,
-      strongest: IPRTDimensionResult,
-      weakest: IPRTDimensionResult,
-    ) => {
-      const canvas = canvasRef.current;
-      if (!canvas) return;
-      const ctx = canvas.getContext("2d");
-      if (!ctx) return;
-
-      const W = 1080;
-      const H = 1080;
-      canvas.width = W;
-      canvas.height = H;
-
-      // Background
-      ctx.fillStyle = "#031D31";
-      ctx.fillRect(0, 0, W, H);
-
-      // Accent bar at top
-      const grad = ctx.createLinearGradient(0, 0, W, 0);
-      grad.addColorStop(0, "#1a7ec2");
-      grad.addColorStop(1, "#0ea5e9");
-      ctx.fillStyle = grad;
-      ctx.fillRect(0, 0, W, 6);
-
-      // Title
-      ctx.fillStyle = "#94a3b8";
-      ctx.font = "600 26px sans-serif";
-      ctx.textAlign = "center";
-      ctx.fillText("ÍNDICE DE PRONTIDÃO PARA A REFORMA TRIBUTÁRIA", W / 2, 80);
-
-      // Name
-      ctx.fillStyle = "#ffffff";
-      ctx.font = "700 42px sans-serif";
-      ctx.fillText(name, W / 2, 140);
-
-      // Score circle
-      const cx = W / 2;
-      const cy = 360;
-      const r = 130;
-      ctx.beginPath();
-      ctx.arc(cx, cy, r, 0, Math.PI * 2);
-      ctx.strokeStyle = "#1e3a50";
-      ctx.lineWidth = 16;
-      ctx.stroke();
-
-      const startAngle = -Math.PI / 2;
-      const endAngle = startAngle + (score / 100) * Math.PI * 2;
-      ctx.beginPath();
-      ctx.arc(cx, cy, r, startAngle, endAngle);
-      ctx.strokeStyle = stageColor;
-      ctx.lineWidth = 16;
-      ctx.lineCap = "round";
-      ctx.stroke();
-
-      // Score text
-      ctx.fillStyle = "#ffffff";
-      ctx.font = "700 72px sans-serif";
-      ctx.textAlign = "center";
-      ctx.fillText(`${score}`, cx, cy + 16);
-      ctx.font = "400 24px sans-serif";
-      ctx.fillStyle = "#94a3b8";
-      ctx.fillText("de 100", cx, cy + 50);
-
-      // Stage label
-      ctx.fillStyle = stageColor;
-      ctx.font = "700 28px sans-serif";
-      ctx.fillText(stage, cx, cy + r + 60);
-
-      // Strongest dimension
-      const dimY = 610;
-      ctx.textAlign = "left";
-      const leftX = 100;
-
-      ctx.fillStyle = "#1dbf73";
-      ctx.font = "700 18px sans-serif";
-      ctx.fillText("DIMENSÃO MAIS FORTE", leftX, dimY);
-      ctx.fillStyle = "#ffffff";
-      ctx.font = "500 26px sans-serif";
-      ctx.fillText(`${strongest.emoji} ${strongest.name}`, leftX, dimY + 38);
-      ctx.fillStyle = "#94a3b8";
-      ctx.font = "400 20px sans-serif";
-      ctx.fillText(`Score: ${strongest.percentage}/100`, leftX, dimY + 70);
-
-      // Weakest dimension
-      const dimY2 = dimY + 120;
-      ctx.fillStyle = "#e84343";
-      ctx.font = "700 18px sans-serif";
-      ctx.fillText("DIMENSÃO MAIS FRACA", leftX, dimY2);
-      ctx.fillStyle = "#ffffff";
-      ctx.font = "500 26px sans-serif";
-      ctx.fillText(`${weakest.emoji} ${weakest.name}`, leftX, dimY2 + 38);
-      ctx.fillStyle = "#94a3b8";
-      ctx.font = "400 20px sans-serif";
-      ctx.fillText(`Score: ${weakest.percentage}/100`, leftX, dimY2 + 70);
-
-      // Footer
-      ctx.textAlign = "center";
-      ctx.fillStyle = "#64748b";
-      ctx.font = "500 20px sans-serif";
-      ctx.fillText("BSSP Pós-Graduação", cx, H - 40);
-
-    },
-    []
-  );
-
-  const download = useCallback(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const link = document.createElement("a");
-    link.download = `iprt-resultado.png`;
-    link.href = canvas.toDataURL("image/png");
-    link.click();
-  }, []);
-
-  return { canvasRef, generate, download };
 }
 
 export default function IPRTResultView({
@@ -347,22 +132,15 @@ export default function IPRTResultView({
   quizTitle,
 }: IPRTResultViewProps) {
   const firstName = respondentName.split(" ")[0] || "Profissional";
-  const { canvasRef, generate, download } = useBragTag();
   const [dealCreated, setDealCreated] = useState(false);
 
-  // WhatsApp URL with pre-filled message including score and weakest dimension
   const whatsappMessage = encodeURIComponent(
     `Olá! Fiz o diagnóstico IPRT e gostaria de saber mais sobre a Especialização em Reforma Tributária.\n\n` +
     `Meu índice: ${result.iprtScore}% (${result.stage})\n` +
     `Maior lacuna: ${result.weakestDimension.name} (${result.weakestDimension.percentage}%)\n` +
     `Perfil: ${result.qualification.perfil}`
   );
-  const whatsappUrl = ctaWhatsappUrl
-    ? `${ctaWhatsappUrl}?text=${whatsappMessage}`
-    : "#";
-
-  // Share: prominent when score > 55%
-  const showProminentShare = result.iprtScore > 55;
+  const whatsappUrl = ctaWhatsappUrl ? `${ctaWhatsappUrl}?text=${whatsappMessage}` : "#";
 
   const handleCtaClick = useCallback(() => {
     if (dealCreated || !hubspotContactId) return;
@@ -383,278 +161,327 @@ export default function IPRTResultView({
 
   const stageCopy = STAGE_COPY[result.stage] || "";
   const weakestCode = result.weakestDimension.code;
-
-  // Gap tension for weakest dimension
   const gapFn = GAP_COPY[weakestCode];
   const gapCopy = gapFn
-    ? weakestCode === "DN"
-      ? gapFn(result.totalNormativos - result.errosNormativos)
-      : weakestCode === "PO"
-      ? gapFn(result.acoesRealizadas)
-      : gapFn(0)
-    : "";
+    ? weakestCode === "DN" ? gapFn(result.totalNormativos - result.errosNormativos)
+    : weakestCode === "PO" ? gapFn(result.acoesRealizadas)
+    : gapFn(0) : "";
 
-  // Profile insight
   let profileInsight = "";
   const perfCode = result.qualification.perfilCode.toLowerCase();
   if (perfCode.includes("contab")) profileInsight = PROFILE_COPY.contador;
   else if (perfCode.includes("advoc")) profileInsight = PROFILE_COPY.advogado;
-  else if (perfCode.includes("admin") || perfCode.includes("gest"))
-    profileInsight = PROFILE_COPY.administrador;
+  else if (perfCode.includes("admin") || perfCode.includes("gest")) profileInsight = PROFILE_COPY.administrador;
 
-  // Neutralizers
-  const showNeutralizerTempo =
-    result.aguardandoPreparacao || result.dimensions.find(d => d.code === "DN")?.percentage === 0;
-  const showNeutralizerAutodidata =
-    result.errosNormativos >= 3 &&
-    (result.qualification.formacaoCode.includes("noticias") ||
-      result.qualification.formacaoCode.includes("webinars"));
+  const showNeutralizerTempo = result.aguardandoPreparacao || result.dimensions.find(d => d.code === "DN")?.percentage === 0;
+  const showNeutralizerAutodidata = result.errosNormativos >= 3 &&
+    (result.qualification.formacaoCode.includes("noticias") || result.qualification.formacaoCode.includes("webinars"));
 
-  // Find strongest dimension
   const sortedDims = [...result.dimensions].sort((a, b) => b.percentage - a.percentage);
-  const strongestDimension = sortedDims[0];
+  const strongestDim = sortedDims[0];
+
+  // Accent: BSSP blue
+  const accent = "#0ea5e9";
 
   return (
-    <div style={{ width: "100%" }}>
-      {/* ============ DARK HERO SECTION ============ */}
-      <div style={{ background: "#031D31", padding: "0 0 48px" }}>
-        <div style={{ maxWidth: 640, margin: "0 auto", padding: "0 20px" }}>
-          {/* Logo */}
-          <div style={{ textAlign: "center", padding: "24px 0 20px", opacity: 0, animation: "fadeSlideUp 0.5s ease-out 0.1s both" }}>
-            <img
-              src="/logos/bssp-pos-graduacao-white.png"
-              alt="BSSP Pós-Graduação"
-              style={{ display: "inline-block", height: 40 }}
-            />
+    <div style={{ fontFamily: "'Montserrat', system-ui, sans-serif", color: "#1A1A1A", background: "#F8F8F5" }}>
+      {/* ====== NAVBAR ====== */}
+      <nav style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: "16px 64px", background: "#031D31", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
+        <img src="/logos/bssp-pos-graduacao-white.png" alt="BSSP Pós-Graduação" style={{ height: 36 }} />
+      </nav>
+
+      {/* ====== HERO: Score ====== */}
+      <section style={{ background: "#031D31", padding: "48px 64px 64px", textAlign: "center", color: "#E8E8E3" }}>
+        <p style={{ fontSize: 18, color: "#E8E8E3", marginBottom: 8 }}>
+          <strong>{firstName}</strong>, aqui está o seu <span style={{ fontWeight: 700 }}>IPRT.</span>
+        </p>
+        <h1 style={{ fontWeight: 700, fontSize: "clamp(18px, 2vw, 24px)", color: "#E8E8E3", marginBottom: 32, lineHeight: 1.3 }}>
+          Índice de Prontidão para a Reforma Tributária<span style={{ color: accent }}>.</span>
+        </h1>
+
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 16, animation: "fadeSlideUp 0.6s ease-out 0.1s both" }}>
+          <DonutChart score={result.iprtScore} color={result.stageColor} />
+
+          <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: `${result.stageColor}18`, border: `1px solid ${result.stageColor}40`, color: result.stageColor, fontWeight: 600, fontSize: 15, padding: "8px 20px", borderRadius: 100 }}>
+            {result.stage}
           </div>
 
-          {/* Greeting */}
-          <p style={{ textAlign: "center", fontFamily: "var(--font-body)", fontSize: 15, fontWeight: 500, color: "rgba(255,255,255,0.6)", margin: "0 0 4px", opacity: 0, animation: "fadeSlideUp 0.5s ease-out 0.15s both" }}>
-            {firstName}, seu Índice de Prontidão:
-          </p>
-
-          {/* IPRT title */}
-          <h1 style={{ textAlign: "center", fontFamily: "var(--font-body)", fontWeight: 700, fontSize: "clamp(36px, 6vw, 48px)", color: "#ffffff", lineHeight: 1.1, margin: "0 0 24px", letterSpacing: -0.5, opacity: 0, animation: "fadeSlideUp 0.5s ease-out 0.2s both" }}>
-            IPRT<span style={{ color: "#0ea5e9" }}>.</span>
-          </h1>
-
-          {/* Donut chart on dark */}
-          <div style={{ opacity: 0, animation: "fadeSlideUp 0.5s ease-out 0.3s both" }}>
-            <DonutChart score={result.iprtScore} stage={result.stage} color={result.stageColor} dark />
-          </div>
-
-          {/* Stage badge */}
-          <div style={{ textAlign: "center", marginTop: 16, opacity: 0, animation: "fadeSlideUp 0.5s ease-out 0.4s both" }}>
-            <span style={{ display: "inline-block", padding: "6px 18px", borderRadius: 100, fontSize: 15, fontWeight: 700, color: result.stageColor, background: `${result.stageColor}20`, border: `1px solid ${result.stageColor}40` }}>
-              {result.stage}
-            </span>
-          </div>
-
-          {/* Brief description */}
-          <p style={{ textAlign: "center", fontFamily: "var(--font-body)", fontSize: 14, lineHeight: 1.55, color: "rgba(255,255,255,0.6)", maxWidth: 440, margin: "16px auto 0", opacity: 0, animation: "fadeSlideUp 0.5s ease-out 0.5s both" }}>
-            Índice de Prontidão para a Reforma Tributária
+          <p style={{ fontSize: 15, color: "rgba(232,232,227,0.55)", maxWidth: 500, lineHeight: 1.6 }}>
+            {stageCopy.split(".")[0]}.
           </p>
         </div>
-      </div>
+      </section>
 
-      {/* ============ LIGHT BODY SECTION ============ */}
-      <div style={{ background: "#f8fafc", padding: "0 0 90px" }}>
-        <div style={{ maxWidth: 640, margin: "0 auto", padding: "0 20px" }}>
+      {/* ====== 2-COLUMN LAYOUT ====== */}
+      <div className="iprt-content-wrapper" style={{ maxWidth: 1080, margin: "0 auto", padding: "48px 24px", display: "grid", gridTemplateColumns: "1fr 280px", gap: 24, alignItems: "start" }}>
 
-          {/* Breakdown card with dimension bars */}
-          <div style={{ background: "#ffffff", borderRadius: 16, padding: "24px 20px", marginTop: -24, boxShadow: "0 2px 12px rgba(0,0,0,0.06), 0 8px 32px rgba(0,0,0,0.04)", opacity: 0, animation: "fadeUp 0.6s ease forwards", animationDelay: "0.6s" }}>
-            <p style={{ fontSize: 13, fontWeight: 700, color: "#031D31", letterSpacing: 0.5, textTransform: "uppercase", marginBottom: 20 }}>
+        {/* LEFT: Content cards */}
+        <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
+
+          {/* Breakdown por Dimensão */}
+          <div style={{ background: "#ffffff", borderRadius: 16, padding: "24px 32px", border: "1px solid rgba(168,168,160,0.2)" }}>
+            <h2 style={{ fontWeight: 700, fontSize: 14, textTransform: "uppercase", letterSpacing: 0.5, marginBottom: 24, paddingBottom: 12, borderBottom: "1px solid rgba(168,168,160,0.2)" }}>
               Breakdown por Dimensão
-            </p>
-            <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
-              {result.dimensions.map((dim, i) => (
-                <DimensionBar key={dim.code} dim={dim} animDelay={0.8 + i * 0.15} />
-              ))}
-            </div>
-          </div>
+            </h2>
 
-          {/* Strongest / Weakest highlight cards */}
-          <div className="iprt-highlight-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginTop: 16 }}>
-            {/* Strongest */}
-            <div style={{ background: "#ecfdf5", border: "1px solid #a7f3d0", borderRadius: 14, padding: "16px 14px", opacity: 0, animation: "fadeUp 0.5s ease forwards", animationDelay: "1.4s" }}>
-              <p style={{ fontSize: 11, fontWeight: 700, color: "#16a34a", marginBottom: 6, letterSpacing: 0.3 }}>MAIS FORTE</p>
-              <p style={{ fontSize: 20, margin: "0 0 4px" }}>{strongestDimension.emoji}</p>
-              <p style={{ fontSize: 14, fontWeight: 600, color: "#0f172a", margin: "0 0 2px", lineHeight: 1.3 }}>{strongestDimension.name}</p>
-              <p style={{ fontSize: 22, fontWeight: 700, color: "#16a34a", margin: 0 }}>{strongestDimension.percentage}%</p>
+            <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+              {result.dimensions.map((dim) => {
+                const badge = getDimBadge(dim.percentage);
+                const barColor = getBarColor(dim.percentage);
+                return (
+                  <div key={dim.code} style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                      <span style={{ display: "flex", alignItems: "center", gap: 8, fontWeight: 600, fontSize: 16 }}>
+                        <span style={{ fontSize: 15 }}>{dim.emoji}</span>
+                        {dim.name}
+                      </span>
+                      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                        <span className="iprt-dim-badge" style={{ fontSize: 11, fontWeight: 600, padding: "3px 10px", borderRadius: 100, background: badge.bg, color: badge.color, border: `1px solid ${badge.border}` }}>
+                          {badge.label}
+                        </span>
+                        <span style={{ fontWeight: 700, fontSize: 14 }}>{dim.percentage}%</span>
+                      </div>
+                    </div>
+                    <div style={{ width: "100%", height: 6, background: "rgba(168,168,160,0.12)", borderRadius: 100, overflow: "hidden" }}>
+                      <div style={{ height: "100%", borderRadius: 100, width: `${dim.percentage}%`, background: barColor, transition: "width 1s ease-out" }} />
+                    </div>
+                  </div>
+                );
+              })}
             </div>
-            {/* Weakest */}
-            <div style={{ background: "#fef2f2", border: "1px solid #fecaca", borderRadius: 14, padding: "16px 14px", opacity: 0, animation: "fadeUp 0.5s ease forwards", animationDelay: "1.5s" }}>
-              <p style={{ fontSize: 11, fontWeight: 700, color: "#dc2626", marginBottom: 6, letterSpacing: 0.3 }}>MAIOR LACUNA</p>
-              <p style={{ fontSize: 20, margin: "0 0 4px" }}>{result.weakestDimension.emoji}</p>
-              <p style={{ fontSize: 14, fontWeight: 600, color: "#0f172a", margin: "0 0 2px", lineHeight: 1.3 }}>{result.weakestDimension.name}</p>
-              <p style={{ fontSize: 22, fontWeight: 700, color: "#dc2626", margin: 0 }}>{result.weakestDimension.percentage}%</p>
-            </div>
-          </div>
 
-          {/* Stage description */}
-          <div style={{ marginTop: 20, opacity: 0, animation: "fadeUp 0.5s ease forwards", animationDelay: "1.7s" }}>
-            <div className="diag-card" style={{ background: `${result.stageColor}10`, border: `1px solid ${result.stageColor}40`, borderLeft: `4px solid ${result.stageColor}`, opacity: 1, animation: "none" }}>
-              <div className="diag-card__header">
-                <span style={{ display: "inline-block", padding: "2px 10px", borderRadius: 12, fontSize: 13, fontWeight: 700, color: result.stageColor, background: `${result.stageColor}20` }}>
-                  {result.stage.toUpperCase()}
-                </span>
+            {/* Strongest / Weakest */}
+            <div className="iprt-highlight-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginTop: 16 }}>
+              <div style={{ padding: 14, borderRadius: 8, background: "rgba(34,197,94,0.08)", border: "1px solid rgba(34,197,94,0.2)" }}>
+                <p style={{ fontWeight: 700, fontSize: 10, textTransform: "uppercase", letterSpacing: 1, color: "#16a34a", marginBottom: 6 }}>Mais forte</p>
+                <p style={{ display: "flex", alignItems: "center", gap: 6, fontWeight: 600, fontSize: 14, margin: 0 }}>{strongestDim.emoji} {strongestDim.name}</p>
+                <p style={{ fontSize: 13, color: "#555550", marginTop: 2 }}>{strongestDim.percentage}%</p>
               </div>
-              <p className="diag-card__text">{stageCopy}</p>
+              <div style={{ padding: 14, borderRadius: 8, background: "rgba(239,68,68,0.06)", border: "1px solid rgba(239,68,68,0.15)" }}>
+                <p style={{ fontWeight: 700, fontSize: 10, textTransform: "uppercase", letterSpacing: 1, color: "#dc2626", marginBottom: 6 }}>Maior lacuna</p>
+                <p style={{ display: "flex", alignItems: "center", gap: 6, fontWeight: 600, fontSize: 14, margin: 0 }}>{result.weakestDimension.emoji} {result.weakestDimension.name}</p>
+                <p style={{ fontSize: 13, color: "#555550", marginTop: 2 }}>{result.weakestDimension.percentage}%</p>
+              </div>
             </div>
           </div>
 
-          {/* Gap Tension */}
+          {/* Mobile CTA (hidden on desktop) */}
+          <div className="iprt-mobile-cta-card" style={{ display: "none" }}>
+            <div style={{ background: "#031D31", borderRadius: 16, padding: 24, display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", gap: 16 }}>
+              <span style={{ fontSize: 28 }}>🎓</span>
+              <h3 style={{ fontWeight: 700, fontSize: 16, color: "#E8E8E3", lineHeight: 1.4 }}>Fechar essas lacunas é a diferença entre assistir e liderar.</h3>
+              <p style={{ fontSize: 13, color: "rgba(232,232,227,0.55)", lineHeight: 1.6 }}>
+                A Especialização BSSP prepara você para atuar com segurança no novo cenário tributário.
+              </p>
+              <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" onClick={handleCtaClick}
+                style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 10, background: accent, color: "white", fontWeight: 700, fontSize: 14, padding: "12px 24px", border: "none", borderRadius: 8, cursor: "pointer", textDecoration: "none", width: "100%", letterSpacing: 0.3 }}>
+                FALAR COM ESPECIALISTA <span>→</span>
+              </a>
+            </div>
+          </div>
+
+          {/* Sua Maior Lacuna */}
           {gapCopy && (
-            <div style={{ marginTop: 16 }}>
-              <div className="diag-card diag-card--red">
-                <div className="diag-card__header">
-                  <span style={{ fontSize: 18 }}>🔴</span>
-                  <span className="diag-card__title">SUA MAIOR LACUNA</span>
-                </div>
-                <p className="diag-card__subtitle">
-                  {result.weakestDimension.emoji} {result.weakestDimension.name}
-                </p>
-                <p className="diag-card__text">{gapCopy}</p>
+            <div style={{ background: "#ffffff", borderRadius: 16, padding: "24px 32px", border: "1px solid rgba(168,168,160,0.2)", borderLeft: "4px solid #dc2626" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
+                <span style={{ fontSize: 20 }}>🔴</span>
+                <span style={{ fontWeight: 700, fontSize: 15, textTransform: "uppercase", letterSpacing: 0.5 }}>Sua maior lacuna</span>
               </div>
+              <h3 style={{ fontWeight: 700, fontSize: 18, marginBottom: 12, lineHeight: 1.3 }}>
+                {result.weakestDimension.emoji} {result.weakestDimension.name} — {result.weakestDimension.percentage}%
+              </h3>
+              <p style={{ fontSize: 15, color: "#555550", lineHeight: 1.75 }}>{gapCopy}</p>
             </div>
           )}
 
-          {/* Profile insight */}
+          {/* Profile Insight */}
           {profileInsight && (
-            <div style={{ marginTop: 16 }}>
-              <div className="diag-card diag-card--blue">
-                <div className="diag-card__header">
-                  <span style={{ fontSize: 18 }}>👤</span>
-                  <span className="diag-card__title">INSIGHT DO SEU PERFIL</span>
-                </div>
-                <p className="diag-card__subtitle">{result.qualification.perfil}</p>
-                <p className="diag-card__text">{profileInsight}</p>
+            <div style={{ background: "#ffffff", borderRadius: 16, padding: "24px 32px", border: "1px solid rgba(168,168,160,0.2)", borderLeft: `4px solid ${accent}` }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
+                <span style={{ fontSize: 20 }}>👤</span>
+                <span style={{ fontWeight: 700, fontSize: 15, textTransform: "uppercase", letterSpacing: 0.5 }}>Insight do seu perfil</span>
               </div>
+              <h3 style={{ fontWeight: 700, fontSize: 18, marginBottom: 12, lineHeight: 1.3 }}>
+                {result.qualification.perfil}
+              </h3>
+              <p style={{ fontSize: 15, color: "#555550", lineHeight: 1.75 }}>{profileInsight}</p>
             </div>
           )}
 
           {/* Neutralizers */}
           {showNeutralizerTempo && (
-            <div style={{ marginTop: 16 }}>
-              <div className="diag-card diag-card--amber">
-                <div className="diag-card__header">
-                  <span style={{ fontSize: 18 }}>⏰</span>
-                  <span className="diag-card__title">MITO: &quot;AINDA TEM TEMPO&quot;</span>
-                </div>
-                <p className="diag-card__text">
-                  A transição já começou em 2026. Impactos em contratos, sistemas e precificação são reais AGORA. Profissionais que esperam vão competir com quem já se preparou.
-                </p>
+            <div style={{ background: "#FFFCF7", borderRadius: 16, padding: "24px 32px", border: "1px solid rgba(168,168,160,0.2)", borderLeft: "4px solid #f59e0b" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
+                <span style={{ fontSize: 20 }}>⏰</span>
+                <span style={{ fontWeight: 700, fontSize: 15, textTransform: "uppercase", letterSpacing: 0.5 }}>Mito: &quot;Ainda tem tempo&quot;</span>
               </div>
+              <p style={{ fontSize: 15, color: "#555550", lineHeight: 1.75 }}>
+                A transição já começou em 2026. Impactos em contratos, sistemas e precificação são reais AGORA. Profissionais que esperam vão competir com quem já se preparou.
+              </p>
             </div>
           )}
 
           {showNeutralizerAutodidata && (
-            <div style={{ marginTop: 16 }}>
-              <div className="diag-card diag-card--amber">
-                <div className="diag-card__header">
-                  <span style={{ fontSize: 18 }}>📚</span>
-                  <span className="diag-card__title">MITO: &quot;DÁ PRA APRENDER SOZINHO&quot;</span>
-                </div>
-                <p className="diag-card__text">
-                  Das {result.totalNormativos} perguntas técnicas, você acertou{" "}
-                  {result.totalNormativos - result.errosNormativos}. A complexidade da Reforma vai
-                  muito além de acompanhar notícias — são novos conceitos, novas lógicas de crédito,
-                  novos impactos operacionais que exigem formação estruturada.
-                </p>
+            <div style={{ background: "#FFFCF7", borderRadius: 16, padding: "24px 32px", border: "1px solid rgba(168,168,160,0.2)", borderLeft: "4px solid #f59e0b" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
+                <span style={{ fontSize: 20 }}>📚</span>
+                <span style={{ fontWeight: 700, fontSize: 15, textTransform: "uppercase", letterSpacing: 0.5 }}>Mito: &quot;Dá pra aprender sozinho&quot;</span>
               </div>
+              <p style={{ fontSize: 15, color: "#555550", lineHeight: 1.75 }}>
+                Das {result.totalNormativos} perguntas técnicas, você acertou{" "}
+                {result.totalNormativos - result.errosNormativos}. A complexidade da Reforma vai
+                muito além de acompanhar notícias — são novos conceitos, novas lógicas de crédito,
+                novos impactos operacionais que exigem formação estruturada.
+              </p>
             </div>
           )}
 
           {/* AI Analysis */}
-          <div style={{ marginTop: 24 }}>
-            {analysis ? (
-              <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-                <div className="diag-card diag-card--green">
-                  <div className="diag-card__header">
-                    <span style={{ fontSize: 18 }}>🎯</span>
-                    <span className="diag-card__title">ANÁLISE PERSONALIZADA</span>
-                  </div>
-                  <p className="diag-card__text">{analysis.analise_personalizada}</p>
-
-                  {analysis.recomendacoes?.length > 0 && (
-                    <>
-                      <p style={{ fontSize: 13, fontWeight: 700, color: "#0f172a", marginTop: 14, marginBottom: 6 }}>
-                        Recomendações:
-                      </p>
-                      <ul className="diag-card__list">
-                        {analysis.recomendacoes.map((r, i) => (
-                          <li key={i}>{r}</li>
-                        ))}
-                      </ul>
-                    </>
-                  )}
-
-                  {analysis.modulos_recomendados?.length > 0 && (
-                    <>
-                      <p style={{ fontSize: 13, fontWeight: 700, color: "#0f172a", marginTop: 14, marginBottom: 6 }}>
-                        Módulos da Especialização mais relevantes para você:
-                      </p>
-                      <ul className="diag-card__list">
-                        {analysis.modulos_recomendados.map((m, i) => (
-                          <li key={i}>{m}</li>
-                        ))}
-                      </ul>
-                    </>
-                  )}
-
-                  {analysis.mensagem_urgencia && (
-                    <p className="diag-card__impact">
-                      ⚡ {analysis.mensagem_urgencia}
-                    </p>
-                  )}
-                </div>
+          {analysis ? (
+            <div style={{ background: "#ffffff", borderRadius: 16, padding: "24px 32px", border: "1px solid rgba(168,168,160,0.2)", borderLeft: "4px solid #16a34a" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
+                <span style={{ fontSize: 20 }}>🎯</span>
+                <span style={{ fontWeight: 700, fontSize: 15, textTransform: "uppercase", letterSpacing: 0.5 }}>Análise personalizada</span>
               </div>
-            ) : markdown ? (
-              <div className="prose-result">
-                <div style={{ whiteSpace: "pre-wrap" }}>{markdown}</div>
-                <span style={{ display: "inline-block", animation: "fadeUp 0.3s ease infinite alternate", color: "#2D3246" }}>
-                  ▊
-                </span>
-              </div>
-            ) : (
-              <div style={{ textAlign: "center", padding: "24px 0" }}>
-                <span style={{ display: "inline-block", animation: "fadeUp 0.3s ease infinite alternate", color: "#2D3246", fontSize: 18 }}>
-                  Gerando análise personalizada...
-                </span>
-              </div>
-            )}
-          </div>
+              <p style={{ fontSize: 15, color: "#555550", lineHeight: 1.75, marginBottom: 16 }}>{analysis.analise_personalizada}</p>
 
-          {/* CTA inline */}
-          <div style={{ marginTop: 48, display: "flex", flexDirection: "column", gap: 12 }}>
-            <p style={{ fontSize: 15, fontWeight: 500, color: "#64748b", textAlign: "center", marginBottom: 8 }}>
-              Quer fechar essas lacunas com profundidade?
+              {analysis.recomendacoes?.length > 0 && (
+                <>
+                  <p style={{ fontSize: 13, fontWeight: 700, marginBottom: 8 }}>Recomendações:</p>
+                  <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: 10, padding: 0, margin: "0 0 16px" }}>
+                    {analysis.recomendacoes.map((r, i) => (
+                      <li key={i} style={{ display: "flex", alignItems: "flex-start", gap: 10, fontSize: 15, color: "#555550", lineHeight: 1.65 }}>
+                        <span style={{ color: "#8A8A82", flexShrink: 0 }}>•</span>{r}
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              )}
+
+              {analysis.modulos_recomendados?.length > 0 && (
+                <>
+                  <p style={{ fontSize: 13, fontWeight: 700, marginBottom: 8 }}>Módulos recomendados:</p>
+                  <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: 10, padding: 0, margin: "0 0 16px" }}>
+                    {analysis.modulos_recomendados.map((m, i) => (
+                      <li key={i} style={{ display: "flex", alignItems: "flex-start", gap: 10, fontSize: 15, color: "#555550", lineHeight: 1.65 }}>
+                        <span style={{ color: "#8A8A82", flexShrink: 0 }}>•</span>{m}
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              )}
+
+              {analysis.mensagem_urgencia && (
+                <p style={{ marginTop: 16, fontSize: 14, color: "#555550", lineHeight: 1.65 }}>
+                  <strong style={{ fontWeight: 600, color: "#1A1A1A" }}>⚡ {analysis.mensagem_urgencia}</strong>
+                </p>
+              )}
+            </div>
+          ) : markdown ? (
+            <div style={{ background: "#ffffff", borderRadius: 16, padding: "24px 32px", border: "1px solid rgba(168,168,160,0.2)" }}>
+              <div style={{ whiteSpace: "pre-wrap", fontSize: 15, color: "#555550", lineHeight: 1.75 }}>{markdown}</div>
+              <span style={{ display: "inline-block", animation: "fadeUp 0.3s ease infinite alternate", color: "#2D3246" }}>▊</span>
+            </div>
+          ) : (
+            <div style={{ background: "#ffffff", borderRadius: 16, padding: "24px 32px", border: "1px solid rgba(168,168,160,0.2)", textAlign: "center" }}>
+              <span style={{ display: "inline-block", animation: "fadeUp 0.3s ease infinite alternate", color: "#2D3246", fontSize: 16 }}>
+                Gerando análise personalizada...
+              </span>
+            </div>
+          )}
+        </div>
+
+        {/* RIGHT: Sticky CTA Sidebar */}
+        <div className="iprt-cta-sidebar" style={{ position: "sticky", top: 24 }}>
+          <div style={{ background: "#031D31", borderRadius: 16, padding: 24, display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", gap: 16 }}>
+            <span style={{ fontSize: 28 }}>🎓</span>
+            <h3 style={{ fontWeight: 700, fontSize: 16, color: "#E8E8E3", lineHeight: 1.4 }}>
+              Fechar essas lacunas é a diferença entre assistir e liderar.
+            </h3>
+            <p style={{ fontSize: 13, color: "rgba(232,232,227,0.55)", lineHeight: 1.6 }}>
+              A Especialização BSSP prepara você para atuar com segurança no novo cenário tributário.
             </p>
-            <a
-              href={whatsappUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="result-primary-cta"
-              onClick={handleCtaClick}
-            >
-              Falar com um especialista BSSP
+            <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" onClick={handleCtaClick}
+              style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 10, background: accent, color: "white", fontWeight: 700, fontSize: 14, padding: "12px 24px", border: "none", borderRadius: 8, cursor: "pointer", textDecoration: "none", width: "100%", letterSpacing: 0.3, transition: "all 0.3s ease" }}>
+              FALAR COM ESPECIALISTA <span>→</span>
             </a>
           </div>
         </div>
       </div>
 
-      {/* Sticky CTA — fixed bottom bar */}
+      {/* ====== BOTTOM CTA ====== */}
+      <div style={{ maxWidth: 1080, margin: "0 auto", padding: "0 24px 48px" }}>
+        <div style={{ background: "#031D31", borderRadius: 16, padding: 48, display: "grid", gridTemplateColumns: "1fr 1fr", gap: 48, alignItems: "center" }} className="iprt-bottom-cta-inner">
+          <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
+            <h2 style={{ fontWeight: 700, fontSize: "clamp(18px, 2vw, 22px)", color: "#E8E8E3", lineHeight: 1.35 }}>
+              Identificar lacunas é o primeiro passo. Fechá-las é o que define quem lidera.
+            </h2>
+            <p style={{ fontSize: 15, color: "rgba(232,232,227,0.6)", lineHeight: 1.7 }}>
+              A Especialização em Reforma Tributária da BSSP cobre todas as 4 dimensões do IPRT com profundidade — do normativo ao estratégico.
+            </p>
+            <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: 8, padding: 0, margin: 0 }}>
+              {[
+                "12 módulos cobrindo IBS, CBS, Split Payment, Simples Nacional e mais",
+                "Aplicação prática: contratos, preços, sistemas, compliance",
+                "Certificação que posiciona você como especialista no mercado",
+              ].map((item) => (
+                <li key={item} style={{ display: "flex", alignItems: "flex-start", gap: 10, fontSize: 14, color: "rgba(232,232,227,0.75)", lineHeight: 1.6 }}>
+                  <span style={{ color: "#38bdf8", flexShrink: 0 }}>✦</span>{item}
+                </li>
+              ))}
+            </ul>
+            <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" onClick={handleCtaClick}
+              style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 10, background: accent, color: "white", fontWeight: 700, fontSize: 15, padding: "16px 36px", border: "none", borderRadius: 8, cursor: "pointer", textDecoration: "none", width: "fit-content", letterSpacing: 0.3, transition: "all 0.3s ease" }}>
+              FALAR COM ESPECIALISTA <span>→</span>
+            </a>
+          </div>
+
+          {/* Testimonial */}
+          <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 12, padding: 32, display: "flex", flexDirection: "column", gap: 24 }}>
+            <p style={{ fontWeight: 500, fontSize: 16, color: "rgba(232,232,227,0.85)", lineHeight: 1.65, fontStyle: "italic", paddingLeft: 20, borderLeft: `3px solid ${accent}` }}>
+              &ldquo;A especialização da BSSP mudou completamente a forma como oriento meus clientes sobre a Reforma Tributária. Saí com confiança para atuar na prática.&rdquo;
+            </p>
+            <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+              <div style={{ width: 52, height: 52, borderRadius: "50%", background: "rgba(255,255,255,0.1)", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 700, fontSize: 18, color: "rgba(232,232,227,0.4)", flexShrink: 0 }}>
+                AB
+              </div>
+              <div>
+                <span style={{ fontWeight: 700, fontSize: 15, color: "#E8E8E3", display: "block" }}>Aluno BSSP</span>
+                <span style={{ fontSize: 13, color: "rgba(232,232,227,0.45)", lineHeight: 1.4 }}>Especialização em Reforma Tributária</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Sticky CTA — mobile only */}
       <div className="iprt-sticky-cta">
-        <a
-          href={whatsappUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="result-primary-cta"
-          onClick={handleCtaClick}
-        >
+        <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className="result-primary-cta" onClick={handleCtaClick}>
           Falar com um especialista BSSP
         </a>
       </div>
+
+      <style>{`
+        @media (max-width: 768px) {
+          .iprt-content-wrapper {
+            grid-template-columns: 1fr !important;
+            padding: 32px 16px !important;
+            gap: 24px !important;
+          }
+          .iprt-cta-sidebar { display: none !important; }
+          .iprt-mobile-cta-card { display: block !important; }
+          .iprt-dim-badge { display: none !important; }
+          .iprt-bottom-cta-inner {
+            grid-template-columns: 1fr !important;
+            padding: 32px 24px !important;
+            gap: 32px !important;
+          }
+          section[style] { padding-left: 24px !important; padding-right: 24px !important; }
+        }
+        @media (max-width: 480px) {
+          .iprt-highlight-grid { grid-template-columns: 1fr !important; }
+        }
+      `}</style>
     </div>
   );
 }
