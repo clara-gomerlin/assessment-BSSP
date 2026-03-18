@@ -354,7 +354,7 @@ function REIHero({ onStart }: { onStart: () => void }) {
           </div>
 
           {/* Client logos */}
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12, padding: "4px 0" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12, padding: "4px 0", marginBottom: 80 }}>
             {[
               { src: "/logos/clients/onfly.png", alt: "Onfly", mh: 50 },
               { src: "/logos/clients/wellhub.png", alt: "Wellhub", mh: 45 },
@@ -373,11 +373,11 @@ function REIHero({ onStart }: { onStart: () => void }) {
 
       {/* Mobile sticky CTA */}
       <div className="rei-mobile-cta" style={{ display: "none", flexDirection: "column", alignItems: "center", gap: 6, position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 100, padding: "12px 24px 10px", background: "var(--bg-dark)", borderTop: "1px solid rgba(255,255,255,0.08)", boxShadow: "0 -4px 20px rgba(0,0,0,0.4)" }}>
-        <button onClick={onStart} style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 10, background: "var(--coral-500)", color: "white", fontFamily: "var(--font-editorial)", fontWeight: 700, fontSize: 15, padding: "14px 32px", border: "none", borderRadius: 8, cursor: "pointer", width: "100%", letterSpacing: 0.3 }}>
+        <button onClick={onStart} style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 8, background: "var(--coral-500)", color: "white", fontFamily: "var(--font-editorial)", fontWeight: 700, fontSize: 13, padding: "12px 24px", border: "none", borderRadius: 8, cursor: "pointer", width: "100%", letterSpacing: 0.3 }}>
           DESCOBRIR INEFICIÊNCIAS
-          <span style={{ fontSize: 16 }}>→</span>
+          <span style={{ fontSize: 14 }}>→</span>
         </button>
-        <span style={{ fontFamily: "var(--font-body)", fontSize: 11, color: "rgba(232,232,227,0.5)" }}>100% gratuito</span>
+        <span style={{ fontFamily: "var(--font-body)", fontSize: 10, color: "rgba(232,232,227,0.5)" }}>100% gratuito</span>
       </div>
 
       <style>{`
