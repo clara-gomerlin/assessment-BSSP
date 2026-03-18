@@ -462,6 +462,9 @@ export default function IPRTResultView({
       </div>
 
       <style>{`
+        /* Desktop: hide bottom sticky bar (sidebar handles CTA) */
+        .iprt-sticky-cta { display: none; }
+
         @media (max-width: 768px) {
           .iprt-content-wrapper {
             grid-template-columns: 1fr !important;
@@ -476,7 +479,27 @@ export default function IPRTResultView({
             padding: 32px 24px !important;
             gap: 32px !important;
           }
-          section[style] { padding-left: 24px !important; padding-right: 24px !important; }
+          /* Mobile: show fixed bottom sticky bar */
+          .iprt-sticky-cta {
+            display: block !important;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 50;
+            padding: 12px 20px;
+            padding-bottom: max(12px, env(safe-area-inset-bottom));
+            background: linear-gradient(0deg, #F8F8F5 70%, transparent);
+            pointer-events: none;
+          }
+          .iprt-sticky-cta .result-primary-cta {
+            display: block;
+            width: 100%;
+            max-width: 480px;
+            margin: 0 auto;
+            text-align: center;
+            pointer-events: auto;
+          }
         }
         @media (max-width: 480px) {
           .iprt-highlight-grid { grid-template-columns: 1fr !important; }
