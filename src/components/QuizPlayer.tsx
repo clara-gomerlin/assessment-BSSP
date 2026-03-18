@@ -555,7 +555,7 @@ export default function QuizPlayer({ quiz, questions }: QuizPlayerProps) {
           }}
         >
           <img
-            src="/logos/bssp-pos-graduacao.png"
+            src="/logos/bssp-pos-graduacao-white.png"
             alt="BSSP Pós-Graduação"
             style={{ height: 36 }}
           />
@@ -570,7 +570,7 @@ export default function QuizPlayer({ quiz, questions }: QuizPlayerProps) {
           borderBottom: "1px solid rgba(255, 255, 255, 0.06)",
         }}
       >
-        {isDiagnostic && diagnosticProgress ? (
+        {(isDiagnostic || isIPRT) && diagnosticProgress ? (
           <>
             {/* Diagnostic header: back + centered section label */}
             <div

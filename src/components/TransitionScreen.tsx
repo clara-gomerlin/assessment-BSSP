@@ -821,7 +821,7 @@ function BSSPTransition1({ onContinue }: { onContinue: () => void }) {
           +10.000 alunos
         </span>
         <br />
-        <span style={{ fontSize: 16, fontWeight: 500, color: "#000" }}>
+        <span style={{ fontSize: 16, fontWeight: 500, color: "rgba(232,232,227,0.7)" }}>
           já passaram pela BSSP desde 2017
         </span>
       </div>
@@ -1064,7 +1064,8 @@ function BSSPTransition3({ onContinue }: { onContinue: () => void }) {
           position: "relative",
           padding: "18px 24px",
           borderRadius: 8,
-          background: "#f3f6fc",
+          background: "var(--bg-dark-elevated)",
+          border: "1px solid rgba(255,255,255,0.1)",
           marginBottom: 8,
         }}
       >
@@ -1094,16 +1095,6 @@ function BSSPTransition3({ onContinue }: { onContinue: () => void }) {
           <QuoteSVG />
         </span>
       </div>
-      <p
-        style={{
-          fontSize: 13,
-          fontWeight: 400,
-          textAlign: "center",
-          color: "var(--text-on-dark-secondary)",
-        }}
-      >
-        Cliente A — Empresa X
-      </p>
     </Content>
   );
 }

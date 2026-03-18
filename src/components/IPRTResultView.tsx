@@ -422,7 +422,7 @@ export default function IPRTResultView({
           {/* Logo */}
           <div style={{ textAlign: "center", padding: "24px 0 20px", opacity: 0, animation: "fadeSlideUp 0.5s ease-out 0.1s both" }}>
             <img
-              src="/logos/bssp-pos-graduacao.png"
+              src="/logos/bssp-pos-graduacao-white.png"
               alt="BSSP Pós-Graduação"
               style={{ display: "inline-block", height: 40 }}
             />
@@ -625,73 +625,6 @@ export default function IPRTResultView({
             )}
           </div>
 
-          {/* Shareable Card */}
-          <div style={{ marginTop: 32, textAlign: "center" }}>
-            {showProminentShare ? (
-              <div className="iprt-share-prominent">
-                <p style={{ fontSize: 15, fontWeight: 600, color: "#166534", textAlign: "center", margin: "0 0 12px" }}>
-                  Mostre ao mercado que você está preparado!
-                </p>
-                <button
-                  onClick={async () => {
-                    const sorted = [...result.dimensions].sort((a, b) => b.percentage - a.percentage);
-                    await generate(
-                      respondentName,
-                      result.iprtScore,
-                      result.stage,
-                      result.stageColor,
-                      sorted[0],
-                      sorted[sorted.length - 1],
-                    );
-                    const canvas = canvasRef.current;
-                    if (canvas && typeof navigator.share === "function" && typeof navigator.canShare === "function") {
-                      try {
-                        const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, "image/png"));
-                        if (blob) {
-                          const file = new File([blob], `iprt-${firstName.toLowerCase()}.png`, { type: "image/png" });
-                          if (navigator.canShare({ files: [file] })) {
-                            await navigator.share({
-                              title: `Meu IPRT: ${result.iprtScore}%`,
-                              text: `Fiz o diagnóstico de prontidão para a Reforma Tributária e meu índice é ${result.iprtScore}% (${result.stage}). Faça o seu também!`,
-                              files: [file],
-                            });
-                            return;
-                          }
-                        }
-                      } catch {
-                        /* user cancelled or share unavailable */
-                      }
-                    }
-                    // Fallback: download image
-                    download();
-                  }}
-                  className="diagnostic-brag-btn diagnostic-brag-btn--highlight"
-                >
-                  Compartilhar meu resultado
-                </button>
-              </div>
-            ) : (
-              <button
-                onClick={async () => {
-                  const sorted = [...result.dimensions].sort((a, b) => b.percentage - a.percentage);
-                  await generate(
-                    respondentName,
-                    result.iprtScore,
-                    result.stage,
-                    result.stageColor,
-                    sorted[0],
-                    sorted[sorted.length - 1],
-                  );
-                  download();
-                }}
-                className="diagnostic-brag-btn diagnostic-brag-btn--subtle"
-              >
-                Baixar resultado (imagem)
-              </button>
-            )}
-            <canvas ref={canvasRef} style={{ display: "none" }} />
-          </div>
-
           {/* CTA inline */}
           <div style={{ marginTop: 48, display: "flex", flexDirection: "column", gap: 12 }}>
             <p style={{ fontSize: 15, fontWeight: 500, color: "#64748b", textAlign: "center", marginBottom: 8 }}>
@@ -707,18 +640,6 @@ export default function IPRTResultView({
               Falar com um especialista BSSP
             </a>
           </div>
-
-          {/* Legal */}
-          <p style={{ fontSize: 11, fontWeight: 300, color: "#94a3b8", textAlign: "center", marginTop: 24, lineHeight: 1.4 }}>
-            Seus dados individuais são confidenciais. Dados agregados e anônimos podem ser utilizados
-            para pesquisa sobre o nível de preparo dos profissionais tributários brasileiros.
-          </p>
-
-          {/* Footer */}
-          <p style={{ fontSize: 12, fontWeight: 200, color: "#515151", textAlign: "center", marginTop: 12, lineHeight: 1.3 }}>
-            Resultado gerado com IA baseado nas suas respostas. Para uma análise aprofundada,
-            fale com nosso time.
-          </p>
         </div>
       </div>
 
