@@ -184,15 +184,15 @@ function REIHero({ onStart }: { onStart: () => void }) {
           {/* Client logos */}
           <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12, padding: "4px 0" }}>
             {[
-              { src: "/logos/clients/onfly.png", alt: "Onfly" },
-              { src: "/logos/clients/wellhub.png", alt: "Wellhub" },
-              { src: "/logos/clients/serasa.png", alt: "Serasa" },
-              { src: "/logos/clients/caffeine-army.png", alt: "Caffeine Army" },
-              { src: "/logos/clients/conta-simples.png", alt: "Conta Simples" },
-              { src: "/logos/clients/omie.png", alt: "Omie" },
+              { src: "/logos/clients/onfly.png", alt: "Onfly", h: 65 },
+              { src: "/logos/clients/wellhub.png", alt: "Wellhub", h: 65 },
+              { src: "/logos/clients/serasa.png", alt: "Serasa", h: 75 },
+              { src: "/logos/clients/caffeine-army.png", alt: "Caffeine Army", h: 100 },
+              { src: "/logos/clients/conta-simples.png", alt: "Conta Simples", h: 100 },
+              { src: "/logos/clients/omie.png", alt: "Omie", h: 65 },
             ].map((logo) => (
               <div key={logo.alt} style={{ display: "flex", alignItems: "center", justifyContent: "center", height: 65, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 8, padding: "8px 16px" }}>
-                <img src={logo.src} alt={logo.alt} style={{ maxHeight: 65, objectFit: "contain", opacity: 0.7, filter: "brightness(0) invert(1)" }} />
+                <img src={logo.src} alt={logo.alt} style={{ maxHeight: logo.h, objectFit: "contain", opacity: 0.7, filter: "brightness(0) invert(1)" }} />
               </div>
             ))}
           </div>
