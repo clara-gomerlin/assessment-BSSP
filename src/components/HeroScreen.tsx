@@ -364,7 +364,7 @@ function REIHero({ onStart }: { onStart: () => void }) {
               { src: "/logos/clients/omie.png", alt: "Omie", mh: 50 },
             ].map((logo) => (
               <div key={logo.alt} style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
-                <img src={logo.src} alt={logo.alt} style={{ height: logo.mh, objectFit: "contain", opacity: 0.65, filter: "brightness(0) invert(1)" }} />
+                <img src={logo.src} alt={logo.alt} className="client-logo-img" style={{ "--logo-h": `${logo.mh}px` } as React.CSSProperties} />
               </div>
             ))}
           </div>

@@ -1,5 +1,14 @@
 @import "tailwindcss";
 
+/* Override Tailwind img reset for client logos */
+.client-logo-img {
+  max-width: none !important;
+  height: var(--logo-h) !important;
+  object-fit: contain;
+  opacity: 0.65;
+  filter: brightness(0) invert(1);
+}
+
 :root {
   /* Dark mode tokens (REI Brand) */
   --black-900: #1A1A1A;
