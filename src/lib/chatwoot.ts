@@ -160,7 +160,7 @@ async function createConversation(
       custom_attributes: customAttributes,
       message: {
         content: initialMessage,
-        message_type: "outgoing",
+        message_type: "incoming",
       },
     }),
   });
