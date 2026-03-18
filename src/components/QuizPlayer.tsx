@@ -389,9 +389,13 @@ export default function QuizPlayer({ quiz, questions }: QuizPlayerProps) {
         }
       }
 
+      // Update URL to permanent result link without reloading
+      if (responseId) {
+        window.history.replaceState(null, "", `/quiz/${quiz.slug}/resultado/${responseId}`);
+      }
       setPhase("result");
     },
-    [quiz.id, responseId]
+    [quiz.id, quiz.slug, responseId]
   );
 
   // Start result generation when entering loading phase
