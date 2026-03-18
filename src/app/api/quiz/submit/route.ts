@@ -465,7 +465,7 @@ Foque a análise na alavanca mais fraca (${diagResult.weakest.name}). Responda A
       },
     });
   } catch (error) {
-    console.error("Submit error:", error);
+    console.error("Submit error:", error instanceof Error ? `${error.message}\n${error.stack}` : error);
     return Response.json({ error: "Erro interno" }, { status: 500 });
   }
 }
