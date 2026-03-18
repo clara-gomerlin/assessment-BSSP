@@ -389,12 +389,7 @@ export default function QuizPlayer({ quiz, questions }: QuizPlayerProps) {
         }
       }
 
-      // Redirect to persistent result page
-      if (responseId) {
-        window.location.href = `/quiz/revenue-efficiency-index/resultado/${responseId}`;
-      } else {
-        setPhase("result");
-      }
+      setPhase("result");
     },
     [quiz.id, responseId]
   );
