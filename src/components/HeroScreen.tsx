@@ -353,21 +353,7 @@ function REIHero({ onStart }: { onStart: () => void }) {
             <span style={{ flex: 1, height: 1, background: "rgba(255,255,255,0.08)" }} />
           </div>
 
-          {/* Client logos */}
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12, padding: "4px 0", marginBottom: 80 }}>
-            {[
-              { src: "/logos/clients/onfly.png", alt: "Onfly", mh: 50 },
-              { src: "/logos/clients/wellhub.png", alt: "Wellhub", mh: 45 },
-              { src: "/logos/clients/serasa.png", alt: "Serasa", mh: 63 },
-              { src: "/logos/clients/caffeine-army.png", alt: "Caffeine Army", mh: 100 },
-              { src: "/logos/clients/conta-simples.png", alt: "Conta Simples", mh: 80 },
-              { src: "/logos/clients/omie.png", alt: "Omie", mh: 50 },
-            ].map((logo) => (
-              <div key={logo.alt} style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
-                <img src={logo.src} alt={logo.alt} className="client-logo-img" style={{ "--logo-h": `${logo.mh}px` } as React.CSSProperties} />
-              </div>
-            ))}
-          </div>
+          <div style={{ marginBottom: 80 }} />
         </div>
       </section>
 
