@@ -6,6 +6,7 @@
 /* ===== BSSP Theme Overrides ===== */
 .bssp-theme {
   --bssp-primary: #031D31;
+  --bssp-accent: #0ea5e9;
   --bssp-button: #32373c;
   --bssp-hover: #052a42;
   --bssp-gray: #abb8c3;
@@ -27,9 +28,9 @@
 .bssp-theme .quiz-option:hover,
 .bssp-theme .quiz-option:active,
 .bssp-theme .quiz-option.selected {
-  background: rgba(3, 29, 49, 0.08);
-  border-color: #031D31;
-  color: #031D31;
+  background: rgba(14, 165, 233, 0.1);
+  border-color: #0ea5e9;
+  color: var(--text-on-dark);
 }
 
 .bssp-theme .continue-button {
@@ -50,15 +51,15 @@
 }
 
 .bssp-theme .progress-dot.active {
-  background: #ffffff;
+  background: #0ea5e9;
 }
 
 .bssp-theme .progress-fill {
-  background-color: #ffffff;
+  background-color: #0ea5e9;
 }
 
 .bssp-theme .progress-bar-fill {
-  background: #ffffff;
+  background: #0ea5e9;
 }
 
 .bssp-theme .result-primary-cta {
@@ -81,6 +82,13 @@
 .bssp-theme .result-top-card {
   border-radius: 15px;
   box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+/* Override coral accent to blue in loading screen carousel dots */
+.bssp-theme {
+  --coral-500: #0ea5e9;
+  --coral-hover: #0284c7;
+  --coral-on-dark: #38bdf8;
 }
 
 .bssp-theme .diagnostic-brag-btn {
