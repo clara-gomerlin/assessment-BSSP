@@ -134,10 +134,15 @@ export default function IPRTResultView({
   const firstName = respondentName.split(" ")[0] || "Profissional";
   const [dealCreated, setDealCreated] = useState(false);
 
+  const dimSummary = result.dimensions
+    .map((d) => `${d.emoji} ${d.name}: ${d.percentage}%`)
+    .join("\n");
   const whatsappMessage = encodeURIComponent(
-    `Olá! Fiz o diagnóstico IPRT e gostaria de saber mais sobre a Especialização em Reforma Tributária.\n\n` +
-    `Meu índice: ${result.iprtScore}% (${result.stage})\n` +
-    `Maior lacuna: ${result.weakestDimension.name} (${result.weakestDimension.percentage}%)\n` +
+    `Fiz o IPRT e quero saber mais sobre a especialização.\n\n` +
+    `*Meu resultado:*\n` +
+    `Índice: ${result.iprtScore}% — ${result.stage}\n\n` +
+    `${dimSummary}\n\n` +
+    `Maior lacuna: ${result.weakestDimension.emoji} ${result.weakestDimension.name} (${result.weakestDimension.percentage}%)\n` +
     `Perfil: ${result.qualification.perfil}`
   );
   const whatsappUrl = ctaWhatsappUrl ? `${ctaWhatsappUrl}?text=${whatsappMessage}` : "#";
@@ -275,7 +280,7 @@ export default function IPRTResultView({
               </p>
               <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" onClick={handleCtaClick}
                 style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 10, background: accent, color: "white", fontWeight: 700, fontSize: 14, padding: "12px 24px", border: "none", borderRadius: 8, cursor: "pointer", textDecoration: "none", width: "100%", letterSpacing: 0.3 }}>
-                FALAR COM ESPECIALISTA <span>→</span>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.625.846 5.059 2.284 7.034L.789 23.492a.5.5 0 00.611.611l4.458-1.495A11.94 11.94 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-2.337 0-4.542-.67-6.413-1.822l-.387-.243-2.882.966.966-2.882-.243-.387A9.96 9.96 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg> FALAR COM ESPECIALISTA
               </a>
             </div>
           </div>
@@ -403,7 +408,7 @@ export default function IPRTResultView({
             </p>
             <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" onClick={handleCtaClick}
               style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 10, background: accent, color: "white", fontWeight: 700, fontSize: 14, padding: "12px 24px", border: "none", borderRadius: 8, cursor: "pointer", textDecoration: "none", width: "100%", letterSpacing: 0.3, transition: "all 0.3s ease" }}>
-              FALAR COM ESPECIALISTA <span>→</span>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.625.846 5.059 2.284 7.034L.789 23.492a.5.5 0 00.611.611l4.458-1.495A11.94 11.94 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-2.337 0-4.542-.67-6.413-1.822l-.387-.243-2.882.966.966-2.882-.243-.387A9.96 9.96 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg> FALAR COM ESPECIALISTA
             </a>
           </div>
         </div>
@@ -432,7 +437,7 @@ export default function IPRTResultView({
             </ul>
             <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" onClick={handleCtaClick}
               style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 10, background: accent, color: "white", fontWeight: 700, fontSize: 15, padding: "16px 36px", border: "none", borderRadius: 8, cursor: "pointer", textDecoration: "none", width: "fit-content", letterSpacing: 0.3, transition: "all 0.3s ease" }}>
-              FALAR COM ESPECIALISTA <span>→</span>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.625.846 5.059 2.284 7.034L.789 23.492a.5.5 0 00.611.611l4.458-1.495A11.94 11.94 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-2.337 0-4.542-.67-6.413-1.822l-.387-.243-2.882.966.966-2.882-.243-.387A9.96 9.96 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg> FALAR COM ESPECIALISTA
             </a>
           </div>
 
@@ -456,8 +461,9 @@ export default function IPRTResultView({
 
       {/* Sticky CTA — mobile only */}
       <div className="iprt-sticky-cta">
-        <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className="result-primary-cta" onClick={handleCtaClick}>
-          Falar com um especialista BSSP
+        <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className="result-primary-cta" onClick={handleCtaClick} style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.625.846 5.059 2.284 7.034L.789 23.492a.5.5 0 00.611.611l4.458-1.495A11.94 11.94 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-2.337 0-4.542-.67-6.413-1.822l-.387-.243-2.882.966.966-2.882-.243-.387A9.96 9.96 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+          FALAR COM ESPECIALISTA
         </a>
       </div>
 
