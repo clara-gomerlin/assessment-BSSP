@@ -3,7 +3,7 @@ import Anthropic from "@anthropic-ai/sdk";
 import { calculateScores, getWinnerArchetype } from "@/lib/scoring";
 import { calculateDiagnosticScores } from "@/lib/scoring-diagnostic";
 import { calculateIPRTScores } from "@/lib/scoring-iprt";
-import { getSupabase, getGLASupabase } from "@/lib/supabase";
+import { getSupabase, getGLASupabase, buildPerQuestionData, buildPilarData } from "@/lib/supabase";
 import { Question, SubmitPayload, QuizSettings, Dimension, Answers } from "@/lib/types";
 
 function getAnthropic() {
@@ -123,9 +123,9 @@ export async function POST(request: NextRequest) {
 
     const quizSettings = quiz.settings as QuizSettings | null;
 
-    // Fetch questions
+    // Fetch questions (BSSP uses dedicated table)
     const { data: questions, error: qError } = await supabase
-      .from("assessment_questions")
+      .from("ax_bssp_q")
       .select("*")
       .eq("quiz_id", quiz_id)
       .order("order_index");
@@ -316,8 +316,11 @@ Foque a análise na alavanca mais fraca (${diagResult.weakest.name}). Responda A
       selected_option_id,
     }));
 
+    const perQuestionData = buildPerQuestionData(questions as Question[], answers as Record<string, string | string[]>);
+    const pilarData = buildPilarData(computedScores as Record<string, unknown>);
+
     let { error: saveError } = await supabase
-      .from("assessment_responses")
+      .from("ax_bssp_r")
       .insert({
         id: responseId,
         quiz_id,
@@ -326,14 +329,15 @@ Foque a análise na alavanca mais fraca (${diagResult.weakest.name}). Responda A
         respondent_phone: respondent_phone || null,
         answers: answersArray,
         computed_scores: computedScores,
-        utm_params: utm_params || null,
+        ...perQuestionData,
+        ...pilarData,
       });
 
-    // Fallback: if utm_params column doesn't exist yet, retry without it
+    // Fallback: if a column doesn't exist yet, retry without extras
     if (saveError && saveError.code === "PGRST204") {
-      console.warn("utm_params column not found, retrying without it");
+      console.warn("Column not found, retrying without extras");
       ({ error: saveError } = await supabase
-        .from("assessment_responses")
+        .from("ax_bssp_r")
         .insert({
           id: responseId,
           quiz_id,
@@ -444,7 +448,7 @@ Foque a análise na alavanca mais fraca (${diagResult.weakest.name}). Responda A
 
         // Update response with AI result
         await supabase
-          .from("assessment_responses")
+          .from("ax_bssp_r")
           .update({
             ai_result: aiResultData,
             result_markdown: fullText,

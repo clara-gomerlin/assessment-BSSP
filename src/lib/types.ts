@@ -22,7 +22,7 @@ export interface Question {
   quiz_id: string;
   order_index: number;
   text: string;
-  type: "single_choice" | "scale" | "multiple_choice";
+  type: "single_choice" | "scale" | "multiple_choice" | "open_text";
   category: string;
   options: QuestionOption[];
 }
