@@ -26,7 +26,7 @@ export default async function QuizPage({ params }: PageProps) {
 
   // Fetch questions ordered
   const { data: questions, error: qError } = await supabase
-    .from("assessment_questions")
+    .from("ax_bssp_q")
     .select("*")
     .eq("quiz_id", quiz.id)
     .order("order_index", { ascending: true });
