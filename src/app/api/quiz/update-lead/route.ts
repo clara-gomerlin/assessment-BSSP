@@ -78,7 +78,7 @@ export async function POST(request: NextRequest) {
 
     // Verify the response exists and has no lead data yet (prevents overwriting)
     const { data: existing, error: existingError } = await supabase
-      .from("ax_bssp_r")
+      .from("assessment_responses")
       .select("respondent_email, computed_scores, ai_result, answers")
       .eq("id", response_id)
       .single();
@@ -96,7 +96,7 @@ export async function POST(request: NextRequest) {
     }
 
     const { error } = await supabase
-      .from("ax_bssp_r")
+      .from("assessment_responses")
       .update({
         respondent_name: respondent_name.trim(),
         respondent_email: respondent_email.trim().toLowerCase(),
@@ -165,7 +165,7 @@ export async function POST(request: NextRequest) {
     const answersData = (existing.answers || []) as { question_id: string; selected_option_id: string | string[] }[];
     if (answersData.length > 0) {
       const { data: questions } = await supabase
-        .from("ax_bssp_q")
+        .from("assessment_questions")
         .select("id, order_index, options")
         .eq("quiz_id", quiz_id);
 

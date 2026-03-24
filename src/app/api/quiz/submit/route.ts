@@ -125,7 +125,7 @@ export async function POST(request: NextRequest) {
 
     // Fetch questions (BSSP uses dedicated table)
     const { data: questions, error: qError } = await supabase
-      .from("ax_bssp_q")
+      .from("assessment_questions")
       .select("*")
       .eq("quiz_id", quiz_id)
       .order("order_index");
@@ -320,7 +320,7 @@ Foque a análise na alavanca mais fraca (${diagResult.weakest.name}). Responda A
     const pilarData = buildPilarData(computedScores as Record<string, unknown>);
 
     let { error: saveError } = await supabase
-      .from("ax_bssp_r")
+      .from("assessment_responses")
       .insert({
         id: responseId,
         quiz_id,
@@ -337,7 +337,7 @@ Foque a análise na alavanca mais fraca (${diagResult.weakest.name}). Responda A
     if (saveError && saveError.code === "PGRST204") {
       console.warn("Column not found, retrying without extras");
       ({ error: saveError } = await supabase
-        .from("ax_bssp_r")
+        .from("assessment_responses")
         .insert({
           id: responseId,
           quiz_id,
@@ -448,7 +448,7 @@ Foque a análise na alavanca mais fraca (${diagResult.weakest.name}). Responda A
 
         // Update response with AI result
         await supabase
-          .from("ax_bssp_r")
+          .from("assessment_responses")
           .update({
             ai_result: aiResultData,
             result_markdown: fullText,

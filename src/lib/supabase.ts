@@ -2,11 +2,13 @@ import { createClient } from "@supabase/supabase-js";
 import { Question } from "./types";
 
 export function getSupabase() {
-  const schema = process.env.DB_SCHEMA || "customer_assessments";
   return createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    { db: { schema } }
+    {
+      db: { schema: "bssp" },
+      global: { fetch: (url, options = {}) => fetch(url, { ...options, cache: "no-store" }) },
+    }
   );
 }
 
