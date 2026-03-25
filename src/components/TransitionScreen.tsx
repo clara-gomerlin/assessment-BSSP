@@ -864,7 +864,7 @@ function BSSPTransition1({ onContinue }: { onContinue: () => void }) {
               lineHeight: 1.4,
             }}
           >
-            A BSSP transformou a forma como encaro minha carreira na área tributária. O conteúdo é prático e direto ao ponto.
+            Sou muito grata a essa instituição, que contribuiu de forma significativa para o meu aprendizado e para a ampliação da minha visão sobre um tema tão importante para o futuro do nosso sistema tributário.
           </span>
           <span
             style={{
@@ -877,9 +877,22 @@ function BSSPTransition1({ onContinue }: { onContinue: () => void }) {
             <QuoteSVG />
           </span>
         </div>
-        <span style={{ fontSize: 16, fontWeight: 400, color: "#D3D9F8" }}>
-          Cliente A — Empresa X
-        </span>
+        <div style={{ display: "flex", alignItems: "center", gap: 10, marginTop: 4 }}>
+          <img
+            src="/testimonials/bssp/kaciane-becker.png"
+            alt="Kaciane Becker"
+            style={{
+              width: 40,
+              height: 40,
+              borderRadius: "50%",
+              objectFit: "cover",
+              border: "2px solid rgba(255,255,255,0.15)",
+            }}
+          />
+          <span style={{ fontSize: 16, fontWeight: 400, color: "#D3D9F8" }}>
+            Kaciane Becker — Aluna BSSP
+          </span>
+        </div>
         <StarsSVG />
       </div>
 

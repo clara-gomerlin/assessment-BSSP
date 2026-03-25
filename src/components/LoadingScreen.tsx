@@ -54,21 +54,52 @@ const DIAGNOSTIC_TESTIMONIALS = [
 const BSSP_TESTIMONIALS = [
   {
     quote:
-      "A especialização da BSSP mudou completamente a forma como oriento meus clientes sobre a Reforma Tributária. Saí com confiança para atuar na prática.",
-    author: "Cliente A",
-    role: "Empresa X",
+      "Sou muito grata a essa instituição, que contribuiu de forma significativa para o meu aprendizado e para a ampliação da minha visão sobre um tema tão importante para o futuro do nosso sistema tributário.",
+    author: "Kaciane Becker",
+    role: "Aluna BSSP",
+    image: "/testimonials/bssp/kaciane-becker.png",
   },
   {
     quote:
-      "Antes eu acompanhava a Reforma por notícias. Depois da BSSP, entendi de verdade o impacto nos contratos e na operação dos meus clientes.",
-    author: "Cliente B",
-    role: "Empresa Y",
+      "O MBA foi um divisor de águas para mim, profissionalmente. Através dele conheci pessoas do Brasil todo que me motivaram a iniciar novos projetos.",
+    author: "Rosisbel Alexandre",
+    role: "Aluna BSSP",
+    image: "/testimonials/bssp/rosisbel-alexandre.jpeg",
   },
   {
     quote:
-      "O conteúdo é direto ao ponto e aplicável. Em poucas semanas já estava usando o que aprendi no dia a dia do escritório.",
-    author: "Cliente C",
-    role: "Empresa Z",
+      "Os professores conhecem a realidade do dia a dia, os conteúdos são sempre atualizados, e isso acaba sendo um diferencial para quem atua nessa área e quer crescer profissionalmente.",
+    author: "Camila Moraes",
+    role: "Aluna BSSP",
+    image: "/testimonials/bssp/camila-moraes.jpg",
+  },
+  {
+    quote:
+      "A minha carreira profissional está evoluindo cada dia mais, e mal posso esperar pelos resultados a serem alcançados após a conclusão da Especialização!",
+    author: "Adriano Santana",
+    role: "Aluno BSSP",
+    image: "/testimonials/bssp/adriano-santana.jpg",
+  },
+  {
+    quote:
+      "Sou grata pela oportunidade de estudar em uma instituição tão importante e tenho certeza de que a bagagem que o MBA me trouxe fará o meu futuro ainda mais próspero.",
+    author: "Ana Clara Lucena",
+    role: "Aluna BSSP",
+    image: "/testimonials/bssp/ana-clara-lucena.jpg",
+  },
+  {
+    quote:
+      "Desde o primeiro contato com a BSSP eu senti que fiz a escolha certa. Mas após o primeiro módulo eu pude ter certeza que estava no caminho certo.",
+    author: "Jacqueline Duarte",
+    role: "Aluna BSSP",
+    image: "/testimonials/bssp/jacqueline-duarte.jpg",
+  },
+  {
+    quote:
+      "Recebi meu certificado de MBA pela Faculdade de Gestão BSSP! Foram meses de muito aprendizado, dedicação e crescimento, aprofundando conhecimentos em uma área essencial.",
+    author: "Rayane Lira",
+    role: "Aluna BSSP",
+    image: "/testimonials/bssp/rayane-lira.png",
   },
 ];
 
@@ -302,10 +333,25 @@ export default function LoadingScreen({ apiReady, onContinue, labels, quizType }
                 <QuoteSVG />
               </span>
             </div>
-            <span style={{ fontSize: 14, fontWeight: 400, color: "#D3D9F8", textAlign: "center", display: "block" }}>
-              {testimonial.author} - {testimonial.role}
-              {(testimonial as { role2?: string }).role2 && <><br />{(testimonial as { role2?: string }).role2}</>}
-            </span>
+            <div style={{ display: "flex", alignItems: "center", gap: 10, marginTop: 4 }}>
+              {(testimonial as { image?: string }).image && (
+                <img
+                  src={(testimonial as { image?: string }).image}
+                  alt={testimonial.author}
+                  style={{
+                    width: 36,
+                    height: 36,
+                    borderRadius: "50%",
+                    objectFit: "cover",
+                    border: "2px solid rgba(255,255,255,0.15)",
+                  }}
+                />
+              )}
+              <span style={{ fontSize: 14, fontWeight: 400, color: "#D3D9F8", textAlign: "left" }}>
+                {testimonial.author} — {testimonial.role}
+                {(testimonial as { role2?: string }).role2 && <><br />{(testimonial as { role2?: string }).role2}</>}
+              </span>
+            </div>
             <StarsSVG />
           </div>
 
