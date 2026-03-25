@@ -811,95 +811,154 @@ function RevenueSocialProof2({ onContinue }: { onContinue: () => void }) {
 }
 
 /* ============================================================
-   BSSP IPRT Transition 1 — Social Proof + 4 Dimensions
+   BSSP — Reusable Testimonial Card (premium glassmorphism)
+   ============================================================ */
+function GoldenStarsSVG() {
+  return (
+    <svg width="88" height="16" viewBox="0 0 88 16" fill="none">
+      {[0, 18, 36, 54, 72].map((x) => (
+        <path key={x} transform={`translate(${x},0)`} fill="#F5A623" d="M8 0l2.47 5.01L16 5.82l-4 3.9.94 5.5L8 12.67l-4.94 2.55.94-5.5-4-3.9 5.53-.81z" />
+      ))}
+    </svg>
+  );
+}
+
+function BSSPTestimonialCard({
+  quote,
+  name,
+  role,
+  image,
+  showBadges,
+}: {
+  quote: string;
+  name: string;
+  role: string;
+  image: string;
+  showBadges?: boolean;
+}) {
+  const accent = "#38bdf8";
+  return (
+    <>
+      {/* Metric badges */}
+      {showBadges && (
+        <div style={{ display: "flex", gap: 10, justifyContent: "center", marginBottom: 20 }}>
+          {[
+            { icon: "🎓", label: "+10.000", sub: "alunos formados" },
+            { icon: "⭐", label: "NPS 93+", sub: "satisfação" },
+          ].map((b) => (
+            <div
+              key={b.label}
+              style={{
+                flex: 1,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                gap: 4,
+                padding: "14px 12px",
+                borderRadius: 12,
+                border: `1px solid rgba(56,189,248,0.2)`,
+                background: "rgba(56,189,248,0.06)",
+              }}
+            >
+              <span style={{ fontSize: 20 }}>{b.icon}</span>
+              <span style={{ fontSize: 18, fontWeight: 700, color: accent, letterSpacing: -0.5 }}>{b.label}</span>
+              <span style={{ fontSize: 11, fontWeight: 500, color: "rgba(232,232,227,0.5)", textTransform: "uppercase", letterSpacing: 0.8 }}>{b.sub}</span>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Glassmorphism card */}
+      <div
+        style={{
+          position: "relative",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          padding: "40px 24px 24px",
+          borderRadius: 16,
+          border: "1px solid rgba(255,255,255,0.12)",
+          background: "rgba(255,255,255,0.04)",
+          backdropFilter: "blur(20px)",
+          WebkitBackdropFilter: "blur(20px)",
+          boxShadow: "0 8px 32px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.06)",
+        }}
+      >
+        {/* Avatar with accent glow ring */}
+        <div
+          style={{
+            position: "absolute",
+            top: -36,
+            width: 72,
+            height: 72,
+            borderRadius: "50%",
+            background: `linear-gradient(135deg, ${accent}, #7c3aed)`,
+            padding: 3,
+            boxShadow: `0 0 24px rgba(56,189,248,0.3)`,
+          }}
+        >
+          <img
+            src={image}
+            alt={name}
+            style={{
+              width: "100%",
+              height: "100%",
+              borderRadius: "50%",
+              objectFit: "cover",
+              display: "block",
+            }}
+          />
+        </div>
+
+        {/* Name + role */}
+        <div style={{ textAlign: "center", marginTop: 8, marginBottom: 16 }}>
+          <span style={{ fontSize: 16, fontWeight: 600, color: "#E8E8E3", display: "block" }}>{name}</span>
+          <span style={{ fontSize: 13, fontWeight: 400, color: "rgba(232,232,227,0.5)" }}>{role}</span>
+        </div>
+
+        {/* Large decorative quote mark */}
+        <svg width="28" height="20" viewBox="0 0 28 20" fill="none" style={{ marginBottom: 8, opacity: 0.3 }}>
+          <path fill={accent} d="M0 19.8V12.9q0-2.7 1.06-5.52 1.06-2.82 2.79-5.31Q5.57 0 7.6 0l5.52 3.26a29 29 0 00-2.7 5.4q-1.03 2.82-1.03 6.28v4.86zm14.82 0V12.9q0-2.7 1.06-5.52 1.06-2.82 2.79-5.31Q20.4 0 22.42 0l5.52 3.26a29 29 0 00-2.7 5.4q-1.03 2.82-1.03 6.28v4.86z" />
+        </svg>
+
+        {/* Quote text */}
+        <p
+          style={{
+            fontSize: 16,
+            fontWeight: 400,
+            textAlign: "center",
+            color: "rgba(232,232,227,0.88)",
+            lineHeight: 1.65,
+            margin: 0,
+            maxWidth: 380,
+          }}
+        >
+          {quote}
+        </p>
+
+        {/* Stars */}
+        <div style={{ marginTop: 16 }}>
+          <GoldenStarsSVG />
+        </div>
+      </div>
+    </>
+  );
+}
+
+/* ============================================================
+   BSSP IPRT Transition 1 — Social Proof (before Perfil)
    ============================================================ */
 function BSSPTransition1({ onContinue }: { onContinue: () => void }) {
   return (
     <Content onContinue={onContinue}>
-      <div style={{ textAlign: "center", marginBottom: 16 }}>
-        <span style={{ fontSize: 24, fontWeight: 700, color: "var(--neutral-50)", fontFamily: "'Montserrat', system-ui, sans-serif" }}>
-          +10.000 alunos
-        </span>
-        <br />
-        <span style={{ fontSize: 16, fontWeight: 500, color: "rgba(232,232,227,0.7)" }}>
-          já passaram pela BSSP desde 2017
-        </span>
-      </div>
-
-      <div
-        style={{
-          display: "flex",
-          padding: "16px 16px 12px",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-          gap: 6,
-          borderRadius: 12,
-          border: "1px solid rgba(255,255,255,0.1)",
-          background: "var(--bg-dark-elevated)",
-          boxShadow: "rgba(56,70,174,0.05) 0px 4px 9px, rgba(56,70,174,0.04) 0px 16px 16px",
-        }}
-      >
-        <div
-          style={{
-            position: "relative",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            minHeight: 100,
-            padding: "18px 24px",
-            borderRadius: 8,
-            background: "rgba(255,255,255,0.04)",
-          }}
-        >
-          <span style={{ position: "absolute", top: 8, left: 13.5 }}>
-            <QuoteSVG />
-          </span>
-          <span
-            style={{
-              fontSize: 15,
-              fontWeight: 400,
-              textAlign: "center",
-              color: "var(--text-on-dark)",
-              lineHeight: 1.4,
-            }}
-          >
-            Sou muito grata a essa instituição, que contribuiu de forma significativa para o meu aprendizado e para a ampliação da minha visão sobre um tema tão importante para o futuro do nosso sistema tributário.
-          </span>
-          <span
-            style={{
-              position: "absolute",
-              bottom: 8,
-              right: 13.5,
-              rotate: "180deg",
-            }}
-          >
-            <QuoteSVG />
-          </span>
-        </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 10, marginTop: 4 }}>
-          <img
-            src="/testimonials/bssp/kaciane-becker.webp"
-            alt="Kaciane Becker"
-            style={{
-              width: 40,
-              height: 40,
-              borderRadius: "50%",
-              objectFit: "cover",
-              border: "2px solid rgba(255,255,255,0.15)",
-            }}
-          />
-          <span style={{ fontSize: 16, fontWeight: 400, color: "#D3D9F8" }}>
-            Kaciane Becker — Aluna BSSP
-          </span>
-        </div>
-        <StarsSVG />
-      </div>
-
-      <div style={{ textAlign: "center", marginTop: 24 }}>
-        <p style={{ fontSize: 15, fontWeight: 500, color: "#64748b", lineHeight: 1.5 }}>
-          Referência em educação tributária desde 2017, a BSSP já formou milhares de profissionais com cursos reconhecidos pelo mercado e nota NPS acima de 93.
-        </p>
+      <div style={{ paddingTop: 16 }}>
+        <BSSPTestimonialCard
+          showBadges
+          quote="Sou muito grata a essa instituição, que contribuiu de forma significativa para o meu aprendizado e para a ampliação da minha visão sobre um tema tão importante para o futuro do nosso sistema tributário."
+          name="Kaciane Becker"
+          role="Aluna BSSP"
+          image="/testimonials/bssp/kaciane-becker.webp"
+        />
       </div>
     </Content>
   );
@@ -911,74 +970,13 @@ function BSSPTransition1({ onContinue }: { onContinue: () => void }) {
 function BSSPTestimonialRayane({ onContinue }: { onContinue: () => void }) {
   return (
     <Content onContinue={onContinue}>
-      <div
-        style={{
-          display: "flex",
-          padding: "16px 16px 12px",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-          gap: 6,
-          borderRadius: 12,
-          border: "1px solid rgba(255,255,255,0.1)",
-          background: "var(--bg-dark-elevated)",
-          boxShadow: "rgba(56,70,174,0.05) 0px 4px 9px, rgba(56,70,174,0.04) 0px 16px 16px",
-        }}
-      >
-        <div
-          style={{
-            position: "relative",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            minHeight: 100,
-            padding: "18px 24px",
-            borderRadius: 8,
-            background: "rgba(255,255,255,0.04)",
-          }}
-        >
-          <span style={{ position: "absolute", top: 8, left: 13.5 }}>
-            <QuoteSVG />
-          </span>
-          <span
-            style={{
-              fontSize: 15,
-              fontWeight: 400,
-              textAlign: "center",
-              color: "var(--text-on-dark)",
-              lineHeight: 1.4,
-            }}
-          >
-            Recebi meu certificado de MBA pela Faculdade de Gestão BSSP! Foram meses de muito aprendizado, dedicação e crescimento, aprofundando conhecimentos em uma área essencial para a gestão e conformidade tributária.
-          </span>
-          <span
-            style={{
-              position: "absolute",
-              bottom: 8,
-              right: 13.5,
-              rotate: "180deg",
-            }}
-          >
-            <QuoteSVG />
-          </span>
-        </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 10, marginTop: 4 }}>
-          <img
-            src="/testimonials/bssp/rayane-lira.webp"
-            alt="Rayane Lira"
-            style={{
-              width: 40,
-              height: 40,
-              borderRadius: "50%",
-              objectFit: "cover",
-              border: "2px solid rgba(255,255,255,0.15)",
-            }}
-          />
-          <span style={{ fontSize: 16, fontWeight: 400, color: "#D3D9F8" }}>
-            Rayane Lira — Aluna BSSP
-          </span>
-        </div>
-        <StarsSVG />
+      <div style={{ paddingTop: 36 }}>
+        <BSSPTestimonialCard
+          quote="Recebi meu certificado de MBA pela Faculdade de Gestão BSSP! Foram meses de muito aprendizado, dedicação e crescimento, aprofundando conhecimentos em uma área essencial para a gestão e conformidade tributária."
+          name="Rayane Lira"
+          role="Aluna BSSP"
+          image="/testimonials/bssp/rayane-lira.webp"
+        />
       </div>
     </Content>
   );
@@ -990,74 +988,13 @@ function BSSPTestimonialRayane({ onContinue }: { onContinue: () => void }) {
 function BSSPTestimonialRosisbel({ onContinue }: { onContinue: () => void }) {
   return (
     <Content onContinue={onContinue}>
-      <div
-        style={{
-          display: "flex",
-          padding: "16px 16px 12px",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-          gap: 6,
-          borderRadius: 12,
-          border: "1px solid rgba(255,255,255,0.1)",
-          background: "var(--bg-dark-elevated)",
-          boxShadow: "rgba(56,70,174,0.05) 0px 4px 9px, rgba(56,70,174,0.04) 0px 16px 16px",
-        }}
-      >
-        <div
-          style={{
-            position: "relative",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            minHeight: 100,
-            padding: "18px 24px",
-            borderRadius: 8,
-            background: "rgba(255,255,255,0.04)",
-          }}
-        >
-          <span style={{ position: "absolute", top: 8, left: 13.5 }}>
-            <QuoteSVG />
-          </span>
-          <span
-            style={{
-              fontSize: 15,
-              fontWeight: 400,
-              textAlign: "center",
-              color: "var(--text-on-dark)",
-              lineHeight: 1.4,
-            }}
-          >
-            O MBA foi um divisor de águas para mim, profissionalmente. Através dele conheci pessoas do Brasil todo que me motivaram a iniciar novos projetos.
-          </span>
-          <span
-            style={{
-              position: "absolute",
-              bottom: 8,
-              right: 13.5,
-              rotate: "180deg",
-            }}
-          >
-            <QuoteSVG />
-          </span>
-        </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 10, marginTop: 4 }}>
-          <img
-            src="/testimonials/bssp/rosisbel-alexandre.webp"
-            alt="Rosisbel Alexandre"
-            style={{
-              width: 40,
-              height: 40,
-              borderRadius: "50%",
-              objectFit: "cover",
-              border: "2px solid rgba(255,255,255,0.15)",
-            }}
-          />
-          <span style={{ fontSize: 16, fontWeight: 400, color: "#D3D9F8" }}>
-            Rosisbel Alexandre — Aluna BSSP
-          </span>
-        </div>
-        <StarsSVG />
+      <div style={{ paddingTop: 36 }}>
+        <BSSPTestimonialCard
+          quote="O MBA foi um divisor de águas para mim, profissionalmente. Através dele conheci pessoas do Brasil todo que me motivaram a iniciar novos projetos."
+          name="Rosisbel Alexandre"
+          role="Aluna BSSP"
+          image="/testimonials/bssp/rosisbel-alexandre.webp"
+        />
       </div>
     </Content>
   );
