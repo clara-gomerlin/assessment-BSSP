@@ -444,15 +444,17 @@ export default function IPRTResultView({
           {/* Testimonial */}
           <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 12, padding: 32, display: "flex", flexDirection: "column", gap: 24 }}>
             <p style={{ fontWeight: 500, fontSize: 16, color: "rgba(232,232,227,0.85)", lineHeight: 1.65, fontStyle: "italic", paddingLeft: 20, borderLeft: `3px solid ${accent}` }}>
-              &ldquo;A especialização da BSSP mudou completamente a forma como oriento meus clientes sobre a Reforma Tributária. Saí com confiança para atuar na prática.&rdquo;
+              &ldquo;Desde o primeiro contato com a BSSP eu senti que fiz a escolha certa. Mas após o primeiro módulo eu pude ter certeza que estava no caminho certo.&rdquo;
             </p>
             <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-              <div style={{ width: 52, height: 52, borderRadius: "50%", background: "rgba(255,255,255,0.1)", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 700, fontSize: 18, color: "rgba(232,232,227,0.4)", flexShrink: 0 }}>
-                AB
-              </div>
+              <img
+                src="/testimonials/bssp/jacqueline-duarte.jpg"
+                alt="Jacqueline Duarte"
+                style={{ width: 52, height: 52, borderRadius: "50%", objectFit: "cover", border: "2px solid rgba(255,255,255,0.15)", flexShrink: 0 }}
+              />
               <div>
-                <span style={{ fontWeight: 700, fontSize: 15, color: "#E8E8E3", display: "block" }}>Aluno BSSP</span>
-                <span style={{ fontSize: 13, color: "rgba(232,232,227,0.45)", lineHeight: 1.4 }}>Especialização em Reforma Tributária</span>
+                <span style={{ fontWeight: 700, fontSize: 15, color: "#E8E8E3", display: "block" }}>Jacqueline Duarte</span>
+                <span style={{ fontSize: 13, color: "rgba(232,232,227,0.45)", lineHeight: 1.4 }}>Aluna BSSP</span>
               </div>
             </div>
           </div>

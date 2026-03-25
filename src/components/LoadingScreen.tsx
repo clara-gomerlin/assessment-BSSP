@@ -54,20 +54,6 @@ const DIAGNOSTIC_TESTIMONIALS = [
 const BSSP_TESTIMONIALS = [
   {
     quote:
-      "Sou muito grata a essa instituição, que contribuiu de forma significativa para o meu aprendizado e para a ampliação da minha visão sobre um tema tão importante para o futuro do nosso sistema tributário.",
-    author: "Kaciane Becker",
-    role: "Aluna BSSP",
-    image: "/testimonials/bssp/kaciane-becker.png",
-  },
-  {
-    quote:
-      "O MBA foi um divisor de águas para mim, profissionalmente. Através dele conheci pessoas do Brasil todo que me motivaram a iniciar novos projetos.",
-    author: "Rosisbel Alexandre",
-    role: "Aluna BSSP",
-    image: "/testimonials/bssp/rosisbel-alexandre.jpeg",
-  },
-  {
-    quote:
       "Os professores conhecem a realidade do dia a dia, os conteúdos são sempre atualizados, e isso acaba sendo um diferencial para quem atua nessa área e quer crescer profissionalmente.",
     author: "Camila Moraes",
     role: "Aluna BSSP",
@@ -82,24 +68,10 @@ const BSSP_TESTIMONIALS = [
   },
   {
     quote:
-      "Sou grata pela oportunidade de estudar em uma instituição tão importante e tenho certeza de que a bagagem que o MBA me trouxe fará o meu futuro ainda mais próspero.",
+      "Sou grata pela oportunidade de estudar em uma instituição tão importante e tenho certeza de que a bagagem que o MBA me trouxe fará o meu futuro ainda mais próspero, e o dos demais alunos também.",
     author: "Ana Clara Lucena",
     role: "Aluna BSSP",
     image: "/testimonials/bssp/ana-clara-lucena.jpg",
-  },
-  {
-    quote:
-      "Desde o primeiro contato com a BSSP eu senti que fiz a escolha certa. Mas após o primeiro módulo eu pude ter certeza que estava no caminho certo.",
-    author: "Jacqueline Duarte",
-    role: "Aluna BSSP",
-    image: "/testimonials/bssp/jacqueline-duarte.jpg",
-  },
-  {
-    quote:
-      "Recebi meu certificado de MBA pela Faculdade de Gestão BSSP! Foram meses de muito aprendizado, dedicação e crescimento, aprofundando conhecimentos em uma área essencial.",
-    author: "Rayane Lira",
-    role: "Aluna BSSP",
-    image: "/testimonials/bssp/rayane-lira.png",
   },
 ];
 

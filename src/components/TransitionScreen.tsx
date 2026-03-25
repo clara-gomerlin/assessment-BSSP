@@ -906,6 +906,164 @@ function BSSPTransition1({ onContinue }: { onContinue: () => void }) {
 }
 
 /* ============================================================
+   BSSP Testimonial — Rayane Lira (between Perfil → DN)
+   ============================================================ */
+function BSSPTestimonialRayane({ onContinue }: { onContinue: () => void }) {
+  return (
+    <Content onContinue={onContinue}>
+      <div
+        style={{
+          display: "flex",
+          padding: "16px 16px 12px",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          gap: 6,
+          borderRadius: 12,
+          border: "1px solid rgba(255,255,255,0.1)",
+          background: "var(--bg-dark-elevated)",
+          boxShadow: "rgba(56,70,174,0.05) 0px 4px 9px, rgba(56,70,174,0.04) 0px 16px 16px",
+        }}
+      >
+        <div
+          style={{
+            position: "relative",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            minHeight: 100,
+            padding: "18px 24px",
+            borderRadius: 8,
+            background: "rgba(255,255,255,0.04)",
+          }}
+        >
+          <span style={{ position: "absolute", top: 8, left: 13.5 }}>
+            <QuoteSVG />
+          </span>
+          <span
+            style={{
+              fontSize: 15,
+              fontWeight: 400,
+              textAlign: "center",
+              color: "var(--text-on-dark)",
+              lineHeight: 1.4,
+            }}
+          >
+            Recebi meu certificado de MBA pela Faculdade de Gestão BSSP! Foram meses de muito aprendizado, dedicação e crescimento, aprofundando conhecimentos em uma área essencial para a gestão e conformidade tributária.
+          </span>
+          <span
+            style={{
+              position: "absolute",
+              bottom: 8,
+              right: 13.5,
+              rotate: "180deg",
+            }}
+          >
+            <QuoteSVG />
+          </span>
+        </div>
+        <div style={{ display: "flex", alignItems: "center", gap: 10, marginTop: 4 }}>
+          <img
+            src="/testimonials/bssp/rayane-lira.png"
+            alt="Rayane Lira"
+            style={{
+              width: 40,
+              height: 40,
+              borderRadius: "50%",
+              objectFit: "cover",
+              border: "2px solid rgba(255,255,255,0.15)",
+            }}
+          />
+          <span style={{ fontSize: 16, fontWeight: 400, color: "#D3D9F8" }}>
+            Rayane Lira — Aluna BSSP
+          </span>
+        </div>
+        <StarsSVG />
+      </div>
+    </Content>
+  );
+}
+
+/* ============================================================
+   BSSP Testimonial — Rosisbel Alexandre (between DN → AP)
+   ============================================================ */
+function BSSPTestimonialRosisbel({ onContinue }: { onContinue: () => void }) {
+  return (
+    <Content onContinue={onContinue}>
+      <div
+        style={{
+          display: "flex",
+          padding: "16px 16px 12px",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          gap: 6,
+          borderRadius: 12,
+          border: "1px solid rgba(255,255,255,0.1)",
+          background: "var(--bg-dark-elevated)",
+          boxShadow: "rgba(56,70,174,0.05) 0px 4px 9px, rgba(56,70,174,0.04) 0px 16px 16px",
+        }}
+      >
+        <div
+          style={{
+            position: "relative",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            minHeight: 100,
+            padding: "18px 24px",
+            borderRadius: 8,
+            background: "rgba(255,255,255,0.04)",
+          }}
+        >
+          <span style={{ position: "absolute", top: 8, left: 13.5 }}>
+            <QuoteSVG />
+          </span>
+          <span
+            style={{
+              fontSize: 15,
+              fontWeight: 400,
+              textAlign: "center",
+              color: "var(--text-on-dark)",
+              lineHeight: 1.4,
+            }}
+          >
+            O MBA foi um divisor de águas para mim, profissionalmente. Através dele conheci pessoas do Brasil todo que me motivaram a iniciar novos projetos.
+          </span>
+          <span
+            style={{
+              position: "absolute",
+              bottom: 8,
+              right: 13.5,
+              rotate: "180deg",
+            }}
+          >
+            <QuoteSVG />
+          </span>
+        </div>
+        <div style={{ display: "flex", alignItems: "center", gap: 10, marginTop: 4 }}>
+          <img
+            src="/testimonials/bssp/rosisbel-alexandre.jpeg"
+            alt="Rosisbel Alexandre"
+            style={{
+              width: 40,
+              height: 40,
+              borderRadius: "50%",
+              objectFit: "cover",
+              border: "2px solid rgba(255,255,255,0.15)",
+            }}
+          />
+          <span style={{ fontSize: 16, fontWeight: 400, color: "#D3D9F8" }}>
+            Rosisbel Alexandre — Aluna BSSP
+          </span>
+        </div>
+        <StarsSVG />
+      </div>
+    </Content>
+  );
+}
+
+/* ============================================================
    BSSP IPRT Transition 2 — Dimensions explanation
    ============================================================ */
 function BSSPTransition2({ onContinue }: { onContinue: () => void }) {
@@ -1141,6 +1299,10 @@ export default function TransitionScreen({
     // BSSP IPRT transitions
     case "bssp-social-proof":
       return <BSSPTransition1 onContinue={onContinue} />;
+    case "bssp-testimonial-rayane":
+      return <BSSPTestimonialRayane onContinue={onContinue} />;
+    case "bssp-testimonial-rosisbel":
+      return <BSSPTestimonialRosisbel onContinue={onContinue} />;
     case "bssp-dimensions":
       return <BSSPTransition2 onContinue={onContinue} />;
     case "bssp-aplicacao-intro":

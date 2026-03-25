@@ -32,8 +32,8 @@ VALUES (
       "0": ["bssp-social-proof"]
     },
     "transitions_after_section": {
-      "0": ["bssp-social-proof"],
-      "1": ["bssp-aplicacao-intro"]
+      "0": ["bssp-testimonial-rayane"],
+      "1": ["bssp-testimonial-rosisbel"]
     }
   }'::jsonb,
   '',
