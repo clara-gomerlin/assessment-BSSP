@@ -112,12 +112,23 @@ function StarsSVG() {
   );
 }
 
+function GoldenStarsSVG() {
+  return (
+    <svg width="88" height="16" viewBox="0 0 88 16" fill="none">
+      {[0, 18, 36, 54, 72].map((x) => (
+        <path key={x} transform={`translate(${x},0)`} fill="#F5A623" d="M8 0l2.47 5.01L16 5.82l-4 3.9.94 5.5L8 12.67l-4.94 2.55.94-5.5-4-3.9 5.53-.81z" />
+      ))}
+    </svg>
+  );
+}
+
 export default function LoadingScreen({ apiReady, onContinue, labels, quizType }: LoadingScreenProps) {
   // Override progress item labels if custom labels are provided
   const progressItems = labels
     ? PROGRESS_ITEMS.map((item, i) => ({ ...item, label: labels[i] || item.label }))
     : PROGRESS_ITEMS;
-  const testimonials = quizType === "iprt" ? BSSP_TESTIMONIALS : quizType === "diagnostic" ? DIAGNOSTIC_TESTIMONIALS : TESTIMONIALS;
+  const isBSSP = quizType === "iprt";
+  const testimonials = isBSSP ? BSSP_TESTIMONIALS : quizType === "diagnostic" ? DIAGNOSTIC_TESTIMONIALS : TESTIMONIALS;
   const [progresses, setProgresses] = useState([0, 0, 0]);
   const [barsFinished, setBarsFinished] = useState(false);
   const [activeTestimonial, setActiveTestimonial] = useState(0);
@@ -252,80 +263,150 @@ export default function LoadingScreen({ apiReady, onContinue, labels, quizType }
 
         {/* Testimonial carousel */}
         <div style={{ marginTop: 32 }}>
-          <div
-            style={{
-              display: "flex",
-              padding: "16px 16px 12px",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-              gap: 8,
-              borderRadius: 12,
-              background: "var(--bg-dark-elevated)",
-              border: "1px solid rgba(255,255,255,0.08)",
-              opacity: testimonialVisible ? 1 : 0,
-              transition: "opacity 0.4s ease",
-              minHeight: 180,
-            }}
-          >
+          {/* Glassmorphism card (BSSP) */}
+          {isBSSP ? (
             <div
               style={{
-                position: "relative",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                padding: "18px 24px",
-                borderRadius: 8,
-                background: "rgba(255,255,255,0.04)",
-                width: "100%",
+                opacity: testimonialVisible ? 1 : 0,
+                transition: "opacity 0.4s ease",
+                minHeight: 240,
               }}
             >
-              <span style={{ position: "absolute", top: 8, left: 13.5 }}>
-                <QuoteSVG />
-              </span>
-              <span
+              <div
                 style={{
-                  fontSize: 15,
-                  fontWeight: 400,
-                  textAlign: "center",
-                  color: "var(--text-on-dark)",
-                  lineHeight: 1.4,
+                  position: "relative",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  padding: "44px 24px 20px",
+                  borderRadius: 16,
+                  border: "1px solid rgba(255,255,255,0.12)",
+                  background: "rgba(255,255,255,0.04)",
+                  backdropFilter: "blur(20px)",
+                  WebkitBackdropFilter: "blur(20px)",
+                  boxShadow: "0 8px 32px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.06)",
                 }}
               >
-                {testimonial.quote}
-              </span>
-              <span
-                style={{
-                  position: "absolute",
-                  bottom: 8,
-                  right: 13.5,
-                  rotate: "180deg",
-                }}
-              >
-                <QuoteSVG />
-              </span>
-            </div>
-            <div style={{ display: "flex", alignItems: "center", gap: 10, marginTop: 4 }}>
-              {(testimonial as { image?: string }).image && (
-                <img
-                  src={(testimonial as { image?: string }).image}
-                  alt={testimonial.author}
+                {/* Avatar with accent glow ring */}
+                <div
                   style={{
-                    width: 36,
-                    height: 36,
+                    position: "absolute",
+                    top: -32,
+                    width: 64,
+                    height: 64,
                     borderRadius: "50%",
-                    objectFit: "cover",
-                    border: "2px solid rgba(255,255,255,0.15)",
+                    background: "linear-gradient(135deg, #38bdf8, #7c3aed)",
+                    padding: 3,
+                    boxShadow: "0 0 24px rgba(56,189,248,0.3)",
                   }}
-                />
-              )}
-              <span style={{ fontSize: 14, fontWeight: 400, color: "#D3D9F8", textAlign: "left" }}>
+                >
+                  {(testimonial as { image?: string }).image && (
+                    <img
+                      src={(testimonial as { image?: string }).image!}
+                      alt={testimonial.author}
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        borderRadius: "50%",
+                        objectFit: "cover",
+                        display: "block",
+                      }}
+                    />
+                  )}
+                </div>
+
+                {/* Name + role */}
+                <div style={{ textAlign: "center", marginTop: 4, marginBottom: 12 }}>
+                  <span style={{ fontSize: 15, fontWeight: 600, color: "#E8E8E3", display: "block" }}>{testimonial.author}</span>
+                  <span style={{ fontSize: 12, fontWeight: 400, color: "rgba(232,232,227,0.5)" }}>{testimonial.role}</span>
+                </div>
+
+                {/* Decorative quote */}
+                <svg width="22" height="16" viewBox="0 0 28 20" fill="none" style={{ marginBottom: 6, opacity: 0.3 }}>
+                  <path fill="#38bdf8" d="M0 19.8V12.9q0-2.7 1.06-5.52 1.06-2.82 2.79-5.31Q5.57 0 7.6 0l5.52 3.26a29 29 0 00-2.7 5.4q-1.03 2.82-1.03 6.28v4.86zm14.82 0V12.9q0-2.7 1.06-5.52 1.06-2.82 2.79-5.31Q20.4 0 22.42 0l5.52 3.26a29 29 0 00-2.7 5.4q-1.03 2.82-1.03 6.28v4.86z" />
+                </svg>
+
+                {/* Quote */}
+                <p
+                  style={{
+                    fontSize: 15,
+                    fontWeight: 400,
+                    textAlign: "center",
+                    color: "rgba(232,232,227,0.88)",
+                    lineHeight: 1.6,
+                    margin: 0,
+                  }}
+                >
+                  {testimonial.quote}
+                </p>
+
+                <div style={{ marginTop: 14 }}>
+                  <GoldenStarsSVG />
+                </div>
+              </div>
+            </div>
+          ) : (
+            /* Original card style (GLA / Diagnostic) */
+            <div
+              style={{
+                display: "flex",
+                padding: "16px 16px 12px",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+                gap: 8,
+                borderRadius: 12,
+                background: "var(--bg-dark-elevated)",
+                border: "1px solid rgba(255,255,255,0.08)",
+                opacity: testimonialVisible ? 1 : 0,
+                transition: "opacity 0.4s ease",
+                minHeight: 180,
+              }}
+            >
+              <div
+                style={{
+                  position: "relative",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  padding: "18px 24px",
+                  borderRadius: 8,
+                  background: "rgba(255,255,255,0.04)",
+                  width: "100%",
+                }}
+              >
+                <span style={{ position: "absolute", top: 8, left: 13.5 }}>
+                  <QuoteSVG />
+                </span>
+                <span
+                  style={{
+                    fontSize: 15,
+                    fontWeight: 400,
+                    textAlign: "center",
+                    color: "var(--text-on-dark)",
+                    lineHeight: 1.4,
+                  }}
+                >
+                  {testimonial.quote}
+                </span>
+                <span
+                  style={{
+                    position: "absolute",
+                    bottom: 8,
+                    right: 13.5,
+                    rotate: "180deg",
+                  }}
+                >
+                  <QuoteSVG />
+                </span>
+              </div>
+              <span style={{ fontSize: 14, fontWeight: 400, color: "#D3D9F8", textAlign: "center", display: "block" }}>
                 {testimonial.author} — {testimonial.role}
                 {(testimonial as { role2?: string }).role2 && <><br />{(testimonial as { role2?: string }).role2}</>}
               </span>
+              <StarsSVG />
             </div>
-            <StarsSVG />
-          </div>
+          )}
 
           {/* Carousel dots */}
           <div
@@ -344,7 +425,7 @@ export default function LoadingScreen({ apiReady, onContinue, labels, quizType }
                   height: 8,
                   borderRadius: "50%",
                   background:
-                    i === activeTestimonial ? "var(--coral-500)" : "rgba(255,255,255,0.15)",
+                    i === activeTestimonial ? (isBSSP ? "#38bdf8" : "var(--coral-500)") : "rgba(255,255,255,0.15)",
                   transition: "background 0.3s ease",
                 }}
               />
