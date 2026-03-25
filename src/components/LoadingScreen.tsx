@@ -57,21 +57,21 @@ const BSSP_TESTIMONIALS = [
       "Os professores conhecem a realidade do dia a dia, os conteúdos são sempre atualizados, e isso acaba sendo um diferencial para quem atua nessa área e quer crescer profissionalmente.",
     author: "Camila Moraes",
     role: "Aluna BSSP",
-    image: "/testimonials/bssp/camila-moraes.jpg",
+    image: "/testimonials/bssp/camila-moraes.webp",
   },
   {
     quote:
       "A minha carreira profissional está evoluindo cada dia mais, e mal posso esperar pelos resultados a serem alcançados após a conclusão da Especialização!",
     author: "Adriano Santana",
     role: "Aluno BSSP",
-    image: "/testimonials/bssp/adriano-santana.jpg",
+    image: "/testimonials/bssp/adriano-santana.webp",
   },
   {
     quote:
       "Sou grata pela oportunidade de estudar em uma instituição tão importante e tenho certeza de que a bagagem que o MBA me trouxe fará o meu futuro ainda mais próspero, e o dos demais alunos também.",
     author: "Ana Clara Lucena",
     role: "Aluna BSSP",
-    image: "/testimonials/bssp/ana-clara-lucena.jpg",
+    image: "/testimonials/bssp/ana-clara-lucena.webp",
   },
 ];
 

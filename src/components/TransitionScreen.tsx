@@ -879,7 +879,7 @@ function BSSPTransition1({ onContinue }: { onContinue: () => void }) {
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 10, marginTop: 4 }}>
           <img
-            src="/testimonials/bssp/kaciane-becker.png"
+            src="/testimonials/bssp/kaciane-becker.webp"
             alt="Kaciane Becker"
             style={{
               width: 40,
@@ -964,7 +964,7 @@ function BSSPTestimonialRayane({ onContinue }: { onContinue: () => void }) {
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 10, marginTop: 4 }}>
           <img
-            src="/testimonials/bssp/rayane-lira.png"
+            src="/testimonials/bssp/rayane-lira.webp"
             alt="Rayane Lira"
             style={{
               width: 40,
@@ -1043,7 +1043,7 @@ function BSSPTestimonialRosisbel({ onContinue }: { onContinue: () => void }) {
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 10, marginTop: 4 }}>
           <img
-            src="/testimonials/bssp/rosisbel-alexandre.jpeg"
+            src="/testimonials/bssp/rosisbel-alexandre.webp"
             alt="Rosisbel Alexandre"
             style={{
               width: 40,

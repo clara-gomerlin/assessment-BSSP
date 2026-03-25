@@ -448,7 +448,7 @@ export default function IPRTResultView({
             </p>
             <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
               <img
-                src="/testimonials/bssp/jacqueline-duarte.jpg"
+                src="/testimonials/bssp/jacqueline-duarte.webp"
                 alt="Jacqueline Duarte"
                 style={{ width: 52, height: 52, borderRadius: "50%", objectFit: "cover", border: "2px solid rgba(255,255,255,0.15)", flexShrink: 0 }}
               />
