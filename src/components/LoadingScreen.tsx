@@ -136,6 +136,17 @@ export default function LoadingScreen({ apiReady, onContinue, labels, quizType }
 
   const canContinue = barsFinished && apiReady;
 
+  // Preload all testimonial images so carousel transitions are instant
+  useEffect(() => {
+    testimonials.forEach((t) => {
+      const img = (t as { image?: string }).image;
+      if (img) {
+        const preload = new Image();
+        preload.src = img;
+      }
+    });
+  }, []);
+
   // Progress bars
   useEffect(() => {
     const intervals: NodeJS.Timeout[] = [];
