@@ -841,7 +841,7 @@ function BSSPTestimonialCard({
     <>
       {/* Headline badge */}
       {showBadges && (
-        <div style={{ textAlign: "center", marginBottom: 28 }}>
+        <div style={{ textAlign: "center", marginBottom: 52 }}>
           <span style={{ fontSize: 28, fontWeight: 700, color: "#E8E8E3", letterSpacing: -0.5 }}>+10.000 alunos</span>
           <br />
           <span style={{ fontSize: 14, fontWeight: 500, color: "rgba(232,232,227,0.5)" }}>já passaram pela BSSP desde 2017</span>
