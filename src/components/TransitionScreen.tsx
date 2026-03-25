@@ -839,32 +839,12 @@ function BSSPTestimonialCard({
   const accent = "#38bdf8";
   return (
     <>
-      {/* Metric badges */}
+      {/* Headline badge */}
       {showBadges && (
-        <div style={{ display: "flex", gap: 10, justifyContent: "center", marginBottom: 20 }}>
-          {[
-            { icon: "🎓", label: "+10.000", sub: "alunos formados" },
-            { icon: "⭐", label: "NPS 93+", sub: "satisfação" },
-          ].map((b) => (
-            <div
-              key={b.label}
-              style={{
-                flex: 1,
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                gap: 4,
-                padding: "14px 12px",
-                borderRadius: 12,
-                border: `1px solid rgba(56,189,248,0.2)`,
-                background: "rgba(56,189,248,0.06)",
-              }}
-            >
-              <span style={{ fontSize: 20 }}>{b.icon}</span>
-              <span style={{ fontSize: 18, fontWeight: 700, color: accent, letterSpacing: -0.5 }}>{b.label}</span>
-              <span style={{ fontSize: 11, fontWeight: 500, color: "rgba(232,232,227,0.5)", textTransform: "uppercase", letterSpacing: 0.8 }}>{b.sub}</span>
-            </div>
-          ))}
+        <div style={{ textAlign: "center", marginBottom: 28 }}>
+          <span style={{ fontSize: 28, fontWeight: 700, color: "#E8E8E3", letterSpacing: -0.5 }}>+10.000 alunos</span>
+          <br />
+          <span style={{ fontSize: 14, fontWeight: 500, color: "rgba(232,232,227,0.5)" }}>já passaram pela BSSP desde 2017</span>
         </div>
       )}
 
@@ -875,7 +855,7 @@ function BSSPTestimonialCard({
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          padding: "40px 24px 24px",
+          padding: "44px 24px 20px",
           borderRadius: 16,
           border: "1px solid rgba(255,255,255,0.12)",
           background: "rgba(255,255,255,0.04)",
