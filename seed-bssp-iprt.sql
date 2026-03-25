@@ -56,7 +56,7 @@ VALUES (
   'single_choice',
   'qualificacao',
   '[
-    {"id": "q1_contabilidade", "label": "Contabilidade ou Assessoria contábil", "scores": {}},
+    {"id": "q1_contabilidade", "label": "Contabilidade ou Assessoria Fiscal", "scores": {}},
     {"id": "q1_advocacia", "label": "Advocacia tributária", "scores": {}},
     {"id": "q1_administracao", "label": "Administração ou Gestão financeira", "scores": {}},
     {"id": "q1_outro", "label": "Outro", "scores": {}}
@@ -217,7 +217,7 @@ VALUES (
   'single_choice',
   'aplicacao_pratica',
   '[
-    {"id": "q10_a", "label": "Manter a estratégia atual aproveitando os benefícios enquanto existirem, sem mudanças.", "value": 0, "scores": {"AP": 0}},
+    {"id": "q10_a", "label": "Manter a estratégia atual aproveitando os benefícios enquanto existirem, sem se preocupar com mudanças futuras.", "value": 0, "scores": {"AP": 0}},
     {"id": "q10_b", "label": "Alertar que benefícios de guerra fiscal perdem razão de existir no modelo de tributação no destino, e propor revisão estratégica imediata.", "value": 10, "scores": {"AP": 10}},
     {"id": "q10_c", "label": "Migrar os benefícios para o Imposto Seletivo, que substitui os incentivos estaduais.", "value": 0, "scores": {"AP": 0}},
     {"id": "q10_d", "label": "Aguardar posição do Comitê Gestor do IBS sobre manutenção dos incentivos.", "value": 0, "scores": {"AP": 0}}
